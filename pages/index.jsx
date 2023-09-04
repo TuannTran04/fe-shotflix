@@ -54,16 +54,46 @@ const Home = (props) => {
 };
 export default Home;
 
-export async function getStaticProps(context) {
-  let allMovie = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/v1/movie`);
-  let allCategory = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/v1/category`
-  );
-  return {
-    props: {
-      dataMovies: allMovie?.data?.data,
-      categories: allCategory?.data?.data,
-    },
-    revalidate: 20,
-  };
+// export async function getStaticProps(context) {
+//   let allMovie = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/v1/movie`);
+//   let allCategory = await axios.get(
+//     `${process.env.NEXT_PUBLIC_URL}/api/v1/category`
+//   );
+//   return {
+//     props: {
+//       dataMovies: allMovie?.data?.data,
+//       categories: allCategory?.data?.data,
+//     },
+//     revalidate: 20,
+//   };
+// }
+
+export async function getStaticProps() {
+  try {
+    const [moviesResponse, categoriesResponse] = await Promise.all([
+      axios.get(`${process.env.NEXT_PUBLIC_URL}/api/v1/movie`),
+      axios.get(`${process.env.NEXT_PUBLIC_URL}/api/v1/category`),
+    ]);
+
+    const dataMovies = moviesResponse?.data?.data || [];
+    const categories = categoriesResponse?.data?.data || [];
+
+    return {
+      props: {
+        dataMovies,
+        categories,
+      },
+      revalidate: 60, // Revalidate every 60 seconds (adjust as needed)
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+
+    return {
+      props: {
+        dataMovies: [],
+        categories: [],
+      },
+      revalidate: 60, // Revalidate every 60 seconds (adjust as needed)
+    };
+  }
 }

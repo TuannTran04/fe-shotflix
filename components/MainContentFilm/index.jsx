@@ -32,7 +32,7 @@ const MainContentFilm = () => {
       <div className="grid grid-cols-7 -mx-2.5 gap-6 h-[700px] overflow-hidden">
         {/* LEFT */}
         <div className="col-span-5 h-full flex flex-col justify-between">
-          {arrSliderCategory.map((item, index) => (
+          {arrSliderCategory?.map((item, index) => (
             <div
               key={item.id}
               className={`${
@@ -53,7 +53,7 @@ const MainContentFilm = () => {
               </div>
 
               <Slider {...settings}>
-                {item?.dataFilm.map((item, index) => {
+                {item?.dataFilm?.map((item, index) => {
                   if (item !== null)
                     return <MovieMainContent key={item?._id} item={item} />;
                 })}

@@ -34,10 +34,10 @@ const CategoryPage = ({ slugCategory, nameCategory, categories }) => {
       try {
         if (cateId) {
           const res = await getMoviesByCate(cateId, currentPage, pageSize);
-          console.log(">>> Category Film <<<", res.data.data.movies);
-          console.log(">>> Category Film <<<", res.data.data.totalCount);
-          setArrMovie(res.data.data.movies);
-          setTotalPages(Math.ceil(res.data.data.totalCount / pageSize));
+          console.log(">>> Category Film <<<", res?.data.data.movies);
+          console.log(">>> Category Film <<<", res?.data.data.totalCount);
+          setArrMovie(res?.data.data.movies);
+          setTotalPages(Math.ceil(res?.data.data.totalCount / pageSize));
         }
       } catch (err) {
         console.log(err);
@@ -101,6 +101,7 @@ export async function getStaticProps(context) {
     revalidate: 20,
   };
 }
+
 export async function getStaticPaths(context) {
   let allCategory = await axios.get(
     `${process.env.NEXT_PUBLIC_URL}/api/v1/category`
