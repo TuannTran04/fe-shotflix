@@ -71,11 +71,10 @@ function SamplePrevArrow(props) {
 }
 
 export var settings = {
-  className: "list_slider_film",
   dots: false,
   infinite: true,
   speed: 500,
-  slidesToShow: 5,
+  slidesToShow: 2,
   slidesToScroll: 1,
   initialSlide: 0,
   autoplay: false,

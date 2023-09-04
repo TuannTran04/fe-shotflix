@@ -63,7 +63,8 @@ const VideoContainer = ({ movie }) => {
   /> */}
 
       <ReactPlayer
-        url={movie?.video?.[0]}
+        // url={movie?.video?.[0]}
+        url={`${process.env.NEXT_PUBLIC_URL}/video/riengminhanh.mp4`}
         // url={"https://youtu.be/DWYwmTdXpqw?si=yAfzJl4ilB-Y0fWd"}
         // url={
         //   "https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/files%2FB%C3%A1%C2%BA%C2%A3n%20in%20l%C3%A1%C2%BB%C2%97i.mp4%20%20%20%20%20%20%202023-8-16%2022%3A53%3A35?alt=media&token=f6bd78f4-3f03-40c8-a4f8-5ec41902866d"
