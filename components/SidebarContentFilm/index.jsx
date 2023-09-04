@@ -4,8 +4,6 @@ import Image from "next/legacy/image";
 import React from "react";
 
 const SidebarContentFilm = ({ movies }) => {
-  // console.log(">>> Sidebar Main Content <<<", movies);
-
   const arrTopTrendingFilm = [
     {
       id: 1,
@@ -25,7 +23,7 @@ const SidebarContentFilm = ({ movies }) => {
           </div>
 
           <div className="list_top_trend_film h-full overflow-y-auto">
-            {item?.listFilm?.map((itemFilm) => (
+            {item.listFilm?.map((itemFilm) => (
               <div
                 key={itemFilm._id}
                 className="overflow-hidden grid grid-cols-4 mb-2.5 h-[100px] gap-1"

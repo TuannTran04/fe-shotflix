@@ -6,7 +6,6 @@ import ReactPlayer from "react-player";
 
 const VideoContainer = ({ movie }) => {
   const [videoQuality, setVideoQuality] = useState("720p"); // Chất lượng mặc định
-  // console.log(movie);
   const handleQualityChange = (quality) => {
     setVideoQuality(quality);
   };

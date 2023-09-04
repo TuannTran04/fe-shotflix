@@ -19,11 +19,9 @@ const SliderTrendingFilm = ({ toast }) => {
 
   const film = useSelector((state) => state.film);
   const { movies, favoriteFilm, watchLaterFilm } = film;
-  // console.log(movies?.trending);
-  // console.log(favoriteFilm);
 
   return (
-    <div className="mt-20 mb-8 -mx-2.5">
+    <div className="mt-5 sm:mt-20 mb-8 -mx-2.5">
       {/* <div>
         <img
           className="block w-full"

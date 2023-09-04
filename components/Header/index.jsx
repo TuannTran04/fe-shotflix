@@ -1,4 +1,4 @@
-// "use client";
+
 import Image from "next/legacy/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -13,7 +13,6 @@ import { searchMovies } from "../../services/userRequest";
 import axios from "axios";
 
 export default function Header({ categories }) {
-  // console.log(categories);
   const router = useRouter();
   const user = useSelector((state) => state.auth.login.currentUser);
   const accessToken = user?.accessToken;
@@ -22,7 +21,6 @@ export default function Header({ categories }) {
   let axiosJWT = createAxios(user, dispatch, logOutSuccess);
 
   const [arrSearchMovie, setArrSearchMovie] = useState([]);
-  // console.log(arrSearchMovie);
 
   const [searchInput, setSearchInput] = useState("");
   const [showSearchResults, setSearchResults] = useState(false);
@@ -36,9 +34,7 @@ export default function Header({ categories }) {
     try {
       if (value) {
         const res = await searchMovies(value);
-        console.log(">>> Results Search <<<", res);
         if (res.data.code === 200) {
-          // console.log(">>> Results Search <<<", res.data.data.movies);
           setArrSearchMovie(res.data.data.movies);
         } else {
           setArrSearchMovie([]);
@@ -53,7 +49,6 @@ export default function Header({ categories }) {
     e.preventDefault();
     setShowSearchInput((prev) => !prev);
     if (searchInput) {
-      console.log("submit");
       router.push(`/search/${searchInput.replace(/\s+/g, "+")}`);
       setSearchInput("");
     }
@@ -61,31 +56,13 @@ export default function Header({ categories }) {
 
   const handleLogout = (e) => {
     e.preventDefault();
-    // Cookies.remove("dataUser");
     logOut(dispatch, id, router, accessToken, axiosJWT);
   };
 
-  // useEffect(() => {
-  //   const handleFocus = (e) => {
-  //     e.stopPropagation();
-  //     // console.log(e.target);
-  //     setSearchResults(true);
-  //   };
-  //   const handleBlur = (e) => {
-  //     e.stopPropagation();
-  //     setSearchResults(false);
-  //   };
 
-  //   inputRef.current.addEventListener("focus", handleFocus);
-  //   inputRef.current.addEventListener("blur", handleBlur);
-  //   // return () => {
-  //   //   inputRef.current.removeEventListener("focus", handleFocus);
-  //   //   inputRef.current.removeEventListener("blur", handleBlur);
-  //   // };
-  // }, []);
 
   return (
-    <header className="bg-[#151414] h-20 fixed top-0 left-0 right-0 z-[100] shadow-xl">
+    <header className="bg-[#151414] h-20 relative sm:fixed top-0 left-0 right-0 z-[100] shadow-xl">
       <nav className="h-full mx-auto max-w-[1200px]">
         <div className="h-full flex justify-between items-center">
           <div className="bg-[rgba(255,255,255,.05)] px-[15px] h-full w-[180px] text-center">
@@ -109,7 +86,7 @@ export default function Header({ categories }) {
             </Link>
           </div>
 
-          <div className="flex-1 text-white">
+          <div className="hidden sm:block flex-1 text-white">
             <ul className="flex justify-center items-center ">
               <li className="inline-block">
                 <Link
