@@ -5,6 +5,9 @@ import {
   logOutSuccess,
   logOutFailed,
   logOutStart,
+  registerStart,
+  registerSuccess,
+  registerFailed,
 } from "./authSlice";
 import { addArrFavorite, addArrWatchLater, deleteSuccess } from "./filmSlice";
 import axios from "axios";
@@ -21,7 +24,7 @@ export const login = async (user, dispatch, router, toast) => {
     if (res.data.code == 200) {
       let c = res.data.data.accessToken.toString();
       // Cookies.set("user-server", "abc");
-      Cookies.set("accessToken", c);
+      // Cookies.set("accessToken", c);
       dispatch(loginSuccess(res.data.data));
       toast("Đăng nhập thành công");
       router.push("/");
@@ -35,15 +38,53 @@ export const login = async (user, dispatch, router, toast) => {
   }
 };
 
-export const register = async (user, dispatch, navigate) => {
+export const registerOTP = async (
+  dataForm,
+  verifyOTP,
+  setVerifyOTP,
+  dispatch,
+  router,
+  toast
+) => {
+  const base_url = process.env.NEXT_PUBLIC_URL;
   dispatch(registerStart());
+
   try {
-    await axios.post("/v1/auth/register", user);
-    dispatch(registerSuccess());
-    navigate("/login");
-  } catch (err) {
-    console.log(err);
-    dispatch(registerFailed("Something is wrong"));
+    let response;
+    // console.log(">>> dataForm REGISTER VERIFY <<<", dataForm);
+
+    if (!verifyOTP) {
+      response = await axios.post(`${base_url}/api/v1/auth/register`, dataForm);
+      console.log(">>> Response REGISTER <<<", response);
+      if (response.status === 200) {
+        setVerifyOTP(true);
+        console.log(response.data);
+        toast(response?.data?.message);
+      }
+    } else {
+      response = await axios.post(
+        `${base_url}/api/v1/auth/register/verify`,
+        dataForm
+      );
+      console.log(">>> Response REGISTER VERIFY <<<", response);
+      console.log(">>> dataForm REGISTER VERIFY <<<", dataForm);
+      const { username, password, email } = dataForm;
+      dispatch(registerSuccess({ username, password, email }));
+      toast(response?.data?.mes);
+      router.push("/login");
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(registerFailed());
+
+    if (error?.response?.data.mes.code === 11000) {
+      toast(`${Object.keys(error.response.data.mes.keyValue)[0]} đã tồn tại`);
+    }
+
+    if (error?.response?.data?.code == 404) {
+      toast(error?.response?.data?.mes);
+      toast(error?.response?.data?.mes?.mes);
+    }
   }
 };
 

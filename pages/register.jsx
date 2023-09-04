@@ -7,8 +7,12 @@ import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { registerOTP } from "../store/apiRequest";
+
 const RegisterPage = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const schema = yup.object().shape({
     username: yup.string().min(6).max(20).required(),
     email: yup.string().email().required().max(50).lowercase(),
@@ -95,43 +99,7 @@ const RegisterPage = () => {
   // };
 
   const onSubmit = async (dataForm) => {
-    const base_url = process.env.NEXT_PUBLIC_URL;
-
-    try {
-      let response;
-
-      if (!verifyOTP) {
-        response = await axios.post(
-          `${base_url}/api/v1/auth/register`,
-          dataForm
-        );
-        console.log(">>> Response REGISTER <<<", response);
-        if (response.status === 200) {
-          setVerifyOTP(true);
-          console.log(response.data);
-          toast(response?.data?.message);
-        }
-      } else {
-        response = await axios.post(
-          `${base_url}/api/v1/auth/register/verify`,
-          dataForm
-        );
-        console.log(">>> Response REGISTER VERIFY <<<", response);
-        toast(response?.data?.mes);
-        router.push("/login");
-      }
-    } catch (error) {
-      console.log(error);
-
-      if (error.response.data.mes.code === 11000) {
-        toast(`${Object.keys(error.response.data.mes.keyValue)[0]} đã tồn tại`);
-      }
-
-      if (error?.response?.data?.code == 404) {
-        toast(error?.response?.data?.mes);
-        toast(error?.response?.data?.mes?.mes);
-      }
-    }
+    registerOTP(dataForm, verifyOTP, setVerifyOTP, dispatch, router, toast);
   };
 
   const reGeneratorOTP = async () => {

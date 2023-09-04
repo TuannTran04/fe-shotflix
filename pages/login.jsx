@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../store/apiRequest";
 import Link from "next/link";
 import Cookies from "js-cookie";
@@ -14,9 +14,15 @@ import Cookies from "js-cookie";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  // console.log(">>> router <<<", router);
+
+  const infoForm = useSelector((state) => state.auth.autoFill?.infoForm);
+  // console.log(infoForm);
+
   const schema = yup.object().shape({
+    email: yup.string().email().required().max(50).lowercase(),
     password: yup.string().min(6).max(32).required(),
-    username: yup.string().min(6).max(20).required(),
+    // username: yup.string().min(6).max(20).required(),
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +34,7 @@ const LoginPage = () => {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -41,6 +48,20 @@ const LoginPage = () => {
 
   useEffect(() => {
     router.push(`/login`);
+  }, []);
+
+  useEffect(() => {
+    if (infoForm) {
+      const loginFields = {
+        // username: infoForm?.username,
+        email: infoForm?.email,
+        password: infoForm?.password,
+      };
+
+      for (const field in loginFields) {
+        setValue(field, loginFields[field]);
+      }
+    }
   }, []);
 
   return (
@@ -57,20 +78,16 @@ const LoginPage = () => {
             >
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Nhập username
+                  Nhập email
                 </label>
 
                 <input
-                  type="text"
+                  type="email"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Tên đăng nhập..."
-                  {...register("username", { required: true })}
+                  placeholder="name@gmail.com"
+                  {...register("email", { required: true })}
                 />
-                {
-                  <span className="text-red-500">
-                    {errors.username?.message}
-                  </span>
-                }
+                {<span className="text-red-500">{errors.email?.message}</span>}
               </div>
 
               <div>

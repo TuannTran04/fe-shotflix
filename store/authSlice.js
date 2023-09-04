@@ -8,6 +8,11 @@ const authSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    autoFill: {
+      infoForm: null,
+      isFetching: false,
+      error: false,
+    },
   },
   reducers: {
     loginStart: (state) => {
@@ -17,11 +22,25 @@ const authSlice = createSlice({
       state.login.isFetching = false;
       console.log(action.payload);
       state.login.currentUser = action.payload;
+      state.autoFill.infoForm = null;
       state.login.error = false;
     },
     loginFailed: (state) => {
       state.login.isFetching = false;
       state.login.error = true;
+    },
+
+    registerStart: (state) => {
+      state.autoFill.isFetching = true;
+    },
+    registerSuccess: (state, action) => {
+      state.autoFill.isFetching = false;
+      state.autoFill.infoForm = action.payload;
+      state.autoFill.error = false;
+    },
+    registerFailed: (state) => {
+      state.autoFill.isFetching = false;
+      state.autoFill.error = true;
     },
 
     logOutSuccess: (state) => {
@@ -43,6 +62,9 @@ export const {
   loginStart,
   loginFailed,
   loginSuccess,
+  registerStart,
+  registerSuccess,
+  registerFailed,
   logOutStart,
   logOutSuccess,
   logOutFailed,
