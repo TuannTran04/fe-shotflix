@@ -29,10 +29,10 @@ const MovieMainContent = ({ item }) => {
 
   const user = useSelector((state) => state.auth.login.currentUser);
   const userId = user?._id;
+  const accessToken = user?.accessToken;
   const film = useSelector((state) => state.film);
   const { favoriteFilm, watchLaterFilm } = film;
   const dispatch = useDispatch();
-  const accessToken = user?.accessToken;
   let axiosJWT = createAxios(user, null, null);
 
   const [showMenu, setShowMenu] = useState(false);
@@ -47,6 +47,10 @@ const MovieMainContent = ({ item }) => {
     e.preventDefault();
     e.stopPropagation();
     try {
+      if (!user || !accessToken) {
+        toast("Đăng nhập để sử dụng tính năng này");
+        return;
+      }
       const res = await addFavoriteMovie(userId, _id);
       console.log(res);
       toast(res?.data?.message);
@@ -60,6 +64,10 @@ const MovieMainContent = ({ item }) => {
     e.preventDefault();
     e.stopPropagation();
     try {
+      if (!user || !accessToken) {
+        toast("Đăng nhập để sử dụng tính năng này");
+        return;
+      }
       const res = await addBookmarkMovie(userId, _id);
       console.log(res);
       toast(res?.data?.message);

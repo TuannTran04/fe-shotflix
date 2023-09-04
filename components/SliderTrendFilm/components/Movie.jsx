@@ -30,6 +30,10 @@ const Movie = ({ item, toast }) => {
     e.preventDefault();
     e.stopPropagation();
     try {
+      if (!user || !accessToken) {
+        toast("Đăng nhập để sử dụng tính năng này");
+        return;
+      }
       const res = await addFavoriteMovie(userId, _id);
       console.log(">>> addFavoriteMovie <<<", res);
       toast(res?.data?.message);
@@ -43,6 +47,10 @@ const Movie = ({ item, toast }) => {
     e.preventDefault();
     e.stopPropagation();
     try {
+      if (!user || !accessToken) {
+        toast("Đăng nhập để sử dụng tính năng này");
+        return;
+      }
       const res = await addBookmarkMovie(userId, _id);
       console.log(res);
       toast(res?.data?.message);

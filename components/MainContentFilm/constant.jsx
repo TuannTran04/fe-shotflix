@@ -74,7 +74,7 @@ export var settings = {
   dots: false,
   infinite: true,
   speed: 500,
-  slidesToShow: 2,
+  slidesToShow: 5,
   slidesToScroll: 1,
   initialSlide: 0,
   autoplay: false,
