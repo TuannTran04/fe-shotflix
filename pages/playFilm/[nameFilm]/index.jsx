@@ -28,6 +28,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
   // console.log(">>> dataMovies <<<", topRatingofWeek);
 
   const [movie, setMovie] = useState({});
+  console.log(movie);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
