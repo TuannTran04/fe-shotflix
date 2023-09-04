@@ -7,8 +7,10 @@ import SidebarContentFilm from "../SidebarContentFilm";
 import MovieMainContent from "./components/Movie";
 import SliderTopRatingofWeek from "../SliderRelatedFilm";
 import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const MainContentFilm = () => {
+const MainContentFilm = ({ toast }) => {
   const film = useSelector((state) => state.film);
   const { movies, favoriteFilm, watchLaterFilm } = film;
   // console.log(movies);
@@ -55,33 +57,17 @@ const MainContentFilm = () => {
               <Slider {...settings}>
                 {item?.dataFilm?.map((item, index) => {
                   if (item !== null)
-                    return <MovieMainContent key={item?._id} item={item} />;
+                    return (
+                      <MovieMainContent
+                        key={item?._id}
+                        item={item}
+                        toast={toast}
+                      />
+                    );
                 })}
               </Slider>
             </div>
           ))}
-
-          {/* <div className="">
-            <div className="px-2.5 mb-4 flex justify-between items-center">
-              <h3 className="text-[#da966e] text-2xl font-normal border-l-4 pl-2.5">
-                Phim mới nhất
-              </h3>
-
-              <Link
-                href={`/category/${"Phim mới nhất".replace(/\s+/g, "-")}`}
-                className="py-[3px] px-[8px] rounded-[3px] bg-[#408BEA] font-light text-[10px] text-white uppercase select-none"
-              >
-                Xem thêm
-              </Link>
-            </div>
-
-            <Slider {...settings}>
-              {movies?.latest?.map((item, index) => {
-                if (item !== null)
-                  return <MovieMainContent key={item?._id} item={item} />;
-              })}
-            </Slider>
-          </div> */}
         </div>
 
         {/* RIGHT */}
@@ -90,7 +76,7 @@ const MainContentFilm = () => {
         </div>
       </div>
 
-      <SliderTopRatingofWeek movies={movies?.topRatingofWeek} />
+      <SliderTopRatingofWeek movies={movies?.topRatingofWeek} toast={toast} />
     </>
   );
 };

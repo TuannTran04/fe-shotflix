@@ -11,7 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Heading from "../Heading";
 
-const SliderTopRatingofWeek = ({ movies }) => {
+const SliderTopRatingofWeek = ({ movies, toast }) => {
   // console.log("topRatingofWeek", movies);
 
   return (
@@ -23,7 +23,6 @@ const SliderTopRatingofWeek = ({ movies }) => {
           return <MovieRalated key={item._id} item={item} toast={toast} />;
         })}
       </Slider>
-      <ToastContainer />
     </div>
   );
 };

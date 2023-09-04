@@ -13,7 +13,7 @@ import { createAxios } from "../../../utils/createInstance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const MovieMainContent = ({ item }) => {
+const MovieMainContent = ({ item, toast }) => {
   let {
     _id,
     title,
@@ -135,7 +135,6 @@ const MovieMainContent = ({ item }) => {
           </p>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

@@ -11,7 +11,7 @@ import { createAxios } from "../../utils/createInstance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const SliderTrendingFilm = () => {
+const SliderTrendingFilm = ({ toast }) => {
   const user = useSelector((state) => state.auth.login.currentUser);
   const userId = user?._id;
   const accessToken = user?.accessToken;
@@ -42,7 +42,6 @@ const SliderTrendingFilm = () => {
           return <Movie key={item._id} item={item} toast={toast} />;
         })}
       </Slider>
-      <ToastContainer />
     </div>
   );
 };
