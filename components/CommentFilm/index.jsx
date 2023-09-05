@@ -54,7 +54,7 @@ const CommentFilm = () => {
       <div
         className="fb-comments h-[700px] w-full overflow-y-auto"
         // data-href="https://developers.facebook.com/docs/plugins/comments#configurator"
-        data-href={router.asPath}
+        data-href={`${process.env.NEXT_PUBLIC_URL}/${router.asPath}`}
         data-width="100%"
         data-numposts="5"
         data-order-by="reverse_time"
