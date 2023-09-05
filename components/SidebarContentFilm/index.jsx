@@ -4,6 +4,8 @@ import Image from "next/legacy/image";
 import React from "react";
 
 const SidebarContentFilm = ({ movies }) => {
+  console.log("sidebar", movies);
+
   const arrTopTrendingFilm = [
     {
       id: 1,

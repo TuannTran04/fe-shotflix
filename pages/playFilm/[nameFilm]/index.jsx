@@ -30,14 +30,16 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
   // console.log(">>> dataMovies <<<", topRatingofWeek);
 
   const [movie, setMovie] = useState({});
-  // console.log(movie);
+  // console.log(movie,"movie single")
 
   useEffect(() => {
     const timerId = setTimeout(() => {
       fetch(`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/update-views`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ movieId: "64ea009f4eb98d2906f135b2" }),
+        body: JSON.stringify({
+          movieId: movie?._id || "64ea009f4eb98d2906f135b2",
+        }),
       })
         .then((response) => response.json())
         .then((json) => console.log(json));
@@ -71,9 +73,9 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
       <div className="mt-16 ">
         <Breadcrumb content={`Xem phim ${movie?.title}`} />
 
-        <div className="grid grid-cols-7 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-7 gap-4">
           {/* LEFT */}
-          <div className="col-span-5">
+          <div className="lg:col-span-5 ">
             <div className="p-2.5 bg-[#2D2D2D]">
               <div className="overflow-hidden">
                 <VideoContainer movie={movie} />
@@ -84,7 +86,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
           </div>
 
           {/* RIGHT */}
-          <div className="col-span-2">
+          <div className=" lg:col-span-2">
             <VideoDetail movie={movie} />
           </div>
         </div>

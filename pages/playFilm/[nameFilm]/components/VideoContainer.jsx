@@ -56,20 +56,7 @@ const VideoContainer = ({ movie }) => {
   ];
   return (
     <div className="players-container">
-      {/* <JWPlayer
-    // library="https://content.jwplatform.com/libraries/j9BLvpMc.js"
-    // playlist="https://cdn.jwplayer.com/v2/playlists/B8FTSH9D"
-    // playlist={playlist}
-    // playlist={
-    //   "https://cdn.jwplayer.com/v2/playlists/B8FTSH9D?fbclid=IwAR0j_kzxOGd1oB0pr4Go-MxsNfzI4KYQOlGPYgRKEkt_O5UZvKsK2CY7GM4"
-    // }
-    // playlist={
-    //   "https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/files%2FB%C3%A1%C2%BA%C2%A3n%20in%20l%C3%A1%C2%BB%C2%97i.mp4%20%20%20%20%20%20%202023-8-16%2022%3A53%3A35?alt=media&token=f6bd78f4-3f03-40c8-a4f8-5ec41902866d"
-    // }
-  /> */}
-
       <ReactPlayer
-        // url={movie?.video?.[0]}
         url={videoUrl}
         // url={"https://youtu.be/DWYwmTdXpqw?si=yAfzJl4ilB-Y0fWd"}
         // url={
@@ -86,7 +73,8 @@ const VideoContainer = ({ movie }) => {
             tracks: [
               {
                 kind: "subtitles",
-                src: "/test.vtt",
+                // src: "/test.vtt",
+                src: "https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/files%2Fneudanhmatem_2023-9-5_15%3A10%3A0%2Ftest_2023-9-5_20%3A6%3A21.vtt?alt=media&token=899f003f-cf30-47a1-9c03-7526857529df",
                 srcLang: "vn",
                 default: true,
               },

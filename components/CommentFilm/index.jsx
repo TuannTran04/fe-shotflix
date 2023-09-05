@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const CommentFilm = () => {
   const router = useRouter();
-  // console.log(router);
+  console.log("comment", router);
   const [commentInput, setCommentInput] = useState("");
 
   const handleCommentInput = (e) => {
@@ -53,8 +53,8 @@ const CommentFilm = () => {
     <div className="mt-[70px] p-6 bg-white">
       <div
         className="fb-comments h-[700px] w-full overflow-y-auto"
-        data-href="https://developers.facebook.com/docs/plugins/comments#configurator"
-        // data-href={router.asPath}
+        // data-href="https://developers.facebook.com/docs/plugins/comments#configurator"
+        data-href={router.asPath}
         data-width="100%"
         data-numposts="5"
         data-order-by="reverse_time"

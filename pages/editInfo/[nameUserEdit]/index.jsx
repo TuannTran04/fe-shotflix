@@ -97,8 +97,8 @@ const EditInfoUser = ({ nameUserEdit, categories }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-6 gap-4">
-            <div className="col-span-2 col-start-3">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div className="md:col-span-2 md:col-start-3">
               <h2 className="mb-[20px] text-xl font-normal text-white">
                 Chỉnh sửa thông tin
               </h2>
@@ -120,8 +120,8 @@ const EditInfoUser = ({ nameUserEdit, categories }) => {
                   }
                 </div>
 
-                <div className="mb-[20px] grid grid-cols-4 gap-4">
-                  <div className="col-span-2">
+                <div className="mb-[20px] grid md:grid-cols-4 gap-4">
+                  <div className="md:col-span-2">
                     <label className="block mb-[5px] text-base text-white">
                       Tên
                     </label>
@@ -132,7 +132,7 @@ const EditInfoUser = ({ nameUserEdit, categories }) => {
                       {...register("givenName", { required: false })}
                     />
                   </div>
-                  <div className="col-span-2">
+                  <div className="md:col-span-2">
                     <label className="block mb-[5px] text-base text-white">
                       Họ
                     </label>

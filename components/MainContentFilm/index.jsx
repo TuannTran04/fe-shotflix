@@ -13,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 const MainContentFilm = ({ toast }) => {
   const film = useSelector((state) => state.film);
   const { movies, favoriteFilm, watchLaterFilm } = film;
-  // console.log(movies);
+  console.log(movies, "movies in MainContentFilm");
   // console.log(movies?.watchToday);
 
   const arrSliderCategory = [
@@ -31,7 +31,7 @@ const MainContentFilm = ({ toast }) => {
 
   return (
     <>
-      <div className="grid grid-cols-7 -mx-2.5 gap-6 h-[700px] overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-7 -mx-2.5 gap-6 h-[700px] overflow-hidden">
         {/* LEFT */}
         <div className="col-span-5 h-full flex flex-col justify-between">
           {arrSliderCategory?.map((item, index) => (
@@ -71,8 +71,9 @@ const MainContentFilm = ({ toast }) => {
         </div>
 
         {/* RIGHT */}
-        <div className="col-span-2 px-2.5 h-full overflow-hidden">
+        <div className="col-span-1 md:col-span-2 px-2.5 h-full overflow-hidden">
           <SidebarContentFilm movies={movies?.awards} />
+          abc
         </div>
       </div>
 

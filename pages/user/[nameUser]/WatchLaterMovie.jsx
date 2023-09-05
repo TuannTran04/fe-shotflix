@@ -69,7 +69,7 @@ const WatchLaterMovie = () => {
   }, []);
 
   return (
-    <div className="srcoll_film_manage_user grid grid-cols-5 gap-4 max-h-[1000px] min-h-[300px] overflow-y-auto">
+    <div className="srcoll_film_manage_user grid grid-cols-2 md:grid-cols-5 gap-4 max-h-[1000px] min-h-[300px] overflow-y-auto">
       {arrWatchLaterMovie.map((movie, index) => (
         <WatchLater key={movie._id} movie={movie} toast={toast} />
       ))}

@@ -1,0 +1,20 @@
+{
+  "projects": {
+    "shotflix": "movie-the-stone-d9f38"
+  },
+  "targets": {},
+  "etags": {},
+  "storage": {
+    "rules": [
+      {
+        "origin": [
+          "http://localhost:3001"
+        ],
+        "method": [
+          "GET"
+        ],
+        "maxAgeSeconds": 3600
+      }
+    ]
+  }
+}
