@@ -74,7 +74,7 @@ const CommentFilm = () => {
             placeholder="Bình luận..."
           />
           <button
-            className="text-black h-11 w-11"
+            className="text-black  w-11 border-[2px] border-[#444]"
             onClick={handleSubmitCommentInput}
           >
             <i className="fa-solid fa-paper-plane text-white"></i>
@@ -101,15 +101,7 @@ const CommentFilm = () => {
           </div>
           <div className="flex-1 ">
             <h4 className="text-[#0285b5] font-semibold">Tuan Tran</h4>
-            <p className="text-white my-1">
-              phim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu
-              ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu
-              ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu
-              ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu
-              ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu
-              ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu ccphim nhu
-              ccphim nhu ccphim nhu ccphim nhu cc
-            </p>
+            <p className="text-white my-1">phim nhu ccphim nhu cc</p>
             <div className="text-sm text-white">
               <span className="mr-[15px] cursor-pointer">
                 <i className="fa-regular fa-thumbs-up mr-[4px]"></i>

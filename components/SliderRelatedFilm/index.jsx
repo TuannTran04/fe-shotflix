@@ -7,15 +7,13 @@ import Image from "next/legacy/image";
 import MovieRalated from "./components/Movie";
 import { useEffect, useState } from "react";
 import { getAllMovies } from "../../store/apiRequest";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Heading from "../Heading";
 
 const SliderTopRatingofWeek = ({ movies, toast }) => {
   // console.log("topRatingofWeek", movies);
 
   return (
-    <div className="mt-10 mb-8 -mx-2.5">
+    <div className="mt-10 mb-8">
       <Heading content={"Phim có rating cao nhất tuần"} />
 
       <Slider {...settings}>

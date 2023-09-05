@@ -1,14 +1,22 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import {
+  registerFailed,
+  registerStart,
+  registerSuccess,
+} from "../store/authSlice";
 
 export const forgotPwdUser = async (
   formData,
   router,
+  dispatch,
   toast,
   verifyOTP,
   setVerifyOTP
 ) => {
   const base_url = process.env.NEXT_PUBLIC_URL;
+  dispatch(registerStart());
+
   try {
     let response;
     if (!verifyOTP) {
@@ -27,11 +35,15 @@ export const forgotPwdUser = async (
         formData
       );
       console.log(">>> Response FORGOT VERIFY <<<", response);
+      const { password, email } = formData;
+      dispatch(registerSuccess({ password, email }));
       toast(response?.data?.mes);
-      // router.push("/login");
+      router.push("/login");
     }
   } catch (error) {
     console.log(error);
+    dispatch(registerFailed());
+
     if (error?.response?.data?.code == 400) {
       toast(error?.response?.data?.mes);
     }

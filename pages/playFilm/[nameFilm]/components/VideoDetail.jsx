@@ -8,11 +8,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { createAxios } from "../../../../utils/createInstance";
 
 const VideoDetail = ({ movie }) => {
-  console.log(">>>check movie",movie)
-  const [currentMovie, setCurrentMovie] = useState({})
-  console.log(currentMovie.rating, "moi nhat")
+  console.log(">>>check movie", movie);
+  const [currentMovie, setCurrentMovie] = useState({});
+  console.log(currentMovie.rating, "moi nhat");
   const user = useSelector((state) => state.auth.login.currentUser);
-  console.log(user)
+  const username = user?.username;
+  // console.log(user);
   const userId = user?._id;
   const accessToken = user?.accessToken;
   const dispatch = useDispatch();
@@ -48,14 +49,18 @@ const VideoDetail = ({ movie }) => {
       );
       console.log("ratingChanged", response);
       if (response.data.code === 200) {
-        toast(response?.data.mes);
-        setCurrentMovie(response.data.updatedMovie)
+        toast(response?.data.message);
+        setCurrentMovie(response.data.updatedMovie);
       }
     } catch (error) {
       console.log(error);
+      toast(error);
     }
   };
-  console.log(movie.listUserRating?.find(item=>item.name == user.username).point)
+  console.log(
+    movie.listUserRating?.find((item) => item.name == user?.username)?.point
+  );
+
   return (
     <div className=" py-[10px] rounded-md bg-[#1b2d58]">
       <div className="h-[400px] px-[15px]">
@@ -135,7 +140,15 @@ const VideoDetail = ({ movie }) => {
             <ReactStars
               count={5}
               half={true}
-              value={movie.listUserRating?.find(item=>item.name == user.username).point || 10}
+              value={
+                currentMovie?.listUserRating != undefined
+                  ? currentMovie.listUserRating?.find(
+                      (item) => item.name == username
+                    )?.point / 2
+                  : movie.listUserRating?.find((item) => item.name == username)
+                      ?.point / 2 || 10
+              }
+              // value={0.5}
               onChange={ratingChanged}
               size={24}
               color2={"#ffd700"}
@@ -144,8 +157,12 @@ const VideoDetail = ({ movie }) => {
           </span>
           <div>
             <span>
-              <b>{currentMovie.rating != undefined ? currentMovie.rating:  movie?.rating}</b> of <b>10</b> ({" "}
-              {movie?.listUserRating?.length} reviews )
+              <b>
+                {currentMovie.rating != undefined
+                  ? currentMovie?.rating
+                  : movie?.rating}
+              </b>{" "}
+              of <b>10</b> ( {movie?.listUserRating?.length} reviews )
             </span>
           </div>
         </div>

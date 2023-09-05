@@ -10,6 +10,8 @@ import axios from "axios";
 import VideoContainer from "./components/VideoContainer";
 import VideoDetail from "./components/VideoDetail";
 import Breadcrumb from "../../../components/BreadCrumb";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // const arrDetailInfoFilm = [
 //   { id: 1, name: "Type", text: ["Movie"] },
@@ -28,7 +30,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
   // console.log(">>> dataMovies <<<", topRatingofWeek);
 
   const [movie, setMovie] = useState({});
-  console.log(movie);
+  // console.log(movie);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -87,8 +89,9 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
           </div>
         </div>
 
-        <SliderTopRatingofWeek movies={movies?.topRatingofWeek} />
+        <SliderTopRatingofWeek movies={movies?.topRatingofWeek} toast={toast} />
       </div>
+      <ToastContainer />
     </LayoutRoot>
   );
 };

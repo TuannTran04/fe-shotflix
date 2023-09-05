@@ -104,6 +104,8 @@ body {
 /* slider_ralated_film */
 .slider_ralated_film {
   height: 350px;
+  margin-left: -10px;
+  margin-right: -10px;
 }
 .slider_ralated_film .slick-list {
   height: 100%;

@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <>
       <footer className="bg-[#0F0F0FE6] border-t border-gray-500">
-        <div className="sm:w-full px-10 text-white mx-auto">
+        <div className="sm:w-full max-w-[1200px] px-10 text-white mx-auto">
           <section className="border-b border-gray-500 grid grid-cols-1 grid-rows-2 gap-3 pb-2 md:grid-cols-5 md:grid-rows-1 md:gap-4 md:pb-1 md:pt-4 pt-1">
             <div className="md:col-span-4">
               <div>logo</div>
@@ -25,7 +25,7 @@ export default function Footer() {
                 </p>
               </div>
             </div>
-            
+
             <div className="md:mx-auto">
               <h3>Thông tin</h3>
               <ul className="text-[#408BEA] text-sm">

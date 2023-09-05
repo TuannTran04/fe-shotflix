@@ -47,7 +47,7 @@ const ForgetPage = () => {
 
   const onSubmit = async (data) => {
     // console.log(">>> Data FORGET <<<", data);
-    forgotPwdUser(data, router, toast, verifyOTP, setVerifyOTP);
+    forgotPwdUser(data, router, dispatch, toast, verifyOTP, setVerifyOTP);
   };
 
   const reGeneratorOTP = async () => {
