@@ -10,7 +10,7 @@ import { createAxios } from "../../../../utils/createInstance";
 const VideoDetail = ({ movie }) => {
   console.log(">>>check movie", movie);
   const [currentMovie, setCurrentMovie] = useState({});
-  console.log(currentMovie.rating, "moi nhat");
+  // console.log(currentMovie.rating, "moi nhat");
   const user = useSelector((state) => state.auth.login.currentUser);
   const username = user?.username;
   // console.log(user);
@@ -57,9 +57,9 @@ const VideoDetail = ({ movie }) => {
       toast(error);
     }
   };
-  console.log(
-    movie.listUserRating?.find((item) => item.name == user?.username)?.point
-  );
+  // console.log(
+  //   movie.listUserRating?.find((item) => item.name == user?.username)?.point
+  // );
 
   return (
     <div className=" py-[10px] rounded-md bg-[#1b2d58]">
