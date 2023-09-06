@@ -5,9 +5,16 @@ import JWPlayer from "@jwplayer/jwplayer-react";
 import ReactPlayer from "react-player";
 import axios from "axios";
 
+import { useRouter } from "next/router";
 const VideoContainer = ({ movie }) => {
   const refVideo = useRef();
   // console.log(refVideo.current);
+
+  const [videoState, setVideoState] = useState({
+    videoId: movie._id || "myvideoid",
+    currentTime:
+      JSON.parse(localStorage.getItem("videoPlaybackState"))?.currentTime || 0,
+  });
   const [videoQuality, setVideoQuality] = useState("720p"); // Chất lượng mặc định
   const handleQualityChange = (quality) => {
     setVideoQuality(quality);
@@ -61,8 +68,72 @@ const VideoContainer = ({ movie }) => {
   //   renderSub();
   // }, []);
 
+  // Khi component được tạo
+  useEffect(() => {
+    const savedVideoState = localStorage.getItem("videoPlaybackState");
+
+    if (savedVideoState) {
+      const parsedState = JSON.parse(savedVideoState);
+      const currentTime = parsedState.currentTime;
+
+      // Nếu có currentTime, thiết lập nó cho video
+      const videoElement = document.querySelector(".players-container video"); // Thay 'myVideo' bằng ID thật của video
+      if (videoElement) {
+        videoElement.currentTime = currentTime;
+      }
+    }
+  }, []);
+  // Khi video bắt đầu phát
+  const handleVideoPlay = () => {
+    localStorage.setItem("videoPlaybackState", JSON.stringify(videoState));
+  };
+
+  const handleVideoTimeUpdate = (event) => {
+    const newVideoState = {
+      ...videoState,
+      currentTime: event.target.currentTime,
+      videoId: movie._id,
+    };
+    setVideoState(newVideoState);
+    localStorage.setItem("videoPlaybackState", JSON.stringify(newVideoState));
+  };
+
+  // Khi video đã hoàn thành hoặc ngừng xem
+  const handleVideoEnded = () => {
+    // Xóa dữ liệu trạng thái video khỏi Local Storage
+    localStorage.removeItem("videoPlaybackState");
+  };
+  // const handleVideoProgress = (state) => {
+  //   // Trạng thái state chứa thông tin về thời gian hiện tại của video và nhiều thông tin khác
+  //   const currentTime = state.playedSeconds; // Thời gian đã phát tính theo giây
+  //   // Sử dụng currentTime theo ý của bạn, ví dụ:
+  //   console.log(`Thời gian đã phát: ${currentTime} giây`);
+
+  //   const newVideoState = { ...videoState, currentTime,videoId: movie._id};
+  //   setVideoState(newVideoState);
+  //   localStorage.setItem('videoPlaybackState', JSON.stringify(newVideoState));
+  // };
+
   return (
     <div className="players-container">
+      <video
+        id={movie._id || "abc"} // Thay 'myVideo' bằng ID thật của video
+        onPlay={handleVideoPlay}
+        onTimeUpdate={handleVideoTimeUpdate}
+        onEnded={handleVideoEnded}
+        controls
+      >
+        <source
+          src={`${process.env.NEXT_PUBLIC_URL}/video/riengminhanh.mp4`}
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* <ReactPlayer
+        // url={movie?.video?.[0]}
+        url={`${process.env.NEXT_PUBLIC_URL}/video/riengminhanh.mp4`}
+        
       <ReactPlayer
         ref={refVideo}
         url={videoUrl}
@@ -74,6 +145,9 @@ const VideoContainer = ({ movie }) => {
           />
         }
         controls
+        id={movie._id || "abc"}
+        onStart={handleVideoPlay}
+        onProgress={handleVideoProgress}
         className=""
         config={{
           file: {
@@ -107,6 +181,7 @@ const VideoContainer = ({ movie }) => {
           },
         }}
       />
+      */}
     </div>
   );
 };
