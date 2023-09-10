@@ -57,7 +57,7 @@ export default function Footer() {
               <div >2</div>
           </div>*/}
           </section>
-          <section className="flex justify-between items-center py-6 md:mr-10">
+          <section className="flex justify-between items-center py-6">
             <div>TheStone</div>
             <div>
               <i className=" fab fa-facebook-f p-4 border-r-[1px] border-gray-500"></i>

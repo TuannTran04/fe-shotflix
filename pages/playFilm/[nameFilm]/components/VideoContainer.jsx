@@ -7,24 +7,24 @@ const CryptoJS = require("crypto-js");
 const secretKey =
   "`MZ7Iv;1gaddDPD!'?h+2x8;dW)%(C`=Q-hv^fZhWs0e5Kl7J!_&4[48]?bT4";
 
-const VideoContainer = ({ movie }) => {
+const VideoContainer = ({ movie, nameFilm }) => {
   const router = useRouter();
   const refVideo = useRef();
   // let player = useRef(null);
   const [playerInstance, setPlayerInstance] = useState(null);
-  // console.log(">>> player <<<", player);
+  console.log(">>> player <<<", playerInstance);
 
-  // Hàm mã hóa
-  function encryptData(data, secretKey) {
-    const ciphertext = CryptoJS.AES.encrypt(data, secretKey);
-    return ciphertext.toString();
-  }
+  // // Hàm mã hóa
+  // function encryptData(data, secretKey) {
+  //   const ciphertext = CryptoJS.AES.encrypt(data, secretKey);
+  //   return ciphertext.toString();
+  // }
 
-  // Hàm giải mã
-  function decryptData(encryptedData, secretKey) {
-    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
-    return bytes.toString(CryptoJS.enc.Utf8);
-  }
+  // // Hàm giải mã
+  // function decryptData(encryptedData, secretKey) {
+  //   const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+  //   return bytes.toString(CryptoJS.enc.Utf8);
+  // }
 
   const setupPlyr = () => {
     // Chuyển đổi dữ liệu phụ đề thành định dạng Plyr
@@ -194,32 +194,16 @@ const VideoContainer = ({ movie }) => {
       if (playerInstance) {
         console.log("playerInstance", playerInstance);
         playerInstance.destroy();
+        window.location.reload();
       }
     };
-  }, [movie]);
-
-  // // Sử dụng playerInstance thay vì player.current
-  // const routeChangeHandler = () => {
-  //   console.log("Route changed. Cleaning up Plyr.");
-  //   if (playerInstance) {
-  //     console.log("Destroying Plyr instance.");
-  //     playerInstance.destroy();
-  //   }
-  // };
-
-  // // Thêm sự kiện lắng nghe thay đổi route
-  // useEffect(() => {
-  //   router.events.on("routeChangeStart", routeChangeHandler);
-
-  //   // Xóa sự kiện khi unmount
-  //   return () => {
-  //     router.events.off("routeChangeStart", routeChangeHandler);
-  //   };
-  // }, [router]);
+  }, [movie, movie._id, nameFilm]);
 
   return (
     <div className="players-container relative">
       <video
+        // key={movie?._id}
+        id="myPlyr"
         ref={refVideo}
         crossOrigin="true"
         playsInline
@@ -230,4 +214,4 @@ const VideoContainer = ({ movie }) => {
   );
 };
 
-export default memo(VideoContainer);
+export default VideoContainer;

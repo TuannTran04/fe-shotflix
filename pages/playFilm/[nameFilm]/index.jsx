@@ -78,7 +78,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
           <div className="lg:col-span-5 ">
             <div className="p-2.5 bg-[#2D2D2D]">
               <div className="overflow-hidden">
-                <VideoContainer movie={movie} />
+                <VideoContainer movie={movie} nameFilm={nameFilm} />
               </div>
 
               <CommentFilm />
