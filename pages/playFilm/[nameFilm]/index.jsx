@@ -27,28 +27,28 @@ const TIME_UPDATE_VIEW = 900000;
 const PlayFilmPage = ({ nameFilm, categories }) => {
   const film = useSelector((state) => state.film);
   const { movies, favoriteFilm, watchLaterFilm } = film;
-  // console.log(">>> dataMovies <<<", topRatingofWeek);
+  // console.log(">>> dataMovies <<<", movies?.topRatingofWeek);
 
   const [movie, setMovie] = useState({});
   // console.log(movie,"movie single")
 
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      fetch(`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/update-views`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          movieId: movie?._id || "64ea009f4eb98d2906f135b2",
-        }),
-      })
-        .then((response) => response.json())
-        .then((json) => console.log(json));
-    }, TIME_UPDATE_VIEW);
-    // after 15mins -> call api
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const timerId = setTimeout(() => {
+  //     fetch(`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/update-views`, {
+  //       method: "PUT",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         movieId: movie?._id || "64ea009f4eb98d2906f135b2",
+  //       }),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((json) => console.log(json));
+  //   }, TIME_UPDATE_VIEW);
+  //   // after 15mins -> call api
+  //   return () => {
+  //     clearTimeout(timerId);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const renderSingleMovie = async () => {

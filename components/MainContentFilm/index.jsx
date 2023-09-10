@@ -13,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 const MainContentFilm = ({ toast }) => {
   const film = useSelector((state) => state.film);
   const { movies, favoriteFilm, watchLaterFilm } = film;
-  console.log(movies, "movies in MainContentFilm");
+  // console.log(movies, "movies in MainContentFilm");
   // console.log(movies?.watchToday);
 
   const arrSliderCategory = [

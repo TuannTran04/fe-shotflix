@@ -215,6 +215,16 @@ body {
 
 /* ///////////////////////////////////////////////////////// */
 
+/* PLYR VIDEO */
+.plyr__controls__item.plyr__progress__container .plyr__progress input {
+  cursor: pointer !important;
+}
+.plyr__controls__item.plyr__volume input {
+  cursor: pointer !important;
+}
+
+/* ///////////////////////////////////////////////////////// */
+
 /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

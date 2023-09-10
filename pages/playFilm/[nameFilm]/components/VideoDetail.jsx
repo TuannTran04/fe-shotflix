@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { createAxios } from "../../../../utils/createInstance";
 
 const VideoDetail = ({ movie }) => {
-  console.log(">>>check movie", movie);
+  // console.log(">>>check movie", movie);
   const [currentMovie, setCurrentMovie] = useState({});
   // console.log(currentMovie.rating, "moi nhat");
   const user = useSelector((state) => state.auth.login.currentUser);

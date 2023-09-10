@@ -1,189 +1,233 @@
-import React, { useEffect, useRef } from "react";
-import { useState } from "react";
-import ReactJWPlayer from "react-jw-player";
-import JWPlayer from "@jwplayer/jwplayer-react";
-import ReactPlayer from "react-player";
-import axios from "axios";
-
+import React, { memo, useEffect, useRef, useState } from "react";
+import Plyr from "plyr";
 import { useRouter } from "next/router";
+const CryptoJS = require("crypto-js");
+
+// Sử dụng các hàm mã hóa và giải mã
+const secretKey =
+  "`MZ7Iv;1gaddDPD!'?h+2x8;dW)%(C`=Q-hv^fZhWs0e5Kl7J!_&4[48]?bT4";
+
 const VideoContainer = ({ movie }) => {
+  const router = useRouter();
   const refVideo = useRef();
-  // console.log(refVideo.current);
+  // let player = useRef(null);
+  const [playerInstance, setPlayerInstance] = useState(null);
+  // console.log(">>> player <<<", player);
 
-  const [videoState, setVideoState] = useState({
-    videoId: movie._id || "myvideoid",
-    currentTime:
-      JSON.parse(localStorage.getItem("videoPlaybackState"))?.currentTime || 0,
-  });
-  const [videoQuality, setVideoQuality] = useState("720p"); // Chất lượng mặc định
-  const handleQualityChange = (quality) => {
-    setVideoQuality(quality);
-  };
-  const qualityOptions = [
-    { value: "1080p", label: "1080p" },
-    { value: "720p", label: "720p" },
-    { value: "480p", label: "480p" },
-    { value: "360p", label: "360p" },
-  ];
-
-  const [duration, setDuration] = useState(0);
-  console.log("duration", duration);
-  // useEffect(() => {
-  //   // Wait for ReactPlayer to load metadata
-  //   const d = refVideo.current.getDuration();
-  //   setDuration(d);
-  // }, []);
-  const handleDuration = (d) => {
-    setDuration(d);
-  };
-
-  const specificFolder = "neudanhmatem_2023-9-5_15:10:0";
-
-  let videoUrl;
-  if (movie?.video?.[0]) {
-    // videoUrl = `${process.env.NEXT_PUBLIC_URL}/video/riengminhanh_2023-9-4_16:15:17.mp4`;
-    // videoUrl = `${process.env.NEXT_PUBLIC_URL}/video/sauchiatay_2023-9-4 16:11:31.mp4`;
-    // videoUrl = `${process.env.NEXT_PUBLIC_URL}/video/${movie?.video?.[0]}`;
-    videoUrl = `${process.env.NEXT_PUBLIC_URL}/video/neudanhmatem_2023-9-5_15:10:0.mp4?specificFolder=${specificFolder}`;
+  // Hàm mã hóa
+  function encryptData(data, secretKey) {
+    const ciphertext = CryptoJS.AES.encrypt(data, secretKey);
+    return ciphertext.toString();
   }
 
-  const [sub, setSub] = useState("");
-  // console.log(sub);
-  // let subUrl = `${process.env.NEXT_PUBLIC_URL}/subtitles/test.vtt`;
-  let subUrl = `${process.env.NEXT_PUBLIC_URL}/subtitles/test_2023-9-5_20:6:21.vtt?specificFolder=${specificFolder}`;
+  // Hàm giải mã
+  function decryptData(encryptedData, secretKey) {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  }
 
-  // useEffect(() => {
-  //   const renderSub = async () => {
-  //     try {
-  //       const getSub = await axios.get(
-  //         `${process.env.NEXT_PUBLIC_URL}/subtitles/test.vtt`
-  //       );
-  //       setSub(getSub.data);
+  const setupPlyr = () => {
+    // Chuyển đổi dữ liệu phụ đề thành định dạng Plyr
+    if (Object.keys(movie).length > 0) {
+      const plyrTracks = movie.subtitles?.map((subtitle, index) => ({
+        kind: "captions",
+        label: `${subtitle.langSubtitle} captions`,
+        srcLang: subtitle.langSubtitle,
+        src: `${process.env.NEXT_PUBLIC_URL}/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`,
+        default: index === 0, // Đánh dấu phụ đề đầu tiên là mặc định
+      }));
+      // console.log("plyrTracks", plyrTracks);
 
-  //       console.log(getSub);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-  //   renderSub();
-  // }, []);
+      const plyrSources = movie.sources?.map((video, index) => ({
+        src: `${process.env.NEXT_PUBLIC_URL}/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
+        type: video.typeVideo,
+        size: video.sizeVideo,
+      }));
+      // console.log("plyrSources", plyrSources);
 
-  // Khi component được tạo
-  useEffect(() => {
-    const savedVideoState = localStorage.getItem("videoPlaybackState");
-
-    if (savedVideoState) {
-      const parsedState = JSON.parse(savedVideoState);
-      const currentTime = parsedState.currentTime;
-
-      // Nếu có currentTime, thiết lập nó cho video
-      const videoElement = document.querySelector(".players-container video"); // Thay 'myVideo' bằng ID thật của video
-      if (videoElement) {
-        videoElement.currentTime = currentTime;
+      // Khởi tạo Ply
+      let player;
+      if (refVideo.current) {
+        player = new Plyr(refVideo.current, {
+          title: "Example Title",
+          controls: [
+            "play-large", // The large play button in the center
+            "restart", // Restart playback
+            "rewind", // Rewind by the seek time (default 10 seconds)
+            "play", // Play/pause playback
+            "fast-forward", // Fast forward by the seek time (default 10 seconds)
+            "progress", // The progress bar and scrubber for playback and buffering
+            "current-time", // The current time of playback
+            "duration", // The full duration of the media
+            "mute", // Toggle mute
+            "volume", // Volume control
+            "captions", // Toggle captions
+            "settings", // Settings menu
+            "pip", // Picture-in-picture (currently Safari only)
+            "airplay", // Airplay (currently Safari only)
+            "fullscreen", // Toggle fullscreen
+          ],
+          settings: ["captions", "quality", "speed", "loop"],
+          quality: {
+            default: 576,
+            options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240],
+          },
+          captions: { active: true, language: "vn", update: true },
+          tooltips: { controls: true, seek: true },
+          keyboard: { focused: true, global: true },
+          markers: {
+            enabled: true,
+            points: [{ time: 50, label: "con cec" }],
+          },
+          disableContextMenu: false,
+        });
+        // console.log(player.duration);
+        setPlayerInstance(player);
       }
+
+      // Thiết lập tracks cho Plyr
+      player.source = {
+        type: "video",
+        title: "Example title",
+        sources: plyrSources,
+        poster:
+          "https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/files%2Friengminhanh-426x240_2023-9-8_11%3A37%3A41%2Ftattay.jpg?alt=media&token=bf80ba35-fb61-40f6-9910-00402f79183e",
+        tracks: plyrTracks,
+      };
+
+      // Đặt sự kiện cho Plyr khi video load xong các data
+      if (player.playing == false) {
+        player.on("loadedmetadata", (event) => {
+          console.log("readyyyy start");
+          // console.log(event.detail.plyr);
+          console.log(event.detail.plyr.duration);
+          // Kiểm tra nếu có trạng thái xem video trong Local Storage
+          const savedPlaybackTime = JSON.parse(
+            decryptData(localStorage.getItem(`${movie?._id}`), secretKey)
+          );
+
+          // const savedPlaybackTime = JSON.parse(
+          //   localStorage.getItem(`${movie?._id}`)
+          // );
+          console.log(savedPlaybackTime);
+          const currTimeLocal = savedPlaybackTime?.currentTime;
+          const videoIdLocal = savedPlaybackTime?.videoId;
+
+          if (videoIdLocal == movie._id && event.detail.plyr.duration) {
+            console.log("savedPlaybackTime canplay");
+
+            const setPlayerCurrentTime = (currentTime) => {
+              setTimeout(() => {
+                const minutes = Math.floor(currentTime / 60);
+                const seconds = Math.round(currentTime % 60);
+                if (true) {
+                  console.log(player.current);
+                  console.log("continue");
+                  event.detail.plyr.muted = false;
+                  event.detail.plyr.currentTime = currentTime;
+                  // player.play();
+                } else {
+                  console.log("begin");
+                  player.muted = true;
+                  player.currentTime = 0;
+                  player.play();
+                }
+              }, 500);
+            };
+            setPlayerCurrentTime(currTimeLocal);
+          }
+        });
+      }
+
+      // Đặt sự kiện cho Plyr khi video được update time
+      player.on("timeupdate", (event) => {
+        console.log("Video is timeupdate");
+        let currentTime = event.detail.plyr.currentTime;
+        const duration = event.detail.plyr.duration;
+
+        // Thời gian hiện tại gần cuối video (1 giây trước khi kết thúc)
+        if (duration && duration - currentTime < 1) {
+          console.log("Video đã xem xong");
+          // Thực hiện các tác vụ khi video kết thúc hoặc đã xem xong
+          localStorage.removeItem(`${movie?._id}`);
+        }
+
+        // currTime > 0 và khi video chưa kết thúc thì set localStorage time update
+        if (
+          currentTime &&
+          currentTime > 0 &&
+          duration &&
+          duration - currentTime > 1
+        ) {
+          console.log("sett", {
+            currentTime: currentTime,
+            videoId: movie._id,
+          });
+
+          localStorage.setItem(
+            `${movie?._id}`,
+            JSON.stringify({
+              currentTime: currentTime,
+              videoId: movie._id,
+            })
+          );
+          // localStorage.setItem(
+          //   `${movie?._id}`,
+          //   encryptData(
+          //     JSON.stringify({
+          //       currentTime: currentTime,
+          //       videoId: movie._id,
+          //     }),
+          //     secretKey
+          //   )
+          // );
+        }
+      });
     }
-  }, []);
-  // Khi video bắt đầu phát
-  const handleVideoPlay = () => {
-    localStorage.setItem("videoPlaybackState", JSON.stringify(videoState));
   };
 
-  const handleVideoTimeUpdate = (event) => {
-    const newVideoState = {
-      ...videoState,
-      currentTime: event.target.currentTime,
-      videoId: movie._id,
+  useEffect(() => {
+    setupPlyr();
+
+    // Xóa sự kiện và Plyr instance khi unmount
+    return () => {
+      if (playerInstance) {
+        console.log("playerInstance", playerInstance);
+        playerInstance.destroy();
+      }
     };
-    setVideoState(newVideoState);
-    localStorage.setItem("videoPlaybackState", JSON.stringify(newVideoState));
-  };
+  }, [movie]);
 
-  // Khi video đã hoàn thành hoặc ngừng xem
-  const handleVideoEnded = () => {
-    // Xóa dữ liệu trạng thái video khỏi Local Storage
-    localStorage.removeItem("videoPlaybackState");
-  };
-  // const handleVideoProgress = (state) => {
-  //   // Trạng thái state chứa thông tin về thời gian hiện tại của video và nhiều thông tin khác
-  //   const currentTime = state.playedSeconds; // Thời gian đã phát tính theo giây
-  //   // Sử dụng currentTime theo ý của bạn, ví dụ:
-  //   console.log(`Thời gian đã phát: ${currentTime} giây`);
-
-  //   const newVideoState = { ...videoState, currentTime,videoId: movie._id};
-  //   setVideoState(newVideoState);
-  //   localStorage.setItem('videoPlaybackState', JSON.stringify(newVideoState));
+  // // Sử dụng playerInstance thay vì player.current
+  // const routeChangeHandler = () => {
+  //   console.log("Route changed. Cleaning up Plyr.");
+  //   if (playerInstance) {
+  //     console.log("Destroying Plyr instance.");
+  //     playerInstance.destroy();
+  //   }
   // };
 
-  return (
-    <div className="players-container">
-      <video
-        id={movie._id || "abc"} // Thay 'myVideo' bằng ID thật của video
-        onPlay={handleVideoPlay}
-        onTimeUpdate={handleVideoTimeUpdate}
-        onEnded={handleVideoEnded}
-        controls
-      >
-        <source
-          src={`${process.env.NEXT_PUBLIC_URL}/video/riengminhanh.mp4`}
-          type="video/mp4"
-        />
-        Your browser does not support the video tag.
-      </video>
+  // // Thêm sự kiện lắng nghe thay đổi route
+  // useEffect(() => {
+  //   router.events.on("routeChangeStart", routeChangeHandler);
 
-      {/* <ReactPlayer
-        // url={movie?.video?.[0]}
-        url={`${process.env.NEXT_PUBLIC_URL}/video/riengminhanh.mp4`}
-        
-      <ReactPlayer
+  //   // Xóa sự kiện khi unmount
+  //   return () => {
+  //     router.events.off("routeChangeStart", routeChangeHandler);
+  //   };
+  // }, [router]);
+
+  return (
+    <div className="players-container relative">
+      <video
         ref={refVideo}
-        url={videoUrl}
-        onDuration={handleDuration}
-        light={
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/many_img%2Ftattay.jpg%20%20%20%20%20%20%202023-8-26%2014%3A18%3A27?alt=media&token=a2094971-d540-435c-ab57-669663a57695"
-            alt="Thumbnail"
-          />
-        }
+        crossOrigin="true"
+        playsInline
         controls
-        id={movie._id || "abc"}
-        onStart={handleVideoPlay}
-        onProgress={handleVideoProgress}
-        className=""
-        config={{
-          file: {
-            attributes: {
-              crossOrigin: "true",
-              controlsList: "nodownload", // Loại bỏ nút tải xuống
-              preload: "metadata", // Tải metadata trước để lấy thông tin chất lượng
-            },
-            tracks: [
-              {
-                kind: "subtitles",
-                // src: "/test.vtt",
-                src: subUrl,
-                srcLang: "vn",
-                default: true,
-              },
-              {
-                kind: "subtitles",
-                src: "/test.vtt",
-                srcLang: "en",
-              },
-            ], // Loại bỏ phụ đề
-            // forceHLS: true, // Sử dụng HLS cho video
-            // forceVideo: true, // Sử dụng phần mềm video native
-            quality: {
-              defaultQuality: videoQuality, // Chất lượng mặc định
-              options: qualityOptions, // Các tùy chọn chất lượng
-              forced: true, // Bắt buộc chọn chất lượng
-              onChange: handleQualityChange, // Xử lý khi người dùng thay đổi chất lượng
-            },
-          },
-        }}
-      />
-      */}
+        style={{ "--plyr-captions-background": "rgba(0, 0, 0, 0.1)" }}
+      ></video>
     </div>
   );
 };
 
-export default VideoContainer;
+export default memo(VideoContainer);

@@ -18,6 +18,7 @@ export default function Document() {
           crossOrigin="anonymous"
           referrerPolicy="no-re"
         /> */}
+        <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
       </Head>
       <body>
         <div id="fb-root"></div>
