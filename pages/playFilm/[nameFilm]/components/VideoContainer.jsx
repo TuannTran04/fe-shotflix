@@ -102,13 +102,13 @@ const VideoContainer = ({ movie }) => {
           // console.log(event.detail.plyr);
           console.log(event.detail.plyr.duration);
           // Kiểm tra nếu có trạng thái xem video trong Local Storage
-          const savedPlaybackTime = JSON.parse(
-            decryptData(localStorage.getItem(`${movie?._id}`), secretKey)
-          );
-
           // const savedPlaybackTime = JSON.parse(
-          //   localStorage.getItem(`${movie?._id}`)
+          //   decryptData(localStorage.getItem(`${movie?._id}`), secretKey)
           // );
+
+          const savedPlaybackTime = JSON.parse(
+            localStorage.getItem(`${movie?._id}`)
+          );
           console.log(savedPlaybackTime);
           const currTimeLocal = savedPlaybackTime?.currentTime;
           const videoIdLocal = savedPlaybackTime?.videoId;
