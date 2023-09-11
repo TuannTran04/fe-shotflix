@@ -31,6 +31,7 @@ export default function Document() {
 
         {/* <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js"></script> */}
         <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js" />
+        <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
       </body>
     </Html>
   );

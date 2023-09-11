@@ -109,7 +109,7 @@ const Test = () => {
   //     }
   //   };
   // }, [movie]);
-  console.log("cc");
+
   return (
     <div className="players-container mx-auto h-[200px] w-[800px]">
       <video
@@ -129,22 +129,22 @@ const Test = () => {
             ></source> */}
             <source
               src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/riengminhanh-426x240.mp4?specificFolder=${movie.folderOnFirebase}`}
-              type="video/mp4"
+              type="video/mp4; codecs=avc1.4D401E, mp4a.40.2"
             ></source>
-            <source
+            {/* <source
               src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
               type="video/webm"
             ></source>
             <source
               src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
               type="video/ogg"
-            ></source>
+            ></source> */}
           </>
         )}
         Bữa nay còn dùng IE8 à bro...Hãy tải ngay Chrome để trải nghiệm nhé!
       </video>
 
-      {Object.keys(movie).length > 0 && (
+      {/* {Object.keys(movie).length > 0 && (
         <>
           <ReactPlayer
             url={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
@@ -159,7 +159,7 @@ const Test = () => {
             height="auto"
           />
         </>
-      )}
+      )} */}
     </div>
   );
 };
