@@ -49,10 +49,10 @@ const Test = () => {
 
       const plyrSources = movie.sources?.map((video, index) => ({
         src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
-        type: video.typeVideo,
+        type: `${video.typeVideo}; codecs="avc1.4D401E, mp4a.40.2"`,
         size: video.sizeVideo,
       }));
-      // console.log("plyrSources", plyrSources);
+      console.log("plyrSources", plyrSources);
 
       // Khởi tạo Ply
       let player;
@@ -211,6 +211,7 @@ const Test = () => {
         id="abc"
         crossOrigin="true"
         playsInline
+        playsinline
         controls
       ></video>
 
