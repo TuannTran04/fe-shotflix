@@ -33,7 +33,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
         kind: "captions",
         label: `${subtitle.langSubtitle} captions`,
         srcLang: subtitle.langSubtitle,
-        src: `${process.env.NEXT_PUBLIC_URL}/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`,
+        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`,
         default: index === 0, // Đánh dấu phụ đề đầu tiên là mặc định
       }));
       // console.log("plyrTracks", plyrTracks);
