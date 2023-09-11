@@ -128,42 +128,22 @@ const Test = () => {
               src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${movie.sources?.[0].srcVideo}?specificFolder=${movie.folderOnFirebase}`}
               type="video/mp4; codecs=avc1.4D401E, mp4a.40.2"
             ></source> */}
-            {/* <source
+            <source
               src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
               type="video/webm"
-            ></source> */}
-            <div
-              dangerouslySetInnerHTML={{
-                __html: `<video className="app__backgroundVideo" autoplay loop muted playsinline>
-      <source src=${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase} type="video/mp4" />
-      Your browser does not support the video tag.
-</video>`,
-              }}
-            />
+            ></source>
           </>
         )}
       </video>
+
+      <ReactPlayer
+        url={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
+        controls
+        width="100%"
+        height="auto"
+      />
     </div>
   );
 };
 
 export default Test;
-
-{
-  /* <ReactPlayer
-        url={`${process.env.NEXT_PUBLIC_URL}/test-convert-video/https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/files%2Fneudanhmatem_2023-9-6_19%3A43%3A57%2Fneudanhmatem_2023-9-6_19%3A43%3A57.mp4?alt=media&token=985428aa-404f-4729-b06b-b2070f0e3b9b&quality=${selectedQuality}`}
-        controls
-        width="100%"
-        height="auto"
-      />
-      <div>
-        Chọn chất lượng:
-        <select value={selectedQuality} onChange={handleQualityChange}>
-          {qualityOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </div> */
-}
