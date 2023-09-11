@@ -44,7 +44,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
         type: video.typeVideo,
         size: video.sizeVideo,
       }));
-      console.log("plyrSources", plyrSources);
+      // console.log("plyrSources", plyrSources);
 
       // Khởi tạo Ply
       let player;
@@ -96,14 +96,14 @@ const VideoContainer = ({ movie, nameFilm }) => {
       }
 
       // Thiết lập tracks cho Plyr
-      player.source = {
-        type: "video",
-        title: "Example title",
-        sources: plyrSources,
-        poster:
-          "https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/files%2Friengminhanh-426x240_2023-9-8_11%3A37%3A41%2Ftattay.jpg?alt=media&token=bf80ba35-fb61-40f6-9910-00402f79183e",
-        tracks: plyrTracks,
-      };
+      // player.source = {
+      //   type: "video",
+      //   title: "Example title",
+      //   sources: plyrSources,
+      //   poster:
+      //     "https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/files%2Friengminhanh-426x240_2023-9-8_11%3A37%3A41%2Ftattay.jpg?alt=media&token=bf80ba35-fb61-40f6-9910-00402f79183e",
+      //   tracks: plyrTracks,
+      // };
 
       // Đặt sự kiện cho Plyr khi video load xong các data
       if (player.playing == false) {
@@ -209,18 +209,51 @@ const VideoContainer = ({ movie, nameFilm }) => {
     };
   }, [movie, movie._id, nameFilm]);
 
+  // const plyrSources = movie.sources?.map((video, index) => ({
+  //   src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
+  //   type: video.typeVideo,
+  //   size: video.sizeVideo,
+  // }));
+
+  const tagSources = movie.sources?.map((video, index) => (
+    <source
+      key={index}
+      src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`}
+      type="video/mp4"
+      size={video.sizeVideo}
+    />
+  ));
+  // console.log(tagSources);
+
+  const tagTracks = movie.subtitles?.map((subtitle, index) => (
+    <track
+      key={index}
+      kind="captions"
+      label={`${subtitle.langSubtitle} captions`}
+      src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`}
+      srcLang={subtitle.langSubtitle}
+      default={index === 0}
+    />
+  ));
+  console.log(tagTracks);
+
   return (
     <div className="players-container relative">
-      <video
-        // key={movie?._id}
-        id="myPlyr"
-        ref={refVideo}
-        crossOrigin="true"
-        playsInline
-        preload="auto"
-        controls
-        style={{ "--plyr-captions-background": "rgba(0, 0, 0, 0.1)" }}
-      ></video>
+      {movie && (
+        <video
+          // key={movie?._id}
+          id="myPlyr"
+          ref={refVideo}
+          crossOrigin="true"
+          playsInline
+          preload="auto"
+          controls
+          style={{ "--plyr-captions-background": "rgba(0, 0, 0, 0.1)" }}
+        >
+          {tagSources}
+          {tagTracks}
+        </video>
+      )}
     </div>
   );
 };
