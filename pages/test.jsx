@@ -6,6 +6,7 @@ import Plyr from "plyr";
 import { useRef } from "react";
 import ReactPlayer from "react-player";
 import axios from "axios";
+import shaka from "shaka-player";
 
 const Test = () => {
   const refVideo = useRef();
@@ -110,6 +111,65 @@ const Test = () => {
   //   };
   // }, [movie]);
 
+  function initApp() {
+    // Install built-in polyfills to patch browser incompatibilities.
+    shaka.polyfill.installAll();
+
+    // Check to see if the browser supports the basic APIs Shaka needs.
+    if (shaka.Player.isBrowserSupported()) {
+      // Everything looks good!
+      initPlayer();
+    } else {
+      // This browser does not have the minimum set of APIs we need.
+      console.error("Browser not supported!");
+    }
+  }
+
+  async function initPlayer() {
+    console.log("test shaka");
+    // Create a Player instance.
+    // const video = document.getElementById("video");
+    const player = new shaka.Player(refVideo.current);
+
+    // Attach player to the window to make it easy to access in the JS console.
+    window.player = player;
+
+    // Listen for error events.
+    player.addEventListener("error", onErrorEvent);
+
+    // Try to load a manifest.
+    // This is an asynchronous process.
+    try {
+      await player.load(
+        `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan_mp4.mp4?specificFolder=${movie.folderOnFirebase}`
+      );
+      // This runs if the asynchronous load is successful.
+      console.log("The video has now been loaded!");
+    } catch (e) {
+      // onError is executed if the asynchronous load fails.
+      onError(e);
+    }
+  }
+
+  function onErrorEvent(event) {
+    // Extract the shaka.util.Error object from the event.
+    onError(event.detail);
+  }
+
+  function onError(error) {
+    // Log the error.
+    console.error("Error code", error.code, "object", error);
+  }
+
+  // document.addEventListener("DOMContentLoaded", initApp);
+
+  useEffect(() => {
+    if (movie) {
+      initApp();
+    }
+    // Xóa sự kiện và Plyr instance khi unmount
+  }, [movie]);
+
   return (
     <div className="players-container mx-auto h-[200px] w-[800px]">
       <video
@@ -120,29 +180,7 @@ const Test = () => {
         controls
         height="400"
         width="400"
-      >
-        {Object.keys(movie).length > 0 && (
-          <>
-            {/* <source
-              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${movie.sources?.[0].srcVideo}?specificFolder=${movie.folderOnFirebase}`}
-              type="video/mp4; codecs=avc1.4D401E, mp4a.40.2"
-            ></source> */}
-            <source
-              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan_mp4.mp4?specificFolder=${movie.folderOnFirebase}`}
-              type="video/mp4"
-            ></source>
-            <source
-              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan_webm.webm?specificFolder=${movie.folderOnFirebase}`}
-              type="video/webm"
-            ></source>
-            <source
-              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan_ogv.ogv?specificFolder=${movie.folderOnFirebase}`}
-              type="video/ogv"
-            ></source>
-          </>
-        )}
-        Bữa nay còn dùng IE8 à bro...Hãy tải ngay Chrome để trải nghiệm nhé!
-      </video>
+      ></video>
 
       {/* {Object.keys(movie).length > 0 && (
         <>
