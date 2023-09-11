@@ -9,86 +9,14 @@ import axios from "axios";
 
 const Test = () => {
   const refVideo = useRef();
+  const [playerInstance, setPlayerInstance] = useState(null);
 
   // const specificFolder = "neudanhmatem_2023-9-6_22:36:28";
   const specificFolder = "riengminhanh-426x240_2023-9-8_11:37:41";
 
-  const [sub, setSub] = useState("");
-  // console.log(sub);
-  // let subUrl = `${process.env.NEXT_PUBLIC_URL}/subtitles/test.vtt`;
-  let subUrl = `${process.env.NEXT_PUBLIC_URL}/subtitles/test_2023-9-5_20:6:21.vtt?specificFolder=${specificFolder}`;
-
-  // let player;
-  // useEffect(() => {
-  //   const savedVideoState = localStorage.getItem("videoPlaybackState");
-
-  //   if (refVideo.current) {
-  //     player = new Plyr(refVideo.current, {
-  //       title: "Example Title",
-  //       controls: [
-  //         "play-large", // The large play button in the center
-  //         "restart", // Restart playback
-  //         "rewind", // Rewind by the seek time (default 10 seconds)
-  //         "play", // Play/pause playback
-  //         "fast-forward", // Fast forward by the seek time (default 10 seconds)
-  //         "progress", // The progress bar and scrubber for playback and buffering
-  //         "current-time", // The current time of playback
-  //         "duration", // The full duration of the media
-  //         "mute", // Toggle mute
-  //         "volume", // Volume control
-  //         "captions", // Toggle captions
-  //         "settings", // Settings menu
-  //         "pip", // Picture-in-picture (currently Safari only)
-  //         "airplay", // Airplay (currently Safari only)
-  //         "fullscreen", // Toggle fullscreen
-  //       ],
-  //       // settings: ["captions", "quality", "speed", "loop"],
-  //       // quality: {
-  //       //   default: 576,
-  //       //   options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240],
-  //       // },
-  //     });
-
-  //     player.source = {
-  //       type: "video",
-  //       title: "Example title",
-  //       sources: [
-  //         {
-  //           // src: `${process.env.NEXT_PUBLIC_URL}/video/neudanhmatem_2023-9-5_15:10:0.mp4?specificFolder=${specificFolder}`,
-  //           src: `${process.env.NEXT_PUBLIC_URL}/test-convert-video/neudanhmatem_2023-9-5_15:10:0.mp4?specificFolder=${specificFolder}`,
-  //           type: "video/mp4",
-  //           size: 720,
-  //         },
-  //         {
-  //           src: "/path/to/movie.webm",
-  //           type: "video/webm",
-  //           size: 1080,
-  //         },
-  //       ],
-  //       poster:
-  //         "https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/many_img%2Ftattay.jpg%20%20%20%20%20%20%202023-8-26%2014%3A18%3A27?alt=media&token=a2094971-d540-435c-ab57-669663a57695",
-  //       previewThumbnails: {
-  //         src: "/path/to/thumbnails.vtt",
-  //       },
-  //       tracks: [
-  //         {
-  //           kind: "captions",
-  //           label: "VietNam",
-  //           srclang: "vn",
-  //           src: `${process.env.NEXT_PUBLIC_URL}/subtitles/test_2023-9-5_20:6:21.vtt?specificFolder=${specificFolder}`,
-  //           default: true,
-  //         },
-  //         {
-  //           kind: "captions",
-  //           label: "English",
-  //           srclang: "en",
-  //           src: "/test.vtt",
-  //         },
-  //       ],
-  //     };
-  //   }
-  // }, []);
   const [movie, setMovie] = useState({});
+  console.log(movie);
+
   useEffect(() => {
     const renderSingleMovie = async () => {
       try {
@@ -107,79 +35,180 @@ const Test = () => {
     renderSingleMovie();
   }, []);
 
-  useEffect(() => {
-    const setupPlyrWithSubtitles = async () => {
-      console.log("movie", movie);
-      // console.log("movie subtitles", movie.subtitles);
-      // Lấy dữ liệu phụ đề từ API
-      // const subtitlesData = await fetchSubtitlesFromAPI();
+  const setupPlyr = () => {
+    // Chuyển đổi dữ liệu phụ đề thành định dạng Plyr
+    if (Object.keys(movie).length > 0) {
+      const plyrTracks = movie.subtitles?.map((subtitle, index) => ({
+        kind: "captions",
+        label: `${subtitle.langSubtitle} captions`,
+        srcLang: subtitle.langSubtitle,
+        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`,
+        default: index === 0, // Đánh dấu phụ đề đầu tiên là mặc định
+      }));
+      // console.log("plyrTracks", plyrTracks);
 
-      // Chuyển đổi dữ liệu phụ đề thành định dạng Plyr
-      let plyrSources;
-      let plyrTracks;
-      if (Object.keys(movie).length > 0 && refVideo.current) {
-        // plyrSources = movie.sources?.map((video, index) => ({
-        //   // src: `${process.env.NEXT_PUBLIC_URL}/video/${video.srcVideo}?specificFolder=${specificFolder}`,
-        //   src: `${process.env.NEXT_PUBLIC_URL}/video/neudanhmatem.mp4?specificFolder=neudanhmatem_2023-9-6_22:36:28`,
-        //   type: video.typeVideo,
-        //   size: video.sizeVideo,
-        // }));
-        // console.log("plyrSources", plyrSources);
+      const plyrSources = movie.sources?.map((video, index) => ({
+        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
+        type: video.typeVideo,
+        size: video.sizeVideo,
+      }));
+      // console.log("plyrSources", plyrSources);
 
-        plyrTracks = movie.subtitles?.map((sub, index) => ({
-          kind: "captions",
-          label: `${sub.langSubtitle} captions`,
-          srcLang: sub.langSubtitle,
-          src: `${process.env.NEXT_PUBLIC_URL}/subtitles/${sub.subtitle}?specificFolder=${specificFolder}`,
-          default: index === 0, // Đánh dấu phụ đề đầu tiên là mặc định
-        }));
-        console.log("plyrTracks", plyrTracks);
-
-        // Khởi tạo Plyr
-        const player = new Plyr(refVideo.current, {
-          settings: ["captions", "quality", "speed", "loop"],
-          captions: { active: true, update: true }, // Thiết lập hiển thị phụ đề
-        });
-
-        // Thiết lập tracks cho Plyr
-        player.source = {
-          type: "video",
-          sources: [
-            {
-              // src: `${process.env.NEXT_PUBLIC_URL}/video/${video.srcVideo}?specificFolder=${specificFolder}`,
-              src: `${process.env.NEXT_PUBLIC_URL}/video/neudanhmatem.mp4?specificFolder=neudanhmatem_2023-9-6_22:36:28`,
-              type: "video/mp4",
-              size: 720,
-            },
+      // Khởi tạo Ply
+      let player;
+      if (true) {
+        player = new Plyr("#abc", {
+          title: "Example Title",
+          controls: [
+            "play-large", // The large play button in the center
+            "restart", // Restart playback
+            "rewind", // Rewind by the seek time (default 10 seconds)
+            "play", // Play/pause playback
+            "fast-forward", // Fast forward by the seek time (default 10 seconds)
+            "progress", // The progress bar and scrubber for playback and buffering
+            "current-time", // The current time of playback
+            "duration", // The full duration of the media
+            "mute", // Toggle mute
+            "volume", // Volume control
+            "captions", // Toggle captions
+            "settings", // Settings menu
+            "pip", // Picture-in-picture (currently Safari only)
+            "airplay", // Airplay (currently Safari only)
+            "fullscreen", // Toggle fullscreen
           ],
-          tracks: plyrTracks,
-        };
+          settings: ["captions", "quality", "speed", "loop"],
+          quality: {
+            default: 720,
+            options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240],
+          },
+          captions: { active: true, language: "vn", update: true },
+          tooltips: { controls: true, seek: true },
+          keyboard: { focused: true, global: true },
+          markers: {
+            enabled: true,
+            points: [{ time: 50, label: "con cec" }],
+          },
+          fullscreen: {
+            enabled: true,
+            fallback: true,
+            iosNative: true,
+            container: null,
+          },
+          disableContextMenu: false,
+          playsinline: true,
+          enabled: true,
+          // debug: true,
+        });
+        // console.log(player.duration);
+        setPlayerInstance(player);
+      }
 
-        if (player) {
-          player.once("canplay", () => {
+      // Thiết lập tracks cho Plyr
+      player.source = {
+        type: "video",
+        title: "Example title",
+        sources: plyrSources,
+        poster:
+          "https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/files%2Friengminhanh-426x240_2023-9-8_11%3A37%3A41%2Ftattay.jpg?alt=media&token=bf80ba35-fb61-40f6-9910-00402f79183e",
+        tracks: plyrTracks,
+      };
+
+      // Đặt sự kiện cho Plyr khi video load xong các data
+      if (player.playing == false) {
+        player.on("loadedmetadata", (event) => {
+          console.log("readyyyy start");
+          // console.log(event.detail.plyr);
+          console.log(event.detail.plyr.duration);
+
+          const savedPlaybackTime = JSON.parse(
+            localStorage.getItem(`${movie?._id}`)
+          );
+          console.log(savedPlaybackTime);
+          const currTimeLocal = savedPlaybackTime?.currentTime;
+          const videoIdLocal = savedPlaybackTime?.videoId;
+
+          if (videoIdLocal == movie._id && event.detail.plyr.duration) {
             console.log("savedPlaybackTime canplay");
+
             const setPlayerCurrentTime = (currentTime) => {
               setTimeout(() => {
-                player.muted = true;
-                player.currentTime = currentTime;
-                player.play();
-              }, 2000);
+                const minutes = Math.floor(currentTime / 60);
+                const seconds = Math.round(currentTime % 60);
+                if (true) {
+                  console.log(player.current);
+                  console.log("continue");
+                  event.detail.plyr.muted = false;
+                  event.detail.plyr.currentTime = currentTime;
+                  // player.play();
+                } else {
+                  console.log("begin");
+                  player.muted = true;
+                  player.currentTime = 0;
+                  player.play();
+                }
+              }, 500);
             };
-            setPlayerCurrentTime(300);
-          });
+            setPlayerCurrentTime(currTimeLocal);
+          }
+        });
+      }
+
+      // Đặt sự kiện cho Plyr khi video được update time
+      player.on("timeupdate", (event) => {
+        console.log("Video is timeupdate");
+        let currentTime = event.detail.plyr.currentTime;
+        const duration = event.detail.plyr.duration;
+
+        // Thời gian hiện tại gần cuối video (1 giây trước khi kết thúc)
+        if (duration && duration - currentTime < 1) {
+          console.log("Video đã xem xong");
+          // Thực hiện các tác vụ khi video kết thúc hoặc đã xem xong
+          localStorage.removeItem(`${movie?._id}`);
         }
+
+        // currTime > 0 và khi video chưa kết thúc thì set localStorage time update
+        if (
+          currentTime &&
+          currentTime > 0 &&
+          duration &&
+          duration - currentTime > 1
+        ) {
+          console.log("sett", {
+            currentTime: currentTime,
+            videoId: movie._id,
+          });
+
+          localStorage.setItem(
+            `${movie?._id}`,
+            JSON.stringify({
+              currentTime: currentTime,
+              videoId: movie._id,
+            })
+          );
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    setupPlyr();
+
+    // Xóa sự kiện và Plyr instance khi unmount
+    return () => {
+      if (playerInstance) {
+        console.log("playerInstance", playerInstance);
+        playerInstance.destroy();
+        window.location.reload();
       }
     };
-
-    setupPlyrWithSubtitles();
-  });
+  }, [movie]);
 
   return (
     <div className="players-container mx-auto h-[200px] w-[800px]">
       <video
         className=""
         ref={refVideo}
-        id={"abc"}
+        id="abc"
         crossOrigin="true"
         playsInline
         controls

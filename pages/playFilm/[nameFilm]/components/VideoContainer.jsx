@@ -197,10 +197,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
   };
 
   useEffect(() => {
-    const initializePlyr = () => {
-      setupPlyr();
-    };
-    document.addEventListener("DOMContentLoaded", initializePlyr);
+    setupPlyr();
 
     // Xóa sự kiện và Plyr instance khi unmount
     return () => {
@@ -209,22 +206,14 @@ const VideoContainer = ({ movie, nameFilm }) => {
         playerInstance.destroy();
         window.location.reload();
       }
-      // Xóa sự kiện DOMContentLoaded khi unmount
-      document.removeEventListener("DOMContentLoaded", initializePlyr);
     };
   }, [movie, movie._id, nameFilm]);
-
-  // const plyrSources = movie.sources?.map((video, index) => ({
-  //   src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
-  //   type: video.typeVideo,
-  //   size: video.sizeVideo,
-  // }));
 
   const tagSources = movie.sources?.map((video, index) => (
     <source
       key={index}
       src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`}
-      type={video.typeVideo}
+      type={video.type}
       size={video.sizeVideo}
     />
   ));
@@ -240,7 +229,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
       default={index === 0}
     />
   ));
-  console.log(tagTracks);
+  // console.log(tagTracks);
 
   return (
     <div className="players-container relative">
