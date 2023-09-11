@@ -88,6 +88,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
           },
           disableContextMenu: false,
           playsinline: true,
+          enabled: true,
           // debug: true,
         });
         // console.log(player.duration);
@@ -215,7 +216,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
         id="myPlyr"
         ref={refVideo}
         crossOrigin="true"
-        // playsInline
+        playsInline
+        preload="auto"
         controls
         style={{ "--plyr-captions-background": "rgba(0, 0, 0, 0.1)" }}
       ></video>
