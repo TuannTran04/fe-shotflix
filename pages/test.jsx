@@ -119,6 +119,8 @@ const Test = () => {
         playsInline
         playsinline
         controls
+        height="400"
+        width="400"
       >
         {Object.keys(movie).length > 0 && (
           <source
