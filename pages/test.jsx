@@ -128,10 +128,18 @@ const Test = () => {
               src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${movie.sources?.[0].srcVideo}?specificFolder=${movie.folderOnFirebase}`}
               type="video/mp4; codecs=avc1.4D401E, mp4a.40.2"
             ></source> */}
-            <source
+            {/* <source
               src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
               type="video/webm"
-            ></source>
+            ></source> */}
+            <div
+              dangerouslySetInnerHTML={{
+                __html: `<video className="app__backgroundVideo" autoplay loop muted playsinline>
+      <source src=${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase} type="video/mp4" />
+      Your browser does not support the video tag.
+</video>`,
+              }}
+            />
           </>
         )}
       </video>
