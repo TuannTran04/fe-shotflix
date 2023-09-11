@@ -109,7 +109,7 @@ const Test = () => {
       }
     };
   }, [movie]);
-
+  console.log("cc");
   return (
     <div className="players-container mx-auto h-[200px] w-[800px]">
       <video
