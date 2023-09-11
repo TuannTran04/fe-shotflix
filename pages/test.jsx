@@ -123,7 +123,7 @@ const Test = () => {
         {Object.keys(movie).length > 0 && (
           <source
             src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${movie.sources?.[0].srcVideo}?specificFolder=${movie.folderOnFirebase}`}
-            type="video/mp4"
+            type="video/mp4; codecs=avc1.4D401E, mp4a.40.2"
           ></source>
         )}
       </video>
