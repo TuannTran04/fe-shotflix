@@ -79,7 +79,15 @@ const VideoContainer = ({ movie, nameFilm }) => {
             enabled: true,
             points: [{ time: 50, label: "con cec" }],
           },
+          fullscreen: {
+            enabled: true,
+            fallback: true,
+            iosNative: true,
+            container: null,
+          },
           disableContextMenu: false,
+          playsinline: true,
+          debug: true,
         });
         // console.log(player.duration);
         setPlayerInstance(player);
@@ -206,7 +214,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
         id="myPlyr"
         ref={refVideo}
         crossOrigin="true"
-        playsInline
+        // playsInline
         controls
         style={{ "--plyr-captions-background": "rgba(0, 0, 0, 0.1)" }}
       ></video>
