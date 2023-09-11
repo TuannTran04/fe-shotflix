@@ -128,17 +128,17 @@ const Test = () => {
               type="video/mp4; codecs=avc1.4D401E, mp4a.40.2"
             ></source> */}
             <source
-              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/riengminhanh-426x240.mp4?specificFolder=${movie.folderOnFirebase}`}
-              type="video/mp4; codecs=avc1.4D401E, mp4a.40.2"
+              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan_mp4.mp4?specificFolder=${movie.folderOnFirebase}`}
+              type="video/mp4"
             ></source>
-            {/* <source
-              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
+            <source
+              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan_webm.webm?specificFolder=${movie.folderOnFirebase}`}
               type="video/webm"
             ></source>
             <source
-              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
-              type="video/ogg"
-            ></source> */}
+              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan_ogv.ogv?specificFolder=${movie.folderOnFirebase}`}
+              type="video/ogv"
+            ></source>
           </>
         )}
         Bữa nay còn dùng IE8 à bro...Hãy tải ngay Chrome để trải nghiệm nhé!
