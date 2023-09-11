@@ -115,9 +115,11 @@ const Test = () => {
       <video
         ref={refVideo}
         id="abc"
-        crossOrigin="true"
         playsInline
-        playsinline
+        crossOrigin="true"
+        autoPlay
+        loop
+        muted
         controls
         height="400"
         width="400"
@@ -136,18 +138,22 @@ const Test = () => {
         )}
       </video>
 
-      <ReactPlayer
-        url={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
-        controls
-        width="100%"
-        height="auto"
-      />
-      <ReactPlayer
-        url={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangtho.mp4?specificFolder=${movie.folderOnFirebase}`}
-        controls
-        width="100%"
-        height="auto"
-      />
+      {Object.keys(movie).length > 0 && (
+        <>
+          <ReactPlayer
+            url={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
+            controls
+            width="100%"
+            height="auto"
+          />
+          <ReactPlayer
+            url={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangtho.mp4?specificFolder=${movie.folderOnFirebase}`}
+            controls
+            width="100%"
+            height="auto"
+          />
+        </>
+      )}
     </div>
   );
 };
