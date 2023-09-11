@@ -142,6 +142,12 @@ const Test = () => {
         width="100%"
         height="auto"
       />
+      <ReactPlayer
+        url={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangtho.mp4?specificFolder=${movie.folderOnFirebase}`}
+        controls
+        width="100%"
+        height="auto"
+      />
     </div>
   );
 };
