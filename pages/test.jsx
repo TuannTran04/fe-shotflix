@@ -117,9 +117,6 @@ const Test = () => {
         id="abc"
         playsInline
         crossOrigin="true"
-        autoPlay
-        loop
-        muted
         controls
         height="400"
         width="400"
@@ -132,10 +129,19 @@ const Test = () => {
             ></source> */}
             <source
               src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
+              type="video/mp4"
+            ></source>
+            <source
+              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
+              type="video/ogg"
+            ></source>
+            <source
+              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
               type="video/webm"
             ></source>
           </>
         )}
+        Bữa nay còn dùng IE8 à bro...Hãy tải ngay Chrome để trải nghiệm nhé!
       </video>
 
       {Object.keys(movie).length > 0 && (
