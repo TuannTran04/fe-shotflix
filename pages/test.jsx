@@ -120,7 +120,7 @@ const Test = () => {
         playsinline
         controls
       >
-        {movie && (
+        {Object.keys(movie).length > 0 && (
           <source
             src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${movie.sources?.[0].srcVideo}?specificFolder=${movie.folderOnFirebase}`}
             type="video/mp4"
