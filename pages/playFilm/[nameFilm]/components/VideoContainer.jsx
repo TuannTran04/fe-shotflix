@@ -26,6 +26,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
   //   return bytes.toString(CryptoJS.enc.Utf8);
   // }
 
+  const [isPlyrInitialized, setIsPlyrInitialized] = useState(false);
   const setupPlyr = () => {
     // Chuyển đổi dữ liệu phụ đề thành định dạng Plyr
     if (Object.keys(movie).length > 0) {
@@ -40,10 +41,10 @@ const VideoContainer = ({ movie, nameFilm }) => {
 
       const plyrSources = movie.sources?.map((video, index) => ({
         src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
-        type: "video/webm",
+        type: video.typeVideo,
         size: video.sizeVideo,
       }));
-      // console.log("plyrSources", plyrSources);
+      console.log("plyrSources", plyrSources);
 
       // Khởi tạo Ply
       let player;
@@ -69,7 +70,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
           ],
           settings: ["captions", "quality", "speed", "loop"],
           quality: {
-            default: 576,
+            default: 720,
             options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240],
           },
           captions: { active: true, language: "vn", update: true },
@@ -87,7 +88,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
           },
           disableContextMenu: false,
           playsinline: true,
-          debug: true,
+          // debug: true,
         });
         // console.log(player.duration);
         setPlayerInstance(player);
