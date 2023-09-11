@@ -197,7 +197,10 @@ const VideoContainer = ({ movie, nameFilm }) => {
   };
 
   useEffect(() => {
-    setupPlyr();
+    const initializePlyr = () => {
+      setupPlyr();
+    };
+    document.addEventListener("DOMContentLoaded", initializePlyr);
 
     // Xóa sự kiện và Plyr instance khi unmount
     return () => {
@@ -206,6 +209,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
         playerInstance.destroy();
         window.location.reload();
       }
+      // Xóa sự kiện DOMContentLoaded khi unmount
+      document.removeEventListener("DOMContentLoaded", initializePlyr);
     };
   }, [movie, movie._id, nameFilm]);
 
@@ -219,7 +224,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
     <source
       key={index}
       src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`}
-      type="video/mp4"
+      type={video.typeVideo}
       size={video.sizeVideo}
     />
   ));
