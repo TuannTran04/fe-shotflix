@@ -39,7 +39,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
       // console.log("plyrTracks", plyrTracks);
 
       const plyrSources = movie.sources?.map((video, index) => ({
-        src: `${process.env.NEXT_PUBLIC_URL}/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
+        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
         type: video.typeVideo,
         size: video.sizeVideo,
       }));
