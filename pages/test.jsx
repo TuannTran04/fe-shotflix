@@ -128,16 +128,16 @@ const Test = () => {
               type="video/mp4; codecs=avc1.4D401E, mp4a.40.2"
             ></source> */}
             <source
-              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
+              src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/riengminhanh-426x240.mp4?specificFolder=${movie.folderOnFirebase}`}
               type="video/mp4"
             ></source>
             <source
               src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
-              type="video/ogg"
+              type="video/webm"
             ></source>
             <source
               src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/nangamxadan.mp4?specificFolder=${movie.folderOnFirebase}`}
-              type="video/webm"
+              type="video/ogg"
             ></source>
           </>
         )}
