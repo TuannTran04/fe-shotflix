@@ -98,17 +98,17 @@ const Test = () => {
     }
   };
 
-  useEffect(() => {
-    setupPlyr();
-    // Xóa sự kiện và Plyr instance khi unmount
-    return () => {
-      if (playerInstance) {
-        console.log("playerInstance", playerInstance);
-        playerInstance.destroy();
-        window.location.reload();
-      }
-    };
-  }, [movie]);
+  // useEffect(() => {
+  //   setupPlyr();
+  //   // Xóa sự kiện và Plyr instance khi unmount
+  //   return () => {
+  //     if (playerInstance) {
+  //       console.log("playerInstance", playerInstance);
+  //       playerInstance.destroy();
+  //       window.location.reload();
+  //     }
+  //   };
+  // }, [movie]);
   console.log("cc");
   return (
     <div className="players-container mx-auto h-[200px] w-[800px]">
