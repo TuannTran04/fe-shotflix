@@ -167,7 +167,7 @@ const VideoDetail = ({ movie }) => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 };
