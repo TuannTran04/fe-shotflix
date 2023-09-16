@@ -348,7 +348,20 @@ const Test = () => {
               autoStartLoad: true, // Tự động tải video khi player được tạo
               lowLatencyMode: true, // Kích hoạt chế độ tải trước đoạn nhỏ
             });
+            // Lắng nghe sự kiện loadedmetadata để chờ metadata của video được tải xong
+            player.on("loadedmetadata", function () {
+              // Lấy thời lượng video
+              const videoDuration = player.duration();
+              console.log(videoDuration);
+              // Giới hạn thời gian đệm tối đa là 10 giây
+              const maxBufferTime = 10;
 
+              // Tính toán thời gian cần tải trước
+              const preloadTime = Math.min(videoDuration, maxBufferTime);
+
+              // Thiết lập thời gian đệm tối đa
+              player.buffered(player.buffered().start(0), preloadTime);
+            });
             // Thêm nguồn video
             player.src({
               src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`, // Thay thế bằng URL của video của bạn
