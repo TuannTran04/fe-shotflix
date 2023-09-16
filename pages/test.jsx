@@ -341,8 +341,12 @@ const Test = () => {
                 hls: {
                   // Enable HLS support
                   enableLowInitialPlaylist: true, // Tạo hiệu ứng tải từng phần nhỏ
+                  overrideNative: true,
                 },
               },
+              // Tùy chọn để chỉ tải trước một đoạn nhỏ
+              autoStartLoad: true, // Tự động tải video khi player được tạo
+              lowLatencyMode: true, // Kích hoạt chế độ tải trước đoạn nhỏ
             });
 
             // Thêm nguồn video
