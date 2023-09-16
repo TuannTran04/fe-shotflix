@@ -186,7 +186,7 @@ const Test = () => {
       if (refVideo.current) {
         // console.log("have element video !");
 
-        if (false) {
+        if (Hls.isSupported()) {
           hls = new Hls(config);
           // console.log("have element video HLS !");
           hls.attachMedia(refVideo.current);
