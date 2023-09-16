@@ -322,22 +322,24 @@ const Test = () => {
               // window.hls = hls;
             });
           });
-        }
-      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        alert("không hỗ trợ");
-        // video.src = "https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8";
-        // video.addEventListener("loadedmetadata", function () {
-        //   video.play();
-        // });
-        if (refVideo.current) {
-          const test = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie`;
-          // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`;
-          refVideo.current.src = "/neudanhmatem.mp4";
-          // refVideo.current.addEventListener("loadedmetadata", function () {
+        } else if (
+          refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+        ) {
+          alert("không hỗ trợ");
+          // video.src = "https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8";
+          // video.addEventListener("loadedmetadata", function () {
           //   video.play();
           // });
+          if (refVideo.current) {
+            const test = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie`;
+            // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`;
+            refVideo.current.src = "/neudanhmatem.mp4";
+            // refVideo.current.addEventListener("loadedmetadata", function () {
+            //   video.play();
+            // });
+          }
+          console.log("no sp");
         }
-        console.log("no sp");
       }
     }
   };
