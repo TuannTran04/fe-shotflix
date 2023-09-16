@@ -180,6 +180,7 @@ const Test = () => {
 
   const setupPlyrHLS = async () => {
     if (Object.keys(movie).length > 0) {
+      console.log(movie);
       let player;
       let hls;
       const defaultOptions = {};
@@ -324,9 +325,11 @@ const Test = () => {
           });
         } else if (
           refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+          // true
         ) {
           // alert("không hỗ trợ");
           if (refVideo.current) {
+            console.log("duma");
             refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`;
 
             // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`;
@@ -365,6 +368,7 @@ const Test = () => {
         controls
         height="400"
         width="400"
+        src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`}
       ></video>
 
       {/* {Object.keys(movie).length > 0 && (
