@@ -40,15 +40,21 @@ const VideoContainer = ({ movie, nameFilm }) => {
       // console.log("plyrTracks", plyrTracks);
 
       const plyrSources = movie.sources?.map((video, index) => ({
-        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
-        type: video.typeVideo,
+        // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
+        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`,
+
+        // type: video.typeVideo,
+        type: "application/x-mpegURL",
         size: video.sizeVideo,
       }));
+
       // console.log("plyrSources", plyrSources);
 
       // Khởi tạo Ply
       let player;
       if (refVideo.current) {
+        // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`;
+
         player = new Plyr(refVideo.current, {
           title: "Example Title",
           controls: [
@@ -89,21 +95,20 @@ const VideoContainer = ({ movie, nameFilm }) => {
           disableContextMenu: false,
           playsinline: true,
           enabled: true,
+          hlsQualitySelector: true,
           // debug: true,
         });
         // console.log(player.duration);
         setPlayerInstance(player);
       }
 
-      // Thiết lập tracks cho Plyr
-      // player.source = {
-      //   type: "video",
-      //   title: "Example title",
-      //   sources: plyrSources,
-      //   poster:
-      //     "https://firebasestorage.googleapis.com/v0/b/movie-the-stone-d9f38.appspot.com/o/files%2Friengminhanh-426x240_2023-9-8_11%3A37%3A41%2Ftattay.jpg?alt=media&token=bf80ba35-fb61-40f6-9910-00402f79183e",
-      //   tracks: plyrTracks,
-      // };
+      // // Thiết lập tracks cho Plyr
+      player.source = {
+        type: "video",
+        title: "Example title",
+        // sources: plyrSources,
+        tracks: plyrTracks,
+      };
 
       // Đặt sự kiện cho Plyr khi video load xong các data
       if (player.playing == false) {
@@ -181,16 +186,6 @@ const VideoContainer = ({ movie, nameFilm }) => {
               videoId: movie._id,
             })
           );
-          // localStorage.setItem(
-          //   `${movie?._id}`,
-          //   encryptData(
-          //     JSON.stringify({
-          //       currentTime: currentTime,
-          //       videoId: movie._id,
-          //     }),
-          //     secretKey
-          //   )
-          // );
         }
       });
     }
@@ -209,27 +204,27 @@ const VideoContainer = ({ movie, nameFilm }) => {
     };
   }, [movie, movie._id, nameFilm]);
 
-  const tagSources = movie.sources?.map((video, index) => (
-    <source
-      key={index}
-      src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`}
-      type={video.type}
-      size={video.sizeVideo}
-    />
-  ));
-  // console.log(tagSources);
+  // const tagSources = movie.sources?.map((video, index) => (
+  //   <source
+  //     key={index}
+  //     src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`}
+  //     type={video.type}
+  //     size={video.sizeVideo}
+  //   />
+  // ));
+  // // console.log(tagSources);
 
-  const tagTracks = movie.subtitles?.map((subtitle, index) => (
-    <track
-      key={index}
-      kind="captions"
-      label={`${subtitle.langSubtitle} captions`}
-      src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`}
-      srcLang={subtitle.langSubtitle}
-      default={index === 0}
-    />
-  ));
-  // console.log(tagTracks);
+  // const tagTracks = movie.subtitles?.map((subtitle, index) => (
+  //   <track
+  //     key={index}
+  //     kind="captions"
+  //     label={`${subtitle.langSubtitle} captions`}
+  //     src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`}
+  //     srcLang={subtitle.langSubtitle}
+  //     default={index === 0}
+  //   />
+  // ));
+  // // console.log(tagTracks);
 
   return (
     <div className="players-container relative">
@@ -244,8 +239,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
           controls
           style={{ "--plyr-captions-background": "rgba(0, 0, 0, 0.1)" }}
         >
-          {tagSources}
-          {tagTracks}
+          {/* {tagSources}
+          {tagTracks} */}
         </video>
       )}
     </div>

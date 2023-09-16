@@ -186,7 +186,7 @@ const Test = () => {
       if (refVideo.current) {
         // console.log("have element video !");
 
-        if (Hls.isSupported()) {
+        if (false) {
           hls = new Hls(config);
           // console.log("have element video HLS !");
           hls.attachMedia(refVideo.current);
@@ -323,101 +323,18 @@ const Test = () => {
             });
           });
         } else if (
-          refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+          // refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+          true
         ) {
-          alert("không hỗ trợ");
+          // alert("không hỗ trợ");
           if (refVideo.current) {
-            // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`;
+            refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`;
+
+            // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`;
             // refVideo.current.src = "/neudanhmatem.mp4";
             // refVideo.current.addEventListener("loadedmetadata", function () {
             //   video.play();
             // });
-
-            hls = new Hls(config);
-            // console.log("have element video HLS !");
-            hls.attachMedia(refVideo.current);
-
-            hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-              // console.log("video and hls.js are now bound together !");
-              hls.loadSource(
-                `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`
-              );
-
-              hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-                console.log(
-                  "manifest loaded, found " +
-                    data.levels.length +
-                    " quality level"
-                );
-                // console.log("hls.subtitleTracks", hls.subtitleTracks);
-                const availableQualities = hls.levels.map((l) => l.height);
-                console.log(availableQualities);
-
-                hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, () => {
-                  console.log("update track");
-                  // Lựa chọn phụ đề (subtitle) bằng cách chỉ định GROUP-ID của phụ đề trong manifest
-                  const selectedSubtitleTrack = hls.subtitleTracks.find(
-                    (track) => track.groupId === "subs"
-                  );
-                  console.log("selectedSubtitleTrack", selectedSubtitleTrack);
-                  if (selectedSubtitleTrack) {
-                    // Bật phụ đề
-                    hls.subtitleTrack = selectedSubtitleTrack.index;
-                  }
-                });
-
-                // Initialize here
-                player = new Plyr(refVideo.current, {
-                  title: "Example Title",
-                  controls: [
-                    "play-large", // The large play button in the center
-                    "restart", // Restart playback
-                    "rewind", // Rewind by the seek time (default 10 seconds)
-                    "play", // Play/pause playback
-                    "fast-forward", // Fast forward by the seek time (default 10 seconds)
-                    "progress", // The progress bar and scrubber for playback and buffering
-                    "current-time", // The current time of playback
-                    "duration", // The full duration of the media
-                    "mute", // Toggle mute
-                    "volume", // Volume control
-                    "captions", // Toggle captions
-                    "settings", // Settings menu
-                    "pip", // Picture-in-picture (currently Safari only)
-                    "airplay", // Airplay (currently Safari only)
-                    "fullscreen", // Toggle fullscreen
-                  ],
-                  settings: ["captions", "quality", "speed", "loop"],
-                  captions: { active: true, language: "vn", update: true },
-                  tooltips: { controls: true, seek: true },
-                  keyboard: { focused: true, global: true },
-                  markers: {
-                    enabled: true,
-                    points: [{ time: 50, label: "con cec" }],
-                  },
-                  fullscreen: {
-                    enabled: true,
-                    fallback: true,
-                    iosNative: true,
-                    container: null,
-                  },
-                  disableContextMenu: false,
-                  playsinline: true,
-                  enabled: true,
-                  html5: {
-                    vhs: {
-                      overrideNative: true,
-                    },
-                    nativeAudioTracks: false,
-                    nativeVideoTracks: false,
-                  },
-                  ...defaultOptions,
-                  // debug: true,
-                });
-                setPlayerInstance(player);
-                setHLSInstance(hls);
-                // window.hls = hls;
-              });
-            });
           }
           console.log("no sp");
         }
