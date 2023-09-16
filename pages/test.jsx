@@ -4,6 +4,7 @@ import { Navigation } from "react-minimal-side-navigation";
 import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
 import Plyr from "plyr";
 import Hls from "hls.js";
+import videojs from "video.js";
 import { useRef } from "react";
 import ReactPlayer from "react-player";
 import axios from "axios";
@@ -187,7 +188,7 @@ const Test = () => {
       if (refVideo.current) {
         // console.log("have element video !");
 
-        if (Hls.isSupported()) {
+        if (false) {
           hls = new Hls(config);
           // console.log("have element video HLS !");
           hls.attachMedia(refVideo.current);
@@ -324,21 +325,33 @@ const Test = () => {
             });
           });
         } else if (
-          refVideo.current.canPlayType("application/vnd.apple.mpegurl")
-          // true
+          // refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+          true
         ) {
           // alert("không hỗ trợ");
           if (refVideo.current) {
-            console.log("duma");
             // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`;
-
-            refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`;
+            // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`;
             // refVideo.current.src = "/neudanhmatem.mp4";
-            // refVideo.current.addEventListener("loadedmetadata", function () {
-            //   video.play();
-            // });
+
+            console.log("dm");
+            // Initialize the video.js player
+            const player = videojs(refVideo.current, {
+              html5: {
+                hls: {
+                  // Enable HLS support
+                  enableLowInitialPlaylist: true, // Tạo hiệu ứng tải từng phần nhỏ
+                },
+              },
+            });
+
+            // Thêm nguồn video
+            player.src({
+              src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`, // Thay thế bằng URL của video của bạn
+              // type: "video/mp4", // Loại video
+              type: "application/x-mpegURL", // Loại video
+            });
           }
-          console.log("no sp");
         }
       }
     }
@@ -361,6 +374,7 @@ const Test = () => {
   return (
     <div className="players-container mx-auto h-[200px] w-[800px]">
       <video
+        className="video-js vjs-default-skin"
         ref={refVideo}
         id="abc"
         playsInline

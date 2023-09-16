@@ -19,6 +19,10 @@ export default function Document() {
           referrerPolicy="no-re"
         /> */}
         <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+        <link
+          href="https://vjs.zencdn.net/8.5.2/video-js.css"
+          rel="stylesheet"
+        />
       </Head>
       <body>
         <div id="fb-root"></div>
