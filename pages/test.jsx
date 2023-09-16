@@ -307,6 +307,13 @@ const Test = () => {
                 disableContextMenu: false,
                 playsinline: true,
                 enabled: true,
+                html5: {
+                  vhs: {
+                    overrideNative: true,
+                  },
+                  nativeAudioTracks: false,
+                  nativeVideoTracks: false,
+                },
                 ...defaultOptions,
                 // debug: true,
               });
@@ -321,6 +328,8 @@ const Test = () => {
         // video.addEventListener("loadedmetadata", function () {
         //   video.play();
         // });
+        const test = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie`;
+
         console.log("no sp");
       }
     }
