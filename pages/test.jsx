@@ -323,8 +323,7 @@ const Test = () => {
             });
           });
         } else if (
-          // refVideo.current.canPlayType("application/vnd.apple.mpegurl")
-          true
+          refVideo.current.canPlayType("application/vnd.apple.mpegurl")
         ) {
           // alert("không hỗ trợ");
           if (refVideo.current) {
