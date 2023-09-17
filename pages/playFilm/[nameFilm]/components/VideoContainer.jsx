@@ -95,15 +95,15 @@ const VideoContainer = ({ movie, nameFilm }) => {
           hls.on(Hls.Events.MEDIA_ATTACHED, function () {
             console.log("video and hls.js are now bound together !");
 
-            // hls.loadSource(
-            //   `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/${
-            //     movie.folderOnFirebase
-            //   }/${movie.video?.[0].trim()}`
-            // );
-
             hls.loadSource(
-              `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`
+              `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/${
+                movie.folderOnFirebase
+              }/${movie.video?.[0].trim()}`
             );
+
+            // hls.loadSource(
+            //   `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`
+            // );
 
             hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
               // console.log(
