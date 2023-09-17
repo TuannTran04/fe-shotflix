@@ -129,7 +129,7 @@ const Test = () => {
     maxBufferLength: 10,
     // maxMaxBufferLength: 600,
     maxMaxBufferLength: 10,
-    maxBufferSize: 60 * 1000 * 1000,
+    maxBufferSize: 30 * 1000 * 1000,
     maxBufferHole: 0.5,
     // maxBufferHole: 0.1,
     lowBufferWatchdogPeriod: 0.5,
