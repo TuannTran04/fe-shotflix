@@ -35,7 +35,7 @@ const SearchFilmPage = ({ queryString, categories }) => {
 
   return (
     <LayoutRoot categories={categories}>
-      <div className="mt-20">
+      <div className="sm:mt-16">
         <Heading
           content={`Kết quả tìm kiếm: ${queryString.replace(/\+/g, " ")}`}
           styleDiv="mb-4"

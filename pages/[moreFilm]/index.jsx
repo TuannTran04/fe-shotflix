@@ -46,7 +46,7 @@ const MoreFilm = ({ nameMoreFilm }) => {
 
   return (
     <LayoutRoot>
-      <div className="mt-16">
+      <div className="sm:mt-16">
         <Breadcrumb content={nameMoreFilm.replace(/-/g, " ")} />
 
         <Heading
