@@ -262,7 +262,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
           });
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
           if (refVideo.current) {
-            refVideo.current.src = `/neudanhmatem.mp4`;
+            alert("khong sp");
+            // refVideo.current.src = `/neudanhmatem.mp4`;
             // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
             // refVideo.current.type = "application/x-mpegURL";
             // refVideo.current.addEventListener("loadedmetadata", function () {
