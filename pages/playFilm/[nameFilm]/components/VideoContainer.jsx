@@ -99,6 +99,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
           hls.on(Hls.Events.MEDIA_ATTACHED, function () {
             console.log("video and hls.js are now bound together !");
 
+            // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
+
             hls.loadSource(
               `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/${
                 movie.folderOnFirebase
@@ -260,6 +262,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
           });
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
           if (refVideo.current) {
+            refVideo.current.src = `/neudanhmatem.mp4`;
             // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
             // refVideo.current.type = "application/x-mpegURL";
             // refVideo.current.addEventListener("loadedmetadata", function () {
