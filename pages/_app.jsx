@@ -11,12 +11,12 @@ export function reportWebVitals(metric) {
 }
 export default function App({ Component, pageProps }) {
   return (
-    <ErrorBoundary>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <Component {...pageProps} />
-        </PersistGate>
-      </Provider>
-    </ErrorBoundary>
+    // <ErrorBoundary>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Component {...pageProps} />
+      </PersistGate>
+    </Provider>
+    // </ErrorBoundary>
   );
 }
