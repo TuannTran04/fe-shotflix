@@ -14,7 +14,11 @@ const SliderTopRatingofWeek = ({ movies, toast }) => {
 
   return (
     <div className="mt-10 mb-8">
-      <Heading content={"Phim có rating cao nhất tuần"} />
+      <Heading
+        content={"Phim có rating cao nhất tuần"}
+        styleDiv="mb-4"
+        styleTitle="text-[#da966e] text-2xl font-normal border-l-4 pl-2.5"
+      />
 
       <Slider {...settings}>
         {movies?.map((item, index) => {

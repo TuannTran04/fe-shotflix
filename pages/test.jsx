@@ -187,8 +187,8 @@ const Test = () => {
       const defaultOptions = {};
       if (refVideo.current) {
         // console.log("have element video !");
-
-        if (false) {
+        // Hls.isSupported()
+        if (Hls.isSupported()) {
           hls = new Hls(config);
           // console.log("have element video HLS !");
           hls.attachMedia(refVideo.current);
@@ -206,6 +206,9 @@ const Test = () => {
 
           hls.on(Hls.Events.MEDIA_ATTACHED, function () {
             // console.log("video and hls.js are now bound together !");
+            // hls.loadSource(
+            //   `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v144p/playlistRange.m3u8`
+            // ); // lỗi tua 1 phát tới 4 phút
             hls.loadSource(
               `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`
             );
@@ -325,8 +328,8 @@ const Test = () => {
             });
           });
         } else if (
-          // refVideo.current.canPlayType("application/vnd.apple.mpegurl")
-          true
+          refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+          // true
         ) {
           // alert("không hỗ trợ");
           if (refVideo.current) {
@@ -364,7 +367,8 @@ const Test = () => {
             });
             // Thêm nguồn video
             player.src({
-              src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`, // Thay thế bằng URL của video của bạn
+              src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`, // Thay thế bằng URL của video của bạn
+              // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`, // Thay thế bằng URL của video của bạn
               // type: "video/mp4", // Loại video
               type: "application/x-mpegURL", // Loại video
             });

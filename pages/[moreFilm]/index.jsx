@@ -49,7 +49,11 @@ const MoreFilm = ({ nameMoreFilm }) => {
       <div className="mt-16">
         <Breadcrumb content={nameMoreFilm.replace(/-/g, " ")} />
 
-        <Heading content={nameMoreFilm.replace(/-/g, " ")} />
+        <Heading
+          content={nameMoreFilm.replace(/-/g, " ")}
+          styleDiv="mb-4"
+          styleTitle="text-[#da966e] text-2xl font-normal border-l-4 pl-2.5"
+        />
 
         <LayoutAllFilm arrMovie={arrMovie} />
 

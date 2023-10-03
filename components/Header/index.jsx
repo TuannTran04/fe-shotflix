@@ -1,4 +1,3 @@
-
 import Image from "next/legacy/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -11,6 +10,7 @@ import { arrNameCategory, arrSearchMovie } from "./constHeader";
 import Cookies from "js-cookie";
 import { searchMovies } from "../../services/userRequest";
 import axios from "axios";
+import SidebarHomeMobile from "../SidebarMobile/SidebarMobile";
 
 export default function Header({ categories }) {
   const router = useRouter();
@@ -25,6 +25,8 @@ export default function Header({ categories }) {
   const [searchInput, setSearchInput] = useState("");
   const [showSearchResults, setSearchResults] = useState(false);
   const [showSearchInput, setShowSearchInput] = useState(false);
+
+  const [showSideBarMobile, setShowSideBarMobile] = useState(false);
 
   const inputRef = useRef();
 
@@ -45,6 +47,10 @@ export default function Header({ categories }) {
     }
   };
 
+  const handleShowSidebarMobile = (e) => {
+    setShowSideBarMobile((prev) => !prev);
+  };
+
   const handleSubmitSearchInput = (e) => {
     e.preventDefault();
     setShowSearchInput((prev) => !prev);
@@ -59,12 +65,100 @@ export default function Header({ categories }) {
     logOut(dispatch, id, router, accessToken, axiosJWT);
   };
 
-
-
   return (
     <header className="bg-[#151414] h-20 relative sm:fixed top-0 left-0 right-0 z-[100] shadow-xl">
-      <nav className="h-full mx-auto max-w-[1200px]">
+      <nav className="px-2 md:px-0 h-full mx-auto max-w-[1200px]">
         <div className="h-full flex justify-between items-center">
+          <div className="block md:hidden">
+            <span
+              className="rounded bg-white text-black p-[8px] h-11 w-11 z-20"
+              onClick={handleShowSidebarMobile}
+            >
+              <i className="fa-solid fa-bars"></i>
+            </span>
+          </div>
+
+          {/* NAV MOBILE */}
+          {/* <div className="fixed md:hidden top-0 left-0 bg-[rgba(0,0,0,.6)] w-full h-full z-[50]">
+            <div className="py-[16px] px-[12px] w-[270px] h-full bg-[rgba(0,0,0,.8)] overflow-y-auto z-[100]">
+              <div className="p-[16px] mb-[18px] bg-[#090b0c] text-center overflow-x-hidden">
+                {!user ? (
+                  <Link
+                    href="/login"
+                    className="px-[18px] inline-block text-white bg-[#b71c1c] rounded cursor-pointer leading-9"
+                  >
+                    Đăng nhập/Đăng ký
+                  </Link>
+                ) : (
+                  <div className="block px-[20px] py-[5px] relative text-left bg-white rounded group cursor-pointer">
+                    <Link
+                      href={`/user/${user?.username
+                        .replace(/\s+/g, "")
+                        .toLowerCase()}`}
+                      className="text-black font-bold whitespace-nowrap text-ellipsis overflow-hidden"
+                      title={user?.username}
+                    >
+                      <p className="whitespace-nowrap text-ellipsis overflow-hidden">
+                        {user?.username}
+                      </p>
+                    </Link>
+
+                    <span className="flex items-center text-xs mt-[2px] col-span-1">
+                      <i className="fa-solid fa-coins text-yellow-400 mr-[4px]"></i>
+                      <p className="text-[#2DAAED] flex-1 font-semibold whitespace-nowrap text-ellipsis overflow-hidden">
+                        0
+                      </p>
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <nav className="">
+                <ul className="text-white">
+                  <li className="">
+                    <Link
+                      href="/"
+                      className="text-base font-normal leading-10 hover:text-[#da966e]"
+                    >
+                      Trang chủ
+                    </Link>
+                  </li>
+                  <li className="relative group">
+                    <Link
+                      href="#"
+                      className="flex justify-between items-center text-base font-normal leading-10 hover:text-[#da966e]"
+                    >
+                      Thể loại
+                      <span className="ml-1.5">
+                        <i className="fa-solid fa-caret-down"></i>
+                      </span>
+                    </Link>
+
+                    <ul className="flex flex-wrap justify-between items-center overflow-hidden">
+                      {categories?.map((item, i) => (
+                        <li key={item._id} className="w-[50%]">
+                          <Link
+                            href={`/category/${item.slug}?cateId=${item._id}`}
+                            className="pl-[15px] pr-[8px] py-2 block w-full text-[12px] overflow-hidden text-ellipsis whitespace-nowrap"
+                            title={`${item.name}`}
+                          >
+                            <span>{item.name}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div> */}
+
+          <SidebarHomeMobile
+            categories={categories}
+            showSideBarMobile={showSideBarMobile}
+            setShowSideBarMobile={setShowSideBarMobile}
+          />
+
           <div className="bg-[rgba(255,255,255,.05)] px-[15px] h-full w-[180px] text-center">
             <Link href="/" className="relative w-full inline-block h-full">
               <Image
@@ -86,7 +180,7 @@ export default function Header({ categories }) {
             </Link>
           </div>
 
-          <div className="hidden sm:block flex-1 text-white">
+          <div className="hidden md:block flex-1 text-white">
             <ul className="flex justify-center items-center ">
               <li className="inline-block">
                 <Link
@@ -108,7 +202,7 @@ export default function Header({ categories }) {
                   </span>
                 </Link>
 
-                <ul className="overflow-hidden absolute z-50 top-14 w-[450px] hidden bg-white text-gray-700 border border-gray-300 rounded-md group-hover:flex flex-wrap">
+                <ul className="overflow-hidden absolute top-14 w-[400px] lg:w-[450px] hidden bg-white text-gray-700 border border-gray-300 rounded-md group-hover:flex flex-wrap z-50">
                   {categories?.map((item, i) => (
                     <li
                       key={item._id}
@@ -136,7 +230,7 @@ export default function Header({ categories }) {
 
           <div className="flex justify-end items-center  ">
             <div className="relative">
-              <div className="mr-[8px] relative flex">
+              <div className="md:mr-[8px] relative flex">
                 <input
                   // className="absolute right-full inset-y-0 bg-[#2D2D2D] focus:outline-none px-3.5 text-white"
                   className={`absolute inset-y-0 placeholder:text-xs bg-[#2D2D2D] text-white transition-all duration-500 outline-none rounded-[5px] ${
@@ -217,10 +311,10 @@ export default function Header({ categories }) {
               )}
             </div>
 
-            <div className="mr-[8px] w-[1px] h-[30px] bg-white opacity-50"></div>
+            <div className="hidden md:block mr-[8px] w-[1px] h-[30px] bg-white opacity-50"></div>
 
             {!user ? (
-              <div className="flex justify-end items-center">
+              <div className="hidden md:flex justify-end items-center">
                 <div className="mr-2.5">
                   <Link
                     className="text-sm font-semibold cursor-pointer text-white hover:underline"
@@ -239,7 +333,7 @@ export default function Header({ categories }) {
                 </div>
               </div>
             ) : (
-              <div className="p-[5px] relative cursor-pointer group w-[150px] bg-white rounded">
+              <div className="hidden md:block p-[5px] relative cursor-pointer group w-[150px] bg-white rounded">
                 <div className="grid grid-cols-5">
                   <div className="col-span-4">
                     <Link

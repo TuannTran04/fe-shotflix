@@ -11,7 +11,7 @@ const LayoutRoot = ({ children, categories }) => {
     <div className="w-full">
       <Header categories={categories} />
       <div className="bg-[#424040]">
-        <div className="w-full md:max-w-[1200px] mx-auto bg-[#151414] p-7">
+        <div className="w-full md:max-w-[1200px] mx-auto bg-[#151414] p-3 sm:p-7">
           {children}
         </div>
       </div>

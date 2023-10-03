@@ -38,6 +38,8 @@ const SearchFilmPage = ({ queryString, categories }) => {
       <div className="mt-20">
         <Heading
           content={`Kết quả tìm kiếm: ${queryString.replace(/\+/g, " ")}`}
+          styleDiv="mb-4"
+          styleTitle="text-[#da966e] text-2xl font-normal border-l-4 pl-2.5"
         />
 
         <LayoutAllFilm arrMovie={arrMovie} />

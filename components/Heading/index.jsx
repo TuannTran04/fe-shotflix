@@ -1,11 +1,9 @@
 import React from "react";
 
-const Heading = ({ content }) => {
+const Heading = ({ content, styleDiv, styleTitle }) => {
   return (
-    <div className="mb-4">
-      <h3 className="text-[#da966e] text-2xl font-normal border-l-4 pl-2.5">
-        {content || "ten o day"}
-      </h3>
+    <div className={styleDiv}>
+      <h3 className={styleTitle}>{content || "ten o day"}</h3>
     </div>
   );
 };

@@ -27,6 +27,7 @@ const Home = (props) => {
     if (props?.dataMovies) {
       dispatch(addDataMovies(props?.dataMovies));
     }
+    // window.location.reload();
   }, []);
 
   return (

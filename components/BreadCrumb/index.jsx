@@ -3,8 +3,8 @@ import React from "react";
 
 const Breadcrumb = ({ content }) => {
   return (
-    <div className="mb-8">
-      <nav className="flex p-2.5" aria-label="Breadcrumb">
+    <div className="mb-4 md:mb-8">
+      <nav className="flex py-2.5" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li className="inline-flex items-center">
             <Link

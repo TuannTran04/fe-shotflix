@@ -71,24 +71,30 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
 
   return (
     <LayoutRoot categories={categories}>
-      <div className="mt-16 ">
+      <div className="sm:mt-16">
         <Breadcrumb content={`Xem phim ${movie?.title}`} />
 
         <div className="grid grid-cols-1 lg:grid-cols-7 gap-4">
           {/* LEFT */}
-          <div className="lg:col-span-5 ">
-            <div className="p-2.5 bg-[#2D2D2D]">
+          <div className="lg:col-span-5">
+            <div className="p-1 sm:p-2.5 bg-[#2D2D2D]">
               <div className="overflow-hidden">
                 <VideoContainer movie={movie} nameFilm={nameFilm} />
               </div>
 
-              <CommentFilm />
+              <div className="hidden lg:block">
+                <CommentFilm />
+              </div>
             </div>
           </div>
 
           {/* RIGHT */}
-          <div className=" lg:col-span-2">
+          <div className="mt-[20px] lg:mt-0 lg:col-span-2">
             <VideoDetail movie={movie} />
+          </div>
+
+          <div className="col-span-1 lg:hidden">
+            <CommentFilm />
           </div>
         </div>
 

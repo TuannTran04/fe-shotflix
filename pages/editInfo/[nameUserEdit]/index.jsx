@@ -70,7 +70,7 @@ const EditInfoUser = ({ nameUserEdit, categories }) => {
   return (
     <ProtectedRoute>
       <LayoutManageInfo categories={categories}>
-        <div className="mt-20 mb-8 min-h-[400px] overflow-hidden">
+        <div className="sm:mt-20 mb-8 min-h-[400px] overflow-hidden">
           <div className="flex justify-start items-center mb-[25px]">
             <div className="h-[130px] w-[130px]">
               <img

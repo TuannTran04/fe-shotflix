@@ -79,7 +79,7 @@ const MovieMainContent = ({ item, toast }) => {
 
   return (
     <div className="h-full">
-      <div className="mx-2 relative h-full overflow-hidden group flex flex-col justify-between">
+      <div className="mx-1 sm:mx-2 relative h-full overflow-hidden group flex flex-col justify-between">
         <Link
           href={`/playFilm/${slug}`}
           className="flex h-full items-center justify-center z-50 overflow-hidden"
@@ -90,7 +90,7 @@ const MovieMainContent = ({ item, toast }) => {
           <img
             src={photo?.[0] || ""}
             alt="user profile avatar"
-            className="block h-[200px] w-full object-cover group-hover:scale-110 transition-all duration-300 group-hover:opacity-50 "
+            className="block h-[150px] sm:h-[200px] w-full object-cover group-hover:scale-110 transition-all duration-300 group-hover:opacity-50 "
           />
           <i className="fa-solid fa-circle-play text-4xl absolute text-white scale-150 opacity-0 group-hover:scale-100 group-hover:opacity-80 duration-500 ease-in-out"></i>
 

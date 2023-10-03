@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { createAxios } from "../../utils/createInstance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Heading from "../Heading";
 
 const SliderTrendingFilm = ({ toast }) => {
   const user = useSelector((state) => state.auth.login.currentUser);
@@ -21,7 +22,7 @@ const SliderTrendingFilm = ({ toast }) => {
   const { movies, favoriteFilm, watchLaterFilm } = film;
 
   return (
-    <div className="mt-5 sm:mt-20 mb-8 -mx-2.5">
+    <div className="mt-0 sm:mt-20 mb-14 sm:mb-8 -mx-2.5">
       {/* <div>
         <img
           className="block w-full"
@@ -29,11 +30,12 @@ const SliderTrendingFilm = ({ toast }) => {
           alt=""
         />
       </div> */}
-      <div className="px-2.5 mb-4">
-        <h2 className="text-[#da966e] text-3xl font-normal border-l-4 pl-2.5">
-          Top Trending
-        </h2>
-      </div>
+
+      <Heading
+        content="Top Trending"
+        styleDiv="px-2.5 mb-4"
+        styleTitle="text-[#da966e] text-3xl font-normal border-l-4 pl-2.5"
+      />
 
       <Slider {...settings}>
         {movies?.trending?.map((item, index) => {

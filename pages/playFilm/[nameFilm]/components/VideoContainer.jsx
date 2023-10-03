@@ -7,11 +7,14 @@ const CryptoJS = require("crypto-js");
 
 const VideoContainer = ({ movie, nameFilm }) => {
   const router = useRouter();
+  console.log(router);
   const refVideo = useRef();
   // let player = useRef(null);
-  const [playerInstance, setPlayerInstance] = useState(null);
-  console.log(">>> player <<<", playerInstance);
-  const [hlsInstance, setHLSInstance] = useState(null);
+  // const [playerInstance, setPlayerInstance] = useState(null);
+  // console.log(">>> player <<<", playerInstance);
+  // const [hlsInstance, setHLSInstance] = useState(null);
+  let player = null;
+  let hls = null;
 
   var config = {
     autoStartLoad: true,
@@ -79,8 +82,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
     // Chuyển đổi dữ liệu phụ đề thành định dạng Plyr
     if (Object.keys(movie).length > 0) {
       console.log(movie);
-      let player;
-      let hls;
+      // let player;
+      // let hls;
       const defaultOptions = {};
       console.log(movie.video?.[0]);
       if (refVideo.current) {
@@ -134,7 +137,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
                 title: "Example Title",
                 controls: [
                   "play-large",
-                  "restart",
+                  // "restart",
                   "rewind",
                   "play",
                   "fast-forward",
@@ -171,8 +174,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
               });
 
               /////////////////////////////
-              setPlayerInstance(player);
-              setHLSInstance(hls);
+              // setPlayerInstance(player);
+              // setHLSInstance(hls);
               /////////////////////////////
 
               // Đặt sự kiện cho Plyr khi video load xong các data
@@ -256,10 +259,13 @@ const VideoContainer = ({ movie, nameFilm }) => {
             });
           });
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-          refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`;
-          refVideo.current.addEventListener("loadedmetadata", function () {
-            refVideo.current.play();
-          });
+          if (refVideo.current) {
+            refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
+            refVideo.current.type = "application/x-mpegURL";
+            // refVideo.current.addEventListener("loadedmetadata", function () {
+            //   refVideo.current.play();
+            // });
+          }
         }
       }
     }
@@ -270,17 +276,23 @@ const VideoContainer = ({ movie, nameFilm }) => {
 
     // Xóa sự kiện và Plyr instance khi unmount
     return () => {
-      if (playerInstance) {
-        // console.log("playerInstance", playerInstance);
-        console.log("destroyyyyyyyyyyyyyyyy playerInstance");
-
-        playerInstance.destroy();
-        if (hlsInstance) {
-          console.log("destroyyyyyyyyyyyyyyyy hls");
-          hlsInstance.destroy();
-        }
+      if (player) {
+        player.destroy();
         window.location.reload();
       }
+      if (hls) {
+        hls.destroy();
+      }
+      // if (playerInstance) {
+      //   // console.log("playerInstance", playerInstance);
+      //   console.log("destroyyyyyyyyyyyyyyyy playerInstance");
+      //   playerInstance.destroy();
+      // }
+      // if (hlsInstance) {
+      //   console.log("destroyyyyyyyyyyyyyyyy hls");
+      //   hlsInstance.destroy();
+      // }
+      // window.location.reload();
     };
   }, [movie, movie._id, nameFilm]);
 

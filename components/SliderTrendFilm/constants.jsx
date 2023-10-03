@@ -77,13 +77,36 @@ export var settings = {
   slidesToShow: 5,
   slidesToScroll: 1,
   initialSlide: 0,
-  // autoplay: true,
+  autoplay: true,
   speed: 1000,
   autoplaySpeed: 5000,
   swipeToSlide: true,
   // arrows: false,
   nextArrow: <SampleNextArrow />,
   prevArrow: <SamplePrevArrow />,
+  // appendDots: (dots) => (
+  //   <div
+  //     style={{
+  //       width: "200px",
+  //       backgroundColor: "#ddd",
+  //       borderRadius: "10px",
+  //       padding: "10px",
+  //     }}
+  //   >
+  //     <ul style={{ margin: "0px" }}> {dots} </ul>
+  //   </div>
+  // ),
+  // customPaging: (i) => (
+  //   <div
+  //     style={{
+  //       width: "30px",
+  //       color: "blue",
+  //       border: "1px blue solid",
+  //     }}
+  //   >
+  //     he
+  //   </div>
+  // ),
   responsive: [
     {
       breakpoint: 1024,
@@ -91,7 +114,7 @@ export var settings = {
         slidesToShow: 3,
         slidesToScroll: 3,
         infinite: true,
-        dots: true,
+        dots: false,
       },
     },
     {
@@ -100,6 +123,7 @@ export var settings = {
         slidesToShow: 2,
         slidesToScroll: 2,
         initialSlide: 2,
+        dots: false,
       },
     },
     {
@@ -107,6 +131,7 @@ export var settings = {
       settings: {
         slidesToShow: 1,
         slidesToScroll: 1,
+        dots: true,
       },
     },
   ],

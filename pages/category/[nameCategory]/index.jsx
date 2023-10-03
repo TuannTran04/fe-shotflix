@@ -48,10 +48,14 @@ const CategoryPage = ({ slugCategory, nameCategory, categories }) => {
 
   return (
     <LayoutRoot categories={categories}>
-      <div className="mt-16">
+      <div className="sm:mt-16">
         <Breadcrumb content={nameCategory} />
 
-        <Heading content={nameCategory} />
+        <Heading
+          content={nameCategory}
+          styleDiv="mb-4 md:mb-8"
+          styleTitle="text-[#da966e] text-2xl font-normal border-l-4 pl-2.5"
+        />
 
         <LayoutAllFilm arrMovie={arrMovie} />
 
