@@ -13,6 +13,7 @@ import VideoDetail from "./components/VideoDetail";
 import Breadcrumb from "../../../components/BreadCrumb";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { io } from "socket.io-client";
 
 // const arrDetailInfoFilm = [
 //   { id: 1, name: "Type", text: ["Movie"] },
@@ -24,13 +25,19 @@ import "react-toastify/dist/ReactToastify.css";
 // ];
 // const TIME_UPDATE_VIEW = 900000
 
-const TIME_UPDATE_VIEW = 900000;
+// Tạo kết nối Socket.IO
+// const socket = io("http://localhost:8000");
+
 const PlayFilmPage = ({ nameFilm, categories }) => {
   const film = useSelector((state) => state.film);
   const { movies, favoriteFilm, watchLaterFilm } = film;
   // console.log(">>> dataMovies <<<", movies?.topRatingofWeek);
 
   const [movie, setMovie] = useState({});
+  const [isLgScreen, setIsLgScreen] = useState(false);
+
+  // const [comments, setComments] = useState([]);
+  // console.log(comments);
   // console.log(movie,"movie single")
 
   // useEffect(() => {
@@ -52,22 +59,47 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
   // }, []);
 
   useEffect(() => {
+    // Xác định kích thước màn hình và cập nhật trạng thái isLgScreen
+    const handleResize = () => {
+      setIsLgScreen(window.innerWidth >= 1024); // Thay đổi ngưỡng theo yêu cầu của bạn
+    };
+
+    // Gắn sự kiện lắng nghe sự thay đổi kích thước màn hình
+    window.addEventListener("resize", handleResize);
+
+    // Khởi tạo trạng thái ban đầu
+    handleResize();
+
+    // Loại bỏ sự kiện lắng nghe khi component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     const renderSingleMovie = async () => {
       try {
         let res = await axios.get(
           `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/user/${nameFilm}`
         );
-        // console.log(">>> Results Search <<<", res);
+        // let comments = await axios.get(
+        //   `${process.env.NEXT_PUBLIC_URL}/api/v1/comment/${movies?._id}`
+        // );
+        // console.log(">>> Results Search <<<", comments);
         if (res.data.code === 200) {
           // console.log(">>> Results Search <<<", res.data.data.movieSingle[0]);
           setMovie(res.data.data.movieSingle[0]);
         }
+        // if (comments.data.code === 200) {
+        //   // console.log(">>> Results Search <<<", res.data.data.movieSingle[0]);
+        //   setComments(comments.data.data);
+        // }
       } catch (err) {
         console.log(err);
       }
     };
     renderSingleMovie();
-  }, [nameFilm]);
+  }, [nameFilm, movies?._id]);
 
   return (
     <LayoutRoot categories={categories}>
@@ -82,9 +114,12 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
                 <VideoContainer movie={movie} nameFilm={nameFilm} />
               </div>
 
-              <div className="hidden lg:block">
-                <CommentFilm />
-              </div>
+              {isLgScreen && (
+                <div className="hidden lg:block">
+                  {/* Hiển thị CommentFilm khi màn hình lớn */}
+                  <CommentFilm movieId={movie?._id} />
+                </div>
+              )}
             </div>
           </div>
 
@@ -93,9 +128,12 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
             <VideoDetail movie={movie} />
           </div>
 
-          <div className="col-span-1 lg:hidden">
-            <CommentFilm />
-          </div>
+          {!isLgScreen && (
+            <div className="col-span-1 lg:hidden">
+              {/* Hiển thị CommentFilm khi màn hình lớn */}
+              <CommentFilm movieId={movie?._id} />
+            </div>
+          )}
         </div>
 
         <SliderTopRatingofWeek movies={movies?.topRatingofWeek} toast={toast} />

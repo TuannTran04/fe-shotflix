@@ -10,6 +10,7 @@ import axios from "axios";
 import { createAxios } from "../utils/createInstance";
 import { getFavoriteMovies, getWatchLaterMovies } from "../store/apiRequest";
 import { addDataMovies } from "../store/filmSlice";
+// import { io } from "socket.io-client";
 
 const Home = (props) => {
   const router = useRouter();

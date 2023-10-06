@@ -287,3 +287,111 @@ export const deleteBookmarkMovie = async (userId, movieId, isBookmark) => {
     throw new Error(err);
   }
 };
+
+////////////////////******************** MOVIES ********************////////////////////////////
+export const addComment = async (userId, movieId, text) => {
+  const data = { userId, movieId, text };
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.post(
+      `${base_url}/api/v1/comment/add-comment`,
+      data
+    );
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const addReplyComment = async (userId, movieId, commentId, text) => {
+  const data = { userId, movieId, commentId, text };
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.post(
+      `${base_url}/api/v1/comment/add-reply-comment`,
+      data
+    );
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const updateCommentById = async (userId, movieId, commentId, text) => {
+  const data = { userId, movieId, commentId, text };
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.put(
+      `${base_url}/api/v1/comment/update-comment`,
+      data
+    );
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const updateReplyCommentById = async (
+  userId,
+  movieId,
+  commentId,
+  commentParentId,
+  text
+) => {
+  const data = { userId, movieId, commentId, commentParentId, text };
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.put(
+      `${base_url}/api/v1/comment/update-reply-comment`,
+      data
+    );
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const deleteCommentById = async (commentId) => {
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.delete(
+      `${base_url}/api/v1/comment/delete-comment/${commentId}`
+    );
+    console.log(res);
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const deleteReplyCommentById = async (commentId, commentParentId) => {
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.delete(
+      `${base_url}/api/v1/comment/delete-reply-comment/${commentParentId}/${commentId}`
+    );
+    console.log(res);
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
