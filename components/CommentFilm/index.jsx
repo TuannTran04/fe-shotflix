@@ -101,7 +101,8 @@ const CommentFilm = ({ movieId }) => {
     // Khởi tạo kết nối Socket.IO tại đây khi trang `/playFilm` được tải lên
     // const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
     const socket = io("https://be-movie-mt-copy.vercel.app", {
-      withCredentials: true,
+      // withCredentials: true,
+      transports: ["websocket", "polling", "flashsocket"],
     }); // Thay đổi URL máy chủ của bạn
 
     // let count = 0;
