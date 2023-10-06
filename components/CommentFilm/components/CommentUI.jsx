@@ -15,7 +15,7 @@ import {
 } from "../../../store/apiRequest";
 import { memo } from "react";
 import { io } from "socket.io-client";
-const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
+// const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
 
 function timeAgo(createdAt) {
   const currentTime = new Date();
