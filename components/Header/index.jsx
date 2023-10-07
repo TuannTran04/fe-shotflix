@@ -464,7 +464,7 @@ export default function Header({ categories }) {
           <div className="relative w-full">
             <input
               // className="absolute right-full inset-y-0 bg-[#2D2D2D] focus:outline-none px-3.5 text-white"
-              className={`block px-2 py-4 w-full placeholder:text-base bg-[#2D2D2D] text-white transition-all duration-500 border-2 ${
+              className={`block px-2 py-4 w-full placeholder:text-base bg-[#2D2D2D] text-white outline-none transition-all duration-500 border-2 ${
                 showSearchInput ? "" : ""
               }`}
               ref={inputRef}
