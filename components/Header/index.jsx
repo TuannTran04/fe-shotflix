@@ -188,11 +188,13 @@ export default function Header({ categories }) {
             </div>
           </div> */}
 
-          <SidebarHomeMobile
-            categories={categories}
-            showSideBarMobile={showSideBarMobile}
-            setShowSideBarMobile={setShowSideBarMobile}
-          />
+          {!isMdScreen && (
+            <SidebarHomeMobile
+              categories={categories}
+              showSideBarMobile={showSideBarMobile}
+              setShowSideBarMobile={setShowSideBarMobile}
+            />
+          )}
 
           <div className="bg-[rgba(255,255,255,.05)] px-[15px] h-full w-[180px] text-center">
             <Link href="/" className="relative w-full inline-block h-full">

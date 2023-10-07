@@ -49,9 +49,9 @@ const SidebarHomeMobile = ({
       <div
         className={`${
           showSideBarMobile
-            ? "left-0 opacity-90 w-[300px] visible h-full"
-            : "left-[-300px] opacity-0 w-0 h-0 invisible"
-        } fixed md:hidden top-0 transition-all duration-500 z-[50]`}
+            ? "left-0 opacity-90 w-[300px] visible"
+            : "left-[-300px] opacity-0 w-0 invisible"
+        } fixed md:hidden top-0 bottom-0 transition-all duration-500 z-[50]`}
       >
         <div className="absolute top-0 right-0 z-[50]">
           <span
