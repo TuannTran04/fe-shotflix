@@ -220,7 +220,7 @@ const CommentUI = ({
   return (
     <div className={`${isLastItem ? "mb-4" : "mb-0"} flex min-h-[60px]`}>
       <div className="relative w-[50px] h-[50px] mr-2.5 ">
-        {user && item.user?.avatar ? (
+        {item.user?.avatar ? (
           <Image
             className="absolute block object-cover w-full h-full"
             src={item.user?.avatar}
