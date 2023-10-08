@@ -333,7 +333,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
           ref={refVideo}
           crossOrigin="true"
           playsInline
-          preload="auto"
+          preload="none"
           controls
           style={{ "--plyr-captions-background": "rgba(0, 0, 0, 0.1)" }}
         >

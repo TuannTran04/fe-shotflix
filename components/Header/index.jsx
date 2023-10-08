@@ -26,7 +26,8 @@ export default function Header({ categories }) {
   const [showSearchResults, setSearchResults] = useState(false);
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [showSearchInputMobile, setShowSearchInputMobile] = useState(false);
-  console.log("showSearchInput", showSearchInputMobile);
+  const [showNotification, setShowNotification] = useState(false);
+  console.log("showNotification", showNotification);
 
   const [showSideBarMobile, setShowSideBarMobile] = useState(false);
 
@@ -57,6 +58,9 @@ export default function Header({ categories }) {
   };
   const handleShowSearchInputMobile = (e) => {
     setShowSearchInputMobile((prev) => !prev);
+  };
+  const handleShowNotification = (e) => {
+    setShowNotification((prev) => !prev);
   };
   const handleSubmitSearchInputMobile = (e) => {
     e.preventDefault();
@@ -273,7 +277,7 @@ export default function Header({ categories }) {
                     // className="absolute right-full inset-y-0 bg-[#2D2D2D] focus:outline-none px-3.5 text-white"
                     className={`hidden md:block absolute inset-y-0 placeholder:text-xs bg-[#2D2D2D] text-white transition-all duration-500 outline-none rounded-[5px] ${
                       showSearchInput
-                        ? "opacity:100 w-[230px] right-[60%] px-3.5 z-10"
+                        ? "opacity:100 w-[230px] right-[60%] px-3.5 z-50"
                         : "opacity:0 right-[30%] w-0 px-0"
                     }`}
                     ref={inputRef}
@@ -285,6 +289,74 @@ export default function Header({ categories }) {
                     autoComplete="off"
                   />
                 )}
+
+                <div className="relative">
+                  <button
+                    className="mr-2 rounded-full bg-white text-black h-11 w-11 z-20"
+                    title="Tìm kiếm"
+                    onClick={handleShowNotification}
+                  >
+                    <i className="fa-regular fa-bell"></i>
+                  </button>
+                  {showNotification && (
+                    <div
+                      // ref={resultsRef}
+                      className="absolute top-[110%] right-[40%] scroll_search_header min-h-[50px] max-h-[600px] w-[400px] bg-[rgba(0,0,0,.8)] overflow-y-auto "
+                    >
+                      {!arrSearchMovie.length === 0 ? (
+                        <p className="p-2 text-white text-center">
+                          Không có kết quả tìm kiếm
+                        </p>
+                      ) : (
+                        ["arrSearchMovie"].map((item, i) => (
+                          <div
+                            key={item._id}
+                            className=" px-1 py-2 flex items-center overflow-hidden"
+                          >
+                            <Link
+                              href={`/playFilm/${item.slug}`}
+                              className="flex w-full h-[80px] group"
+                              rel="preload"
+                              as="script"
+                            >
+                              <span className="mr-[10px] overflow-hidden">
+                                <img
+                                  // src={item.photo?.[0]}
+                                  src="https://yt3.ggpht.com/oEiclGnYQdKhndmRnTOI-V0qU0pwoijkwSs-dLgTGAzr9zcS6NGS-H3ryfRjhgs3LTZwkLjHyA=s300-c-k-c0x00ffffff-no-rj"
+                                  alt="pic"
+                                  className="object-cover w-[48px] h-[48px] rounded-[50%]"
+                                />
+                              </span>
+
+                              <span className="flex flex-col flex-[2] justify-between overflow-hidden">
+                                <p className="text-white">text</p>
+                                <p className="text-white">time</p>
+                              </span>
+
+                              <span className="ml-[10px] overflow-hidden group-hover:opacity-80">
+                                <img
+                                  // src={item.photo?.[0]}
+                                  src="https://yt3.ggpht.com/oEiclGnYQdKhndmRnTOI-V0qU0pwoijkwSs-dLgTGAzr9zcS6NGS-H3ryfRjhgs3LTZwkLjHyA=s300-c-k-c0x00ffffff-no-rj"
+                                  alt="pic"
+                                  className="object-cover w-[100px] h-[50px]"
+                                />
+                              </span>
+                            </Link>
+                          </div>
+                        ))
+                      )}
+
+                      {/* <div className="py-4 px-2 text-center border-t-[1px] border-[rgba(255,255,255,.3)]">
+                        <p
+                          className="text-xs text-white cursor-pointer italic"
+                          onClick={handleSubmitSearchInputMobile}
+                        >
+                          Xem tất cả kết quả
+                        </p>
+                      </div> */}
+                    </div>
+                  )}
+                </div>
 
                 {isMdScreen && (
                   <button

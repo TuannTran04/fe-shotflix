@@ -47,6 +47,12 @@ function timeAgo(createdAt) {
 }
 
 const CommentFilm = ({ movieId }) => {
+  // const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
+  const socket = io("https://be-movie-mt-copy.vercel.app", {
+    // withCredentials: true,
+    transports: ["websocket", "polling", "flashsocket"],
+  }); // Thay đổi URL máy chủ của bạn
+
   const router = useRouter();
   // console.log("comment", router);
   const user = useSelector((state) => state.auth.login.currentUser);
@@ -87,6 +93,12 @@ const CommentFilm = ({ movieId }) => {
       const res = await addComment(userId, movieId, commentInput);
       console.log(">>> addComment <<<", res);
       toast(res?.data?.message);
+      if (res && res.data?.data) {
+        setComments((prevComments) => {
+          return [res.data.data, ...prevComments];
+        });
+        socket.emit("new-comment", JSON.stringify(res.data.data));
+      }
       setTextInputs((prevState) => ({
         ...prevState,
         commentInput: "",
@@ -99,11 +111,6 @@ const CommentFilm = ({ movieId }) => {
 
   useEffect(() => {
     // Khởi tạo kết nối Socket.IO tại đây khi trang `/playFilm` được tải lên
-    // const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
-    const socket = io("https://be-movie-mt-copy.vercel.app", {
-      // withCredentials: true,
-      transports: ["websocket", "polling", "flashsocket"],
-    }); // Thay đổi URL máy chủ của bạn
 
     // let count = 0;
     // setInterval(() => {
@@ -111,59 +118,78 @@ const CommentFilm = ({ movieId }) => {
     // }, 1000);
 
     // Xử lý bình luận ở đây
-    socket.on("new-comment", (data) => {
+    socket.on("new-comment-user", (data) => {
+      console.log("an event");
       setComments((prevComments) => {
-        return [data, ...prevComments];
+        return [JSON.parse(data), ...prevComments];
       });
     });
 
-    socket.on("new-reply-comment", (data) => {
+    socket.on("new-reply-comment-user", (data) => {
       console.log(data);
+      const dataServer = JSON.parse(data);
       setComments((prevComments) => {
         return prevComments.map((prevComment) => {
-          if (prevComment._id === data._id) {
-            return data;
+          if (prevComment._id === dataServer._id) {
+            return dataServer;
           } else {
             return prevComment;
           }
         });
       });
     });
-    socket.on("comment-updated", (updatedComment) => {
+    socket.on("comment-updated-user", (updatedComment) => {
       // Cập nhật giao diện người dùng với comment đã được cập nhật
+      const dataServer = JSON.parse(updatedComment);
+
       setComments((prevComments) => {
         return prevComments.map((prevComment) => {
-          if (prevComment._id === updatedComment._id) {
-            return updatedComment;
+          if (prevComment._id === dataServer._id) {
+            return dataServer;
           } else {
             return prevComment;
           }
         });
       });
     });
-    socket.on("reply-comment-updated", (updatedComment) => {
+    socket.on("reply-comment-updated-user", (updatedComment) => {
       // Tìm và cập nhật comment reply tương ứng trong danh sách comments
-      const updatedComments = comments.map((comment) => {
-        if (comment._id === updatedComment._id) {
-          return updatedComment;
-        } else {
-          return comment;
-        }
-      });
+      // const updatedComments = comments.map((comment) => {
+      //   if (comment._id === updatedComment._id) {
+      //     return updatedComment;
+      //   } else {
+      //     return comment;
+      //   }
+      // });
 
-      // Cập nhật state của danh sách comments với thông tin đã cập nhật
-      setComments(updatedComments);
-    });
+      // // Cập nhật state của danh sách comments với thông tin đã cập nhật
+      // setComments(updatedComments);
 
-    socket.on("comment-deleted", (commentId) => {
-      // Cập nhật giao diện người dùng để xóa comment với commentId đã được xóa
+      const dataServer = JSON.parse(updatedComment);
       setComments((prevComments) => {
-        return prevComments.filter((comment) => comment._id !== commentId);
+        return prevComments.map((prevComment) => {
+          if (prevComment._id === dataServer._id) {
+            return dataServer;
+          } else {
+            return prevComment;
+          }
+        });
       });
     });
-    socket.on("reply-comment-deleted", ({ commentId, commentParentId }) => {
+
+    socket.on("comment-deleted-user", (commentId) => {
+      // Cập nhật giao diện người dùng để xóa comment với commentId đã được xóa
+      const dataServer = JSON.parse(commentId);
+      setComments((prevComments) => {
+        return prevComments.filter((comment) => comment._id !== dataServer);
+      });
+    });
+    socket.on("reply-comment-deleted-user", (data) => {
       // Cập nhật giao diện người dùng để xóa reply với commentId đã xóa từ comment với commentParentId tương ứng
+      // console.log(commentId, commentParentId);
+      const { commentId, commentParentId } = JSON.parse(data);
       console.log(commentId, commentParentId);
+
       setComments((prevComments) => {
         return prevComments.map((comment) => {
           if (comment._id === commentParentId) {
@@ -184,7 +210,7 @@ const CommentFilm = ({ movieId }) => {
     return () => {
       socket.disconnect();
     };
-  }, [comments]); // [] đảm bảo hiệu chỉnh này chỉ chạy một lần sau khi trang được tải
+  }, [comments, socket]); // [] đảm bảo hiệu chỉnh này chỉ chạy một lần sau khi trang được tải
 
   useEffect(() => {
     console.log("rerender", movieId);
@@ -206,144 +232,6 @@ const CommentFilm = ({ movieId }) => {
     }
   }, [movieId]);
 
-  // const UIComment = (item, replyUI) => (
-  //   <div key={item._id} className="mb-4 flex min-h-[60px]">
-  //     <div className="relative w-[50px] h-[50px] mr-2.5 ">
-  //       {user && item.user?.avatar ? (
-  //         <Image
-  //           className="absolute block object-cover w-full h-full"
-  //           src={item.user?.avatar}
-  //           alt="pic"
-  //           layout="fill"
-  //         />
-  //       ) : (
-  //         <div className="relative h-full w-[50px] mr-2.5 border-[2px] border-[#444] flex items-center justify-center">
-  //           <i className="fa-solid fa-user inline-block text-xl text-white"></i>
-  //         </div>
-  //       )}
-  //     </div>
-  //     <div className="flex-1 overflow-hidden">
-  //       <div className="flex justify-between items-center">
-  //         <h4 className="text-[#0285b5] font-semibold">
-  //           {item.user?.username}
-  //         </h4>
-
-  //         {userId === item.user?._id ? (
-  //           <span className="relative flex justify-center text-white">
-  //             <i
-  //               className="fa-solid fa-ellipsis-vertical cursor-pointer"
-  //               onClick={(e) => {
-  //                 e.preventDefault();
-  //                 e.stopPropagation();
-  //                 handleShowMenuComment(item._id);
-  //               }}
-  //             ></i>
-  //             {item._id === showMenuCommentId && (
-  //               <span className="py-1 absolute top-1 right-[10px] bg-white min-h-[50px] min-w-[100px] z-40">
-  //                 <span
-  //                   className="px-2 flex justify-start items-center hover:bg-[rgba(0,0,0,0.3)] cursor-pointer"
-  //                   onClick={() => handleShowInputEdit(item._id, item.text)}
-  //                 >
-  //                   <p className="flex-1 w-full whitespace-nowrap text-black">
-  //                     Chỉnh sửa
-  //                   </p>
-  //                 </span>
-  //                 <span
-  //                   className="px-2 flex justify-start items-center mt-1 hover:bg-[rgba(0,0,0,0.3)] cursor-pointer"
-  //                   onClick={() => deleteComment(item._id)}
-  //                 >
-  //                   <p className="flex-1 w-full whitespace-nowrap text-black">
-  //                     Xóa
-  //                   </p>
-  //                 </span>
-  //               </span>
-  //             )}
-  //           </span>
-  //         ) : (
-  //           <></>
-  //         )}
-  //       </div>
-
-  //       {showEditingCommentId === item._id ? (
-  //         <div className="bg-[rgba(0,0,0,0.1)]">
-  //           <textarea
-  //             name="updatedText"
-  //             className="p-2 w-full outline-none"
-  //             value={updatedText}
-  //             onChange={handleChangeInputs}
-  //           />
-  //           <div className="flex items-center justify-end">
-  //             <button
-  //               type="button"
-  //               className="py-[9px] px-[16px] tracking-[.085em] text-sm font-bold text-[#f4fcf0] bg-[#DD0C39] rounded select-none cursor-pointer"
-  //               onClick={() => setShowEditingCommentId(null)}
-  //             >
-  //               Hủy
-  //             </button>
-  //             <button
-  //               type="button"
-  //               className="ml-[10px] py-[9px] px-[16px] tracking-[.085em] text-sm font-bold text-[#f4fcf0] bg-[#00b020] rounded select-none cursor-pointer"
-  //               onClick={() => updateComment(item._id, updatedText)}
-  //             >
-  //               Lưu
-  //             </button>
-  //           </div>
-  //         </div>
-  //       ) : (
-  //         <p className="break-words text-white my-1">{item.text}</p>
-  //       )}
-
-  //       <div className="text-sm text-white">
-  //         <span
-  //           className="mr-[15px] cursor-pointer hover:underline"
-  //           onClick={(e) => {
-  //             handleShowInputReply(item._id);
-  //           }}
-  //         >
-  //           <i className="fa-solid fa-reply mr-[4px]"></i>trả lời
-  //         </span>
-  //         <span className="mr-[15px]">
-  //           <i className="fa-regular fa-clock mr-[4px]"></i>
-  //           {timeAgo(new Date(item.createdAt))}
-  //         </span>
-  //       </div>
-
-  //       {showInputReply === item._id ? (
-  //         <div className="mt-2 bg-[rgba(0,0,0,0.1)]">
-  //           <textarea
-  //             name="replyText"
-  //             className="p-2 w-full outline-none"
-  //             autoFocus
-  //             value={replyText}
-  //             onChange={handleChangeInputs}
-  //           />
-  //           <div className="flex items-center justify-end">
-  //             <button
-  //               type="button"
-  //               className="py-[9px] px-[16px] tracking-[.085em] text-sm font-bold text-[#f4fcf0] bg-[#DD0C39] rounded select-none cursor-pointer"
-  //               onClick={(e) => {
-  //                 handleHideInputReply();
-  //               }}
-  //             >
-  //               Hủy
-  //             </button>
-  //             <button
-  //               type="button"
-  //               className="ml-[10px] py-[9px] px-[16px] tracking-[.085em] text-sm font-bold text-[#f4fcf0] bg-[#00b020] rounded select-none cursor-pointer"
-  //               onClick={() => handleAddReplyComment(item._id, replyText)}
-  //             >
-  //               Lưu
-  //             </button>
-  //           </div>
-  //         </div>
-  //       ) : (
-  //         <></>
-  //       )}
-
-  //       {replyUI ? <div className="mt-4">{replyUI}</div> : <></>}
-  //     </div>
-  //   </div>
-  // );
   // useEffect(() => {
   //   const initFacebookSDK = () => {
   //     if (window.FB) {
@@ -429,31 +317,41 @@ const CommentFilm = ({ movieId }) => {
               )
             : UIComment(item)
         )} */}
-        {comments?.map((item, i) =>
-          item.replies && item.replies.length > 0 ? (
-            <CommentUI
-              key={item._id}
-              movieId={movieId}
-              item={item}
-              isLastItem={i !== comments.length - 1}
-              replyComment={item.replies.map((reply, i) => (
-                <CommentUI
-                  key={reply._id}
-                  movieId={movieId}
-                  item={reply}
-                  isLastItem={i !== item.replies.length - 1}
-                  commentParentId={item._id}
-                />
-              ))}
-            />
-          ) : (
-            <CommentUI
-              key={item._id}
-              movieId={movieId}
-              item={item}
-              isLastItem={i !== comments.length - 1}
-            />
+        {comments.length > 0 ? (
+          comments?.map((item, i) =>
+            item.replies && item.replies.length > 0 ? (
+              <CommentUI
+                key={item._id}
+                movieId={movieId}
+                item={item}
+                isLastItem={i !== comments.length - 1}
+                setComments={setComments}
+                socket={socket}
+                replyComment={item.replies.map((reply, i) => (
+                  <CommentUI
+                    key={reply._id}
+                    movieId={movieId}
+                    item={reply}
+                    isLastItem={i !== item.replies.length - 1}
+                    commentParentId={item._id}
+                    setComments={setComments}
+                    socket={socket}
+                  />
+                ))}
+              />
+            ) : (
+              <CommentUI
+                key={item._id}
+                movieId={movieId}
+                item={item}
+                isLastItem={i !== comments.length - 1}
+                setComments={setComments}
+                socket={socket}
+              />
+            )
           )
+        ) : (
+          <p className="p-2 text-white text-center">Không có bình luận nào</p>
         )}
       </div>
     </div>

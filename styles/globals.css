@@ -201,15 +201,27 @@ body {
 }
 .sidebarMobile .side-navigation-panel-select-wrap {
 }
+.sidebarMobile
+  .side-navigation-panel-select-option.side-navigation-panel-select-option-selected {
+  /* background-color: white !important; */
+}
 .sidebarMobile .side-navigation-panel-select-option {
   border: none !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+.sidebarMobile .side-navigation-panel-select-option:hover {
+  /* background-color: white !important; */
+}
 .sidebarMobile .side-navigation-panel-select-option-text {
   color: white;
   margin-left: 0px !important;
   margin-right: 0px !important;
+}
+.sidebarMobile
+  .side-navigation-panel-select-option:hover
+  .side-navigation-panel-select-option-text {
+  color: black;
 }
 .sidebarMobile
   .side-navigation-panel-select-option:hover

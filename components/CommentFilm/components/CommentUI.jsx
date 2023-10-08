@@ -55,6 +55,8 @@ const CommentUI = ({
   item,
   replyComment,
   isLastItem,
+  setComments,
+  socket,
 }) => {
   const router = useRouter();
   // console.log("comment", router);
@@ -68,9 +70,6 @@ const CommentUI = ({
   });
   const { updatedText, replyText } = textInputs;
   console.log(textInputs);
-
-  const [comments, setComments] = useState([]);
-  console.log(comments);
 
   const [showMenuCommentId, setShowMenuCommentId] = useState(null);
   const [showEditingCommentId, setShowEditingCommentId] = useState(null);
@@ -129,6 +128,19 @@ const CommentUI = ({
 
       const res = await addReplyComment(userId, movieId, commentId, replyText);
       console.log(">>> updateComment <<<", res);
+
+      if (res && res.data?.data) {
+        setComments((prevComments) => {
+          return prevComments.map((prevComment) => {
+            if (prevComment._id === res.data?.data._id) {
+              return res.data?.data;
+            } else {
+              return prevComment;
+            }
+          });
+        });
+        socket.emit("new-reply-comment", JSON.stringify(res.data.data));
+      }
       toast(res?.data?.message);
       setShowInputReply(null);
       setTextInputs((prevState) => ({
@@ -157,6 +169,19 @@ const CommentUI = ({
       );
 
       console.log(">>> updateComment <<<", res);
+
+      if (res && res.data?.data) {
+        setComments((prevComments) => {
+          return prevComments.map((prevComment) => {
+            if (prevComment._id === res.data?.data._id) {
+              return res.data?.data;
+            } else {
+              return prevComment;
+            }
+          });
+        });
+        socket.emit("reply-comment-updated", JSON.stringify(res.data.data));
+      }
       toast(res?.data?.message);
       setShowEditingCommentId(null);
     } catch (err) {
@@ -184,6 +209,20 @@ const CommentUI = ({
 
       const res = await updateCommentById(userId, movieId, commentId, text);
       console.log(">>> updateComment <<<", res);
+
+      if (res && res.data?.data) {
+        setComments((prevComments) => {
+          return prevComments.map((prevComment) => {
+            if (prevComment._id === res.data?.data._id) {
+              return res.data?.data;
+            } else {
+              return prevComment;
+            }
+          });
+        });
+        socket.emit("comment-updated", JSON.stringify(res.data.data));
+      }
+
       toast(res?.data?.message);
       setShowEditingCommentId(null);
     } catch (err) {
@@ -198,7 +237,16 @@ const CommentUI = ({
     try {
       const res = await deleteCommentById(commentId);
       console.log(">>> deleteComment <<<", res);
-      toast(res?.data);
+
+      if (res && res.data?.data) {
+        setComments((prevComments) => {
+          return prevComments.filter(
+            (comment) => comment._id !== res.data?.data
+          );
+        });
+        socket.emit("comment-deleted", JSON.stringify(res.data.data));
+      }
+      toast(res?.data?.message);
     } catch (err) {
       console.log(err);
       throw new Error(err);
@@ -210,7 +258,26 @@ const CommentUI = ({
     try {
       const res = await deleteReplyCommentById(commentId, commentParentId);
       console.log(">>> deleteComment <<<", res);
-      toast(res?.data);
+
+      if (res && res.data?.data) {
+        setComments((prevComments) => {
+          return prevComments.map((comment) => {
+            if (comment._id === res.data?.data.commentParentId) {
+              // Tạo một bản sao của comment và loại bỏ reply với commentId đã xóa
+              const updatedComment = { ...comment };
+              updatedComment.replies = updatedComment.replies.filter(
+                (reply) => reply._id !== res.data?.data.commentId
+              );
+              return updatedComment;
+            } else {
+              return comment;
+            }
+          });
+        });
+        socket.emit("reply-comment-deleted", JSON.stringify(res.data.data));
+      }
+
+      toast(res?.data?.message);
     } catch (err) {
       console.log(err);
       throw new Error(err);
