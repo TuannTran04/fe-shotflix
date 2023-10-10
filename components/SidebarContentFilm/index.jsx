@@ -17,18 +17,21 @@ const SidebarContentFilm = ({ movies }) => {
   return (
     <>
       {arrTopTrendingFilm.map((item) => (
-        <div key={item.id} className="overflow-hidden">
+        <div key={item.id} className="h-full overflow-hidden">
           <div className="mb-4">
             <h3 className="text-[#da966e] text-2xl font-normal border-l-4 pl-2.5">
               {item.title}
             </h3>
           </div>
 
-          <div className="list_top_trend_film md:h-[700px] overflow-y-auto">
+          <div className="list_top_trend_film h-[400px] md:h-[600px] overflow-y-auto">
             {item.listFilm?.map((itemFilm) => (
               <div
                 key={itemFilm._id}
                 className="overflow-hidden grid grid-cols-4 mb-2.5 h-[120px] md:h-[100px] gap-1"
+                // className={`overflow-hidden grid grid-cols-4 h-[120px] md:h-[100px] gap-1 ${
+                //   index === item.listFilm.length - 1 ? "" : "mb-2.5"
+                // }`}
               >
                 <div className="col-span-1 h-full">
                   <Link href={`/playFilm/${itemFilm.slug}`}>

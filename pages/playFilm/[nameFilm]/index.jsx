@@ -5,6 +5,7 @@ import CommentFilm from "../../../components/CommentFilm";
 // import { arrDetailInfoFilm } from "./constant";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useSearchParams } from "next/navigation";
 import SliderTopRatingofWeek from "../../../components/SliderRelatedFilm";
 import axios from "axios";
 import VideoContainer from "./components/VideoContainer";
@@ -31,6 +32,7 @@ import { io } from "socket.io-client";
 const PlayFilmPage = ({ nameFilm, categories }) => {
   const film = useSelector((state) => state.film);
   const { movies, favoriteFilm, watchLaterFilm } = film;
+
   // console.log(">>> dataMovies <<<", movies?.topRatingofWeek);
 
   const [movie, setMovie] = useState({});

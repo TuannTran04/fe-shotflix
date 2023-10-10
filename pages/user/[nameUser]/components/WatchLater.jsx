@@ -8,7 +8,7 @@ import {
 } from "../../../../store/apiRequest";
 import Link from "next/link";
 
-const WatchLater = ({ movie, toast }) => {
+const WatchLater = ({ movie, toast, setArrWatchLaterMovie }) => {
   const user = useSelector((state) => state.auth.login.currentUser);
   const userId = user?._id;
   const dispatch = useDispatch();
@@ -42,6 +42,12 @@ const WatchLater = ({ movie, toast }) => {
     try {
       const res = await deleteBookmarkMovie(userId, movie._id);
       console.log(res);
+
+      setArrWatchLaterMovie((prevWatchLaters) => {
+        return prevWatchLaters.filter(
+          (watchLater) => watchLater._id !== movie._id
+        );
+      });
       toast(res?.data?.message);
     } catch (err) {
       console.log(err);

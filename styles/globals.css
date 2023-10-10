@@ -19,7 +19,7 @@ body::-webkit-scrollbar,
 .sidebar_manage_info::-webkit-scrollbar,
 .srcoll_film_manage_user::-webkit-scrollbar,
 .scroll_search_header::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 .scroll_tab_manage_user::-webkit-scrollbar,
 .scroll_desc::-webkit-scrollbar {

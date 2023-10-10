@@ -288,7 +288,7 @@ export const deleteBookmarkMovie = async (userId, movieId, isBookmark) => {
   }
 };
 
-////////////////////******************** MOVIES ********************////////////////////////////
+////////////////////******************** COMMENT ********************////////////////////////////
 export const addComment = async (userId, movieId, text) => {
   const data = { userId, movieId, text };
   const base_url = process.env.NEXT_PUBLIC_URL;
@@ -385,6 +385,61 @@ export const deleteReplyCommentById = async (commentId, commentParentId) => {
   try {
     const res = await axios.delete(
       `${base_url}/api/v1/comment/delete-reply-comment/${commentParentId}/${commentId}`
+    );
+    console.log(res);
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+
+////////////////////******************** NOTIFY ********************////////////////////////////
+export const addNotify = async (
+  sender,
+  recipient,
+  movieId,
+  commentId,
+  text
+) => {
+  const data = { sender, recipient, movieId, commentId, text };
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.post(`${base_url}/api/v1/notify/add-notify`, data);
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const updateNotifyRead = async (notifyId) => {
+  const data = { notifyId };
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.put(
+      `${base_url}/api/v1/notify/update-notify-read`,
+      data
+    );
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const deleteNotifyById = async (notifyId) => {
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.delete(
+      `${base_url}/api/v1/notify/delete-notify/${notifyId}`
     );
     console.log(res);
     return res;

@@ -59,20 +59,19 @@ const UserManagePage = ({ nameUser, categories }) => {
                   onClick={() => {
                     setShowBigAvatar(false);
                   }}
-                >
-                  <div className="relative flex h-full select-none z-[200]">
-                    <img
-                      className="block mx-auto my-auto w-[400px] h-[500px] sm:w-[500px] sm:h-[500px] object-cover z-[200]"
-                      src={user?.avatar || "/unknowAvatar.webp"}
-                      alt="big pic"
-                    />
-                    <i
-                      className="fa-solid fa-xmark flex items-center justify-center w-[30px] h-[30px] absolute top-1 right-1 bg-white opacity-60 rounded-[50%] z-[250] cursor-pointer hover:opacity-100"
-                      onClick={() => {
-                        setShowBigAvatar(false);
-                      }}
-                    ></i>
-                  </div>
+                ></div>
+                <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex select-none z-[200]">
+                  <img
+                    className="block mx-auto my-auto w-[400px] h-[500px] sm:w-[500px] sm:h-[500px] object-cover z-[200]"
+                    src={user?.avatar || "/unknowAvatar.webp"}
+                    alt="big pic"
+                  />
+                  <i
+                    className="fa-solid fa-xmark absolute top-1 right-1 w-[30px] h-[30px] flex items-center justify-center bg-white opacity-60 rounded-[50%] z-[250] cursor-pointer hover:opacity-100"
+                    onClick={() => {
+                      setShowBigAvatar(false);
+                    }}
+                  ></i>
                 </div>
               </>
             )}

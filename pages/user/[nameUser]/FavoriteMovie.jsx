@@ -76,7 +76,12 @@ const FavoriteMovie = () => {
   return (
     <div className="srcoll_film_manage_user grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-h-[1000px] min-h-[300px] overflow-y-auto">
       {arrFavoriteMovie.map((movie, index) => (
-        <Favorite key={movie._id} movie={movie} toast={toast} />
+        <Favorite
+          key={movie._id}
+          movie={movie}
+          toast={toast}
+          setArrFavoriteMovie={setArrFavoriteMovie}
+        />
       ))}
       <ToastContainer />
     </div>

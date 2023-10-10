@@ -22,7 +22,7 @@ const SliderTrendingFilm = ({ toast }) => {
   const { movies, favoriteFilm, watchLaterFilm } = film;
 
   return (
-    <div className="mt-0 sm:mt-20 mb-14 sm:mb-8 -mx-2.5">
+    <div className="mt-0 md:mt-20 mb-14 sm:mb-8 -mx-2.5">
       {/* <div>
         <img
           className="block w-full"

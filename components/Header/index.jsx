@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import { searchMovies } from "../../services/userRequest";
 import axios from "axios";
 import SidebarHomeMobile from "../SidebarMobile/SidebarMobile";
+import Notification from "../Notification/Notification";
 
 export default function Header({ categories }) {
   const router = useRouter();
@@ -20,14 +21,14 @@ export default function Header({ categories }) {
   const dispatch = useDispatch();
   let axiosJWT = createAxios(user, dispatch, logOutSuccess);
 
+  const resultsRef = useRef(null);
+
   const [arrSearchMovie, setArrSearchMovie] = useState([]);
 
   const [searchInput, setSearchInput] = useState("");
   const [showSearchResults, setSearchResults] = useState(false);
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [showSearchInputMobile, setShowSearchInputMobile] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
-  console.log("showNotification", showNotification);
 
   const [showSideBarMobile, setShowSideBarMobile] = useState(false);
 
@@ -58,10 +59,9 @@ export default function Header({ categories }) {
   };
   const handleShowSearchInputMobile = (e) => {
     setShowSearchInputMobile((prev) => !prev);
+    setSearchInput("");
   };
-  const handleShowNotification = (e) => {
-    setShowNotification((prev) => !prev);
-  };
+
   const handleSubmitSearchInputMobile = (e) => {
     e.preventDefault();
     if (searchInput) {
@@ -86,6 +86,38 @@ export default function Header({ categories }) {
     logOut(dispatch, id, router, accessToken, axiosJWT);
   };
 
+  // Sự kiện lắng nghe khi click chuột toàn trang
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      console.log(resultsRef.current);
+      // Kiểm tra nếu kết quả đang hiển thị và chuột không nằm trong phần tử kết quả
+      if (
+        resultsRef.current &&
+        !resultsRef.current.contains(e.target) &&
+        e.target !==
+          document.querySelector(".fa-magnifying-glass").parentNode &&
+        e.target !== document.querySelector(".fa-magnifying-glass") &&
+        e.target !== inputRef.current
+      ) {
+        setShowSearchInput(false); // Ẩn kết quả
+        setSearchInput("");
+      } else if (
+        !resultsRef.current &&
+        e.target !==
+          document.querySelector(".fa-magnifying-glass").parentNode &&
+        e.target !== document.querySelector(".fa-magnifying-glass") &&
+        e.target !== inputRef.current
+      ) {
+        setShowSearchInput(false); // Ẩn kết quả
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   useEffect(() => {
     // Xác định kích thước màn hình và cập nhật trạng thái isLgScreen
     const handleResize = () => {
@@ -105,7 +137,7 @@ export default function Header({ categories }) {
   }, []);
 
   return (
-    <header className="bg-[#151414] h-20 relative sm:fixed top-0 left-0 right-0 z-[100] shadow-xl">
+    <header className="bg-[#151414] h-20 relative md:fixed top-0 left-0 right-0 z-[100] shadow-xl">
       <nav className="px-2 md:px-0 h-full mx-auto max-w-[1200px]">
         <div className="h-full flex justify-between items-center">
           <div className="block md:hidden">
@@ -272,126 +304,65 @@ export default function Header({ categories }) {
           <div className="flex justify-end items-center  ">
             <div className="relative">
               <div className="md:mr-[8px] relative flex">
-                {isMdScreen && (
-                  <input
-                    // className="absolute right-full inset-y-0 bg-[#2D2D2D] focus:outline-none px-3.5 text-white"
-                    className={`hidden md:block absolute inset-y-0 placeholder:text-xs bg-[#2D2D2D] text-white transition-all duration-500 outline-none rounded-[5px] ${
-                      showSearchInput
-                        ? "opacity:100 w-[230px] right-[60%] px-3.5 z-50"
-                        : "opacity:0 right-[30%] w-0 px-0"
-                    }`}
-                    ref={inputRef}
-                    type="text"
-                    name="searchInput"
-                    value={searchInput}
-                    onChange={handleSearchInput}
-                    placeholder="vd: Tên phim, đạo diễn, diễn viên..."
-                    autoComplete="off"
-                  />
-                )}
+                {/* // SHOW IPNUT SEARCH LAPTOP */}
+                <div className="relative h-[44px] w-[44px]">
+                  {isMdScreen && (
+                    <input
+                      // className="absolute right-full inset-y-0 bg-[#2D2D2D] focus:outline-none px-3.5 text-white"
+                      className={`hidden md:block absolute inset-y-0 placeholder:text-xs bg-[#2D2D2D] text-white transition-all duration-500 outline-none rounded-[5px] ${
+                        showSearchInput
+                          ? "opacity:100 w-[230px] right-[60%] px-3.5"
+                          : "opacity:0 right-[30%] w-0 px-0"
+                      }`}
+                      ref={inputRef}
+                      type="text"
+                      name="searchInput"
+                      value={searchInput}
+                      onChange={handleSearchInput}
+                      placeholder="vd: Tên phim, đạo diễn, diễn viên..."
+                      autoComplete="off"
+                    />
+                  )}
 
-                <div className="relative">
-                  <button
-                    className="mr-2 rounded-full bg-white text-black h-11 w-11 z-20"
-                    title="Tìm kiếm"
-                    onClick={handleShowNotification}
-                  >
-                    <i className="fa-regular fa-bell"></i>
-                  </button>
-                  {showNotification && (
-                    <div
-                      // ref={resultsRef}
-                      className="absolute top-[110%] right-[40%] scroll_search_header min-h-[50px] max-h-[600px] w-[400px] bg-[rgba(0,0,0,.8)] overflow-y-auto "
+                  {/* // SHOW ICON SEARCH LAPTOP */}
+                  {isMdScreen && (
+                    <button
+                      className="absolute right-0 mr-2 rounded-full bg-white text-black h-11 w-11 z-[100]"
+                      title="Tìm kiếm"
+                      onClick={handleSubmitSearchInput}
                     >
-                      {!arrSearchMovie.length === 0 ? (
-                        <p className="p-2 text-white text-center">
-                          Không có kết quả tìm kiếm
-                        </p>
-                      ) : (
-                        ["arrSearchMovie"].map((item, i) => (
-                          <div
-                            key={item._id}
-                            className=" px-1 py-2 flex items-center overflow-hidden"
-                          >
-                            <Link
-                              href={`/playFilm/${item.slug}`}
-                              className="flex w-full h-[80px] group"
-                              rel="preload"
-                              as="script"
-                            >
-                              <span className="mr-[10px] overflow-hidden">
-                                <img
-                                  // src={item.photo?.[0]}
-                                  src="https://yt3.ggpht.com/oEiclGnYQdKhndmRnTOI-V0qU0pwoijkwSs-dLgTGAzr9zcS6NGS-H3ryfRjhgs3LTZwkLjHyA=s300-c-k-c0x00ffffff-no-rj"
-                                  alt="pic"
-                                  className="object-cover w-[48px] h-[48px] rounded-[50%]"
-                                />
-                              </span>
+                      <i className="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                  )}
 
-                              <span className="flex flex-col flex-[2] justify-between overflow-hidden">
-                                <p className="text-white">text</p>
-                                <p className="text-white">time</p>
-                              </span>
-
-                              <span className="ml-[10px] overflow-hidden group-hover:opacity-80">
-                                <img
-                                  // src={item.photo?.[0]}
-                                  src="https://yt3.ggpht.com/oEiclGnYQdKhndmRnTOI-V0qU0pwoijkwSs-dLgTGAzr9zcS6NGS-H3ryfRjhgs3LTZwkLjHyA=s300-c-k-c0x00ffffff-no-rj"
-                                  alt="pic"
-                                  className="object-cover w-[100px] h-[50px]"
-                                />
-                              </span>
-                            </Link>
-                          </div>
-                        ))
-                      )}
-
-                      {/* <div className="py-4 px-2 text-center border-t-[1px] border-[rgba(255,255,255,.3)]">
-                        <p
-                          className="text-xs text-white cursor-pointer italic"
-                          onClick={handleSubmitSearchInputMobile}
-                        >
-                          Xem tất cả kết quả
-                        </p>
-                      </div> */}
-                    </div>
+                  {/* // SHOW ICON SEARCH MOBILE */}
+                  {!isMdScreen && !showSearchInputMobile && (
+                    <button
+                      className="mr-2 flex justify-center items-center rounded-full bg-white text-black h-11 w-11 z-20"
+                      title="Tìm kiếm"
+                      onClick={handleShowSearchInputMobile}
+                    >
+                      <i className="fa-solid fa-magnifying-glass text-[15px]"></i>
+                    </button>
+                  )}
+                  {!isMdScreen && showSearchInputMobile && (
+                    <button
+                      className="mr-2 flex justify-center items-center rounded-full bg-red-600 text-black h-11 w-11 z-20"
+                      title="Tắt tìm kiếm"
+                      onClick={handleShowSearchInputMobile}
+                    >
+                      <i className="fa-solid fa-xmark text-[20px]"></i>
+                    </button>
                   )}
                 </div>
 
-                {isMdScreen && (
-                  <button
-                    className="rounded-full bg-white text-black h-11 w-11 z-20"
-                    title="Tìm kiếm"
-                    onClick={handleSubmitSearchInput}
-                  >
-                    <i className="fa-solid fa-magnifying-glass"></i>
-                  </button>
-                )}
-
-                {/* //Mobile Toggle show */}
-                {!isMdScreen && !showSearchInputMobile && (
-                  <button
-                    className="flex justify-center items-center rounded-full bg-white text-black h-11 w-11 z-20"
-                    title="Tìm kiếm"
-                    onClick={handleShowSearchInputMobile}
-                  >
-                    <i className="fa-solid fa-magnifying-glass text-[15px]"></i>
-                  </button>
-                )}
-                {!isMdScreen && showSearchInputMobile && (
-                  <button
-                    className="flex justify-center items-center rounded-full bg-red-600 text-black h-11 w-11 z-20"
-                    title="Tìm kiếm"
-                    onClick={handleShowSearchInputMobile}
-                  >
-                    <i className="fa-solid fa-xmark text-[20px]"></i>
-                  </button>
-                )}
+                {/* NOTFICATION  */}
+                <Notification />
               </div>
 
-              {searchInput && isMdScreen && (
+              {searchInput && showSearchInput && isMdScreen && (
                 <div
-                  // ref={resultsRef}
+                  ref={resultsRef}
                   className="scroll_search_header absolute top-[110%] right-[80%] min-h-[50px] max-h-[300px] w-[330px] bg-[rgba(0,0,0,.8)] overflow-y-auto z-[100]"
                 >
                   {arrSearchMovie.length === 0 ? (
@@ -559,7 +530,7 @@ export default function Header({ categories }) {
           {searchInput && !isMdScreen && (
             <div
               // ref={resultsRef}
-              className="scroll_search_header min-h-[50px] max-h-[600px] bg-[rgba(0,0,0,.8)] overflow-y-auto "
+              className="scroll_search_header min-h-[50px] max-h-[500px] bg-[rgba(0,0,0,.8)] overflow-y-auto "
             >
               {arrSearchMovie.length === 0 ? (
                 <p className="p-2 text-white text-center">

@@ -8,7 +8,7 @@ import {
 } from "../../../../store/apiRequest";
 import Link from "next/link";
 
-const Favorite = ({ movie, toast }) => {
+const Favorite = ({ movie, toast, setArrFavoriteMovie }) => {
   const user = useSelector((state) => state.auth.login.currentUser);
   const userId = user?._id;
   const dispatch = useDispatch();
@@ -29,6 +29,10 @@ const Favorite = ({ movie, toast }) => {
     try {
       const res = await deleteFavoriteMovie(userId, movie._id);
       console.log(">>> deleteFavoriteMovie <<<", res);
+
+      setArrFavoriteMovie((prevFavorires) => {
+        return prevFavorires.filter((favorite) => favorite._id !== movie._id);
+      });
       toast(res?.data?.message);
     } catch (err) {
       console.log(err);

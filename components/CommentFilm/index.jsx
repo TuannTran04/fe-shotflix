@@ -1,6 +1,6 @@
 import Image from "next/legacy/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import {
   addComment,
   addReplyComment,
@@ -13,6 +13,12 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import CommentUI from "./components/CommentUI";
 import { io } from "socket.io-client";
+import { useRef } from "react";
+// const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
+// const socket = io("https://be-movie-mt-copy.vercel.app", {
+//   // withCredentials: true,
+//   transports: ["websocket", "polling", "flashsocket"],
+// }); // Thay đổi URL máy chủ của bạn
 
 function timeAgo(createdAt) {
   const currentTime = new Date();
@@ -47,12 +53,7 @@ function timeAgo(createdAt) {
 }
 
 const CommentFilm = ({ movieId }) => {
-  // const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
-  const socket = io("https://be-movie-mt-copy.vercel.app", {
-    // withCredentials: true,
-    transports: ["websocket", "polling", "flashsocket"],
-  }); // Thay đổi URL máy chủ của bạn
-
+  const socket = useRef();
   const router = useRouter();
   // console.log("comment", router);
   const user = useSelector((state) => state.auth.login.currentUser);
@@ -97,7 +98,7 @@ const CommentFilm = ({ movieId }) => {
         setComments((prevComments) => {
           return [res.data.data, ...prevComments];
         });
-        socket.emit("new-comment", JSON.stringify(res.data.data));
+        socket.current.emit("new-comment", JSON.stringify(res.data.data));
       }
       setTextInputs((prevState) => ({
         ...prevState,
@@ -110,22 +111,29 @@ const CommentFilm = ({ movieId }) => {
   };
 
   useEffect(() => {
-    // Khởi tạo kết nối Socket.IO tại đây khi trang `/playFilm` được tải lên
-
-    // let count = 0;
-    // setInterval(() => {
-    //   socket.emit("ping", count++);
-    // }, 1000);
+    // https://be-movie-mt-copy.vercel.app
+    socket.current = io("https://be-movie-mt-copy.vercel.app", {
+      query: {
+        token: accessToken,
+      },
+      transportOptions: {
+        polling: {
+          extraHeaders: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      },
+    });
 
     // Xử lý bình luận ở đây
-    socket.on("new-comment-user", (data) => {
+    socket.current.on("new-comment-user", (data) => {
       console.log("an event");
       setComments((prevComments) => {
         return [JSON.parse(data), ...prevComments];
       });
     });
 
-    socket.on("new-reply-comment-user", (data) => {
+    socket.current.on("new-reply-comment-user", (data) => {
       console.log(data);
       const dataServer = JSON.parse(data);
       setComments((prevComments) => {
@@ -138,7 +146,7 @@ const CommentFilm = ({ movieId }) => {
         });
       });
     });
-    socket.on("comment-updated-user", (updatedComment) => {
+    socket.current.on("comment-updated-user", (updatedComment) => {
       // Cập nhật giao diện người dùng với comment đã được cập nhật
       const dataServer = JSON.parse(updatedComment);
 
@@ -152,19 +160,7 @@ const CommentFilm = ({ movieId }) => {
         });
       });
     });
-    socket.on("reply-comment-updated-user", (updatedComment) => {
-      // Tìm và cập nhật comment reply tương ứng trong danh sách comments
-      // const updatedComments = comments.map((comment) => {
-      //   if (comment._id === updatedComment._id) {
-      //     return updatedComment;
-      //   } else {
-      //     return comment;
-      //   }
-      // });
-
-      // // Cập nhật state của danh sách comments với thông tin đã cập nhật
-      // setComments(updatedComments);
-
+    socket.current.on("reply-comment-updated-user", (updatedComment) => {
       const dataServer = JSON.parse(updatedComment);
       setComments((prevComments) => {
         return prevComments.map((prevComment) => {
@@ -177,14 +173,14 @@ const CommentFilm = ({ movieId }) => {
       });
     });
 
-    socket.on("comment-deleted-user", (commentId) => {
+    socket.current.on("comment-deleted-user", (commentId) => {
       // Cập nhật giao diện người dùng để xóa comment với commentId đã được xóa
       const dataServer = JSON.parse(commentId);
       setComments((prevComments) => {
         return prevComments.filter((comment) => comment._id !== dataServer);
       });
     });
-    socket.on("reply-comment-deleted-user", (data) => {
+    socket.current.on("reply-comment-deleted-user", (data) => {
       // Cập nhật giao diện người dùng để xóa reply với commentId đã xóa từ comment với commentParentId tương ứng
       // console.log(commentId, commentParentId);
       const { commentId, commentParentId } = JSON.parse(data);
@@ -206,11 +202,11 @@ const CommentFilm = ({ movieId }) => {
       });
     });
 
-    // Ngắt kết nối Socket.IO khi component unmount (trang bị đóng hoặc chuyển sang trang khác)
+    // Ngắt kết nối Socket.current.IO khi component unmount (trang bị đóng hoặc chuyển sang trang khác)
     return () => {
-      socket.disconnect();
+      socket.current.disconnect();
     };
-  }, [comments, socket]); // [] đảm bảo hiệu chỉnh này chỉ chạy một lần sau khi trang được tải
+  }, []); // [] đảm bảo hiệu chỉnh này chỉ chạy một lần sau khi trang được tải
 
   useEffect(() => {
     console.log("rerender", movieId);
@@ -326,7 +322,7 @@ const CommentFilm = ({ movieId }) => {
                 item={item}
                 isLastItem={i !== comments.length - 1}
                 setComments={setComments}
-                socket={socket}
+                socket={socket?.current}
                 replyComment={item.replies.map((reply, i) => (
                   <CommentUI
                     key={reply._id}
@@ -335,7 +331,7 @@ const CommentFilm = ({ movieId }) => {
                     isLastItem={i !== item.replies.length - 1}
                     commentParentId={item._id}
                     setComments={setComments}
-                    socket={socket}
+                    socket={socket?.current}
                   />
                 ))}
               />
@@ -346,7 +342,7 @@ const CommentFilm = ({ movieId }) => {
                 item={item}
                 isLastItem={i !== comments.length - 1}
                 setComments={setComments}
-                socket={socket}
+                socket={socket?.current}
               />
             )
           )
@@ -358,7 +354,7 @@ const CommentFilm = ({ movieId }) => {
   );
 };
 
-export default CommentFilm;
+export default memo(CommentFilm);
 
 // {/* <div className="flex min-h-[60px]">
 // <div className="relative w-[50px] h-[50px] mr-2.5 ">

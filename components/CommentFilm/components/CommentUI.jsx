@@ -1,12 +1,13 @@
 import Image from "next/legacy/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
 import { useSelector } from "react-redux";
+import { useSearchParams } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import {
+  addNotify,
   addReplyComment,
   deleteCommentById,
   deleteReplyCommentById,
@@ -58,6 +59,21 @@ const CommentUI = ({
   setComments,
   socket,
 }) => {
+  const searchParams = useSearchParams();
+  const commentIdScrollTo = searchParams.get("commentId");
+  console.log(commentIdScrollTo);
+
+  useEffect(() => {
+    if (commentIdScrollTo) {
+      // Lấy phần tử bình luận bằng ID hoặc class hoặc bất kỳ cách nào phù hợp
+      const commentElement = document.getElementById(`${commentIdScrollTo}`); // Thay 'commentId' bằng ID của bình luận
+      if (commentElement) {
+        // Sử dụng phương thức scrollIntoView để cuộn đến phần tử bình luận
+        commentElement.scrollIntoView({ behavior: "smooth" }); // Sử dụng 'smooth' để có hiệu ứng cuộn mượt
+      }
+    }
+  }, [commentIdScrollTo]);
+
   const router = useRouter();
   // console.log("comment", router);
   const user = useSelector((state) => state.auth.login.currentUser);
@@ -69,7 +85,7 @@ const CommentUI = ({
     replyText: "",
   });
   const { updatedText, replyText } = textInputs;
-  console.log(textInputs);
+  // console.log(textInputs);
 
   const [showMenuCommentId, setShowMenuCommentId] = useState(null);
   const [showEditingCommentId, setShowEditingCommentId] = useState(null);
@@ -127,7 +143,7 @@ const CommentUI = ({
       }
 
       const res = await addReplyComment(userId, movieId, commentId, replyText);
-      console.log(">>> updateComment <<<", res);
+      console.log(">>> handleAddReplyComment <<<", res);
 
       if (res && res.data?.data) {
         setComments((prevComments) => {
@@ -140,6 +156,28 @@ const CommentUI = ({
           });
         });
         socket.emit("new-reply-comment", JSON.stringify(res.data.data));
+
+        if (userId != item?.user._id) {
+          const resAddNotify = await addNotify(
+            userId, // sender
+            item?.user._id,
+            movieId,
+            // commentId, //cmt parent
+            item._id, //cmt ma` minh` rep
+            replyText
+          );
+          console.log(">>> resAddNotify <<<", resAddNotify);
+
+          if (resAddNotify && resAddNotify.data?.data) {
+            console.log("emit", resAddNotify.data?.data);
+
+            socket.emit(
+              "new-notify-comment",
+              JSON.stringify(resAddNotify.data.data),
+              resAddNotify.data?.data.recipient._id
+            );
+          }
+        }
       }
       toast(res?.data?.message);
       setShowInputReply(null);
@@ -285,7 +323,10 @@ const CommentUI = ({
   };
 
   return (
-    <div className={`${isLastItem ? "mb-4" : "mb-0"} flex min-h-[60px]`}>
+    <div
+      id={item._id}
+      className={`${isLastItem ? "mb-4" : "mb-0"} flex min-h-[60px]`}
+    >
       <div className="relative w-[50px] h-[50px] mr-2.5 ">
         {item.user?.avatar ? (
           <Image
