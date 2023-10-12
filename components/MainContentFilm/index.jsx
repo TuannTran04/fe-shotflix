@@ -32,7 +32,7 @@ const MainContentFilm = ({ toast }) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-7 -mx-2.5 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-7 -mx-2.5 gap-6">
         {/* LEFT */}
         <div className="md:col-span-5">
           <div className="flex flex-col justify-between">

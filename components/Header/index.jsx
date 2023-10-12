@@ -100,6 +100,8 @@ export default function Header({ categories }) {
         e.target !== inputRef.current
       ) {
         setShowSearchInput(false); // Ẩn kết quả
+        setShowSearchInputMobile(false); // Ẩn kết quả
+
         setSearchInput("");
       } else if (
         !resultsRef.current &&
@@ -109,6 +111,7 @@ export default function Header({ categories }) {
         e.target !== inputRef.current
       ) {
         setShowSearchInput(false); // Ẩn kết quả
+        setShowSearchInputMobile(false); // Ẩn kết quả
       }
     };
     document.addEventListener("mousedown", handleClickOutside);

@@ -1,15 +1,21 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createAxios } from "../../utils/createInstance";
 import { useState } from "react";
 import { logOutSuccess } from "../../store/authSlice";
 import Link from "next/link";
 import axios from "axios";
-import { deleteNotifyById, updateNotifyRead } from "../../store/apiRequest";
+import {
+  deleteNotifyById,
+  getNotify,
+  getUnreadNotifyCount,
+  updateNotifyRead,
+} from "../../store/apiRequest";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
+import { floor } from "lodash";
 // const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
 
 function timeAgo(createdAt) {
@@ -46,6 +52,8 @@ function timeAgo(createdAt) {
 
 const Notification = ({}) => {
   const socket = useRef();
+  const notifyRef = useRef();
+  console.log(notifyRef.current);
 
   const router = useRouter();
   const user = useSelector((state) => state.auth.login.currentUser);
@@ -55,10 +63,24 @@ const Notification = ({}) => {
   let axiosJWT = createAxios(user, dispatch, logOutSuccess);
 
   const [listNoti, setListNoti] = useState([]);
+  const [totalUnread, setTotalUnread] = useState(0);
+  const [totalNotify, setTotalNotify] = useState(0);
+  console.log("notify unread >", totalUnread, "notify total >", totalNotify);
   console.log(listNoti);
   const [showNotification, setShowNotification] = useState(false);
   console.log("showNotification", showNotification);
   const [showMenuNotification, setShowMenuCommentNotification] = useState(null);
+
+  const [loadedOnce, setLoadedOnce] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [hasMoreData, setHasMoreData] = useState(true);
+  console.log("loadMore", loadMore);
+  console.log("hasMoreData", hasMoreData);
+
+  const [page, setPage] = useState(1);
+  const batchSize = 5; // Kích thước lô thông báo
+  console.log("page", page);
 
   const handleShowNotification = (e) => {
     setShowNotification((prev) => !prev);
@@ -123,17 +145,20 @@ const Notification = ({}) => {
     }
   };
 
+  // handle click out side notifyContainer to hide
   useEffect(() => {
     // Đặt sự kiện lắng nghe chuột trên toàn trang
     const mouseClickHandler = (e) => {
       const notificationContainer = document.querySelector(
-        ".scroll_search_header"
+        ".notification_container"
       );
+      const btnShowNotify = document.querySelector("#btn_show_notify");
 
       // Kiểm tra xem người dùng đã nhấp chuột ra ngoài phần tử thông báo
       if (
         notificationContainer &&
         !notificationContainer?.contains(e.target) &&
+        !btnShowNotify?.contains(e.target) &&
         e.target !== document.querySelector(".fa-bell").parentNode &&
         e.target !== document.querySelector(".fa-bell")
       ) {
@@ -148,11 +173,12 @@ const Notification = ({}) => {
     return () => {
       document.removeEventListener("mousedown", mouseClickHandler);
     };
-  }, []); // [] đảm bảo sự kiện chỉ được đăng ký một lần khi component được tạo
+  }, []);
 
+  // handle listent event socket realtime
   useEffect(() => {
     // https://be-movie-mt-copy.vercel.app
-    socket.current = io("https://be-movie-mt-copy.vercel.app", {
+    socket.current = io("http://localhost:8000", {
       query: {
         token: accessToken,
       },
@@ -167,41 +193,117 @@ const Notification = ({}) => {
 
     socket.current.on("new-notify-comment-user", (data) => {
       console.log("an event new-notify-comment-user", data);
+
       setListNoti((prevNotify) => {
         return [JSON.parse(data), ...prevNotify];
       });
+
+      // setListNoti([JSON.parse(data), ...listNoti]);
     });
-    // Ngắt kết nối Socket.IO khi component unmount (trang bị đóng hoặc chuyển sang trang khác)
+
     return () => {
       socket.current.disconnect();
     };
-  }, [socket.current]); // [] đảm bảo hiệu chỉnh này chỉ chạy một lần sau khi trang được tải
+  }, [socket.current]);
+
+  // handle scroll notifyContainer to load more
+  const handleScroll = useCallback(() => {
+    if (!notifyRef.current) return;
+    const notifyContainer = notifyRef.current;
+    const { scrollTop, scrollHeight, clientHeight } = notifyContainer;
+
+    if (hasMoreData && scrollHeight - Math.floor(scrollTop) === clientHeight) {
+      setLoadMore(true);
+      setPage((prev) => prev + 1);
+    } else {
+      setLoadMore(false);
+    }
+  }, [notifyRef.current, hasMoreData]);
 
   useEffect(() => {
-    if (user && id) {
-      const renderNotifications = async () => {
-        try {
-          let notify = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/v1/notify/${id}`
-          );
-          console.log("renderNotifications", notify);
+    if (notifyRef.current) {
+      notifyRef.current?.addEventListener("scroll", handleScroll);
 
-          if (notify?.data.code === 200) {
-            setListNoti(notify.data.data);
-          }
-        } catch (err) {
-          console.log(err);
-        }
+      return () => {
+        notifyRef.current?.removeEventListener("scroll", handleScroll);
       };
-      renderNotifications();
     }
-  }, []);
+  }, [notifyRef.current, handleScroll]);
+
+  // handle render notifications
+  const fetchData = async (pageNumber) => {
+    if (!hasMoreData) return;
+    try {
+      setLoading(true);
+      const notify = await getNotify(id, pageNumber, batchSize);
+      console.log("fetchData", notify);
+
+      if (notify?.data.code === 200) {
+        const newNotifications = notify.data.data;
+        console.log("newNotifications.length", newNotifications.length);
+
+        if (newNotifications.length === 0) {
+          setHasMoreData(false);
+        } else {
+          if (pageNumber === 1) {
+            setListNoti(newNotifications);
+          } else {
+            setListNoti((prev) => [...prev, ...newNotifications]);
+          }
+          // setTotalUnread(notify.data.count.unreadNotifyCount);
+          setLoadMore(false);
+        }
+
+        setLoading(false);
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log("alo", loadedOnce);
+    if (user && id && notifyRef.current && showNotification && !loadedOnce) {
+      fetchData(1);
+      // loadedOnce = true;
+      setLoadedOnce(true);
+    }
+  }, [notifyRef, showNotification]);
+
+  useEffect(() => {
+    if (loadMore) {
+      fetchData(page);
+    }
+  }, [loadMore, page]);
+
+  // get count unread notify
+  useEffect(() => {
+    // Gọi API để lấy số lượng thông báo chưa đọc khi component tải lần đầu
+    const fetchUnreadNotifyCount = async () => {
+      try {
+        const response = await getUnreadNotifyCount(id); // Thay thế bằng cuộc gọi API thích hợp
+        console.log(response);
+        if (response?.data?.code === 200) {
+          setTotalUnread(response.data.data.unreadNotifyCount);
+          setTotalNotify(response.data.data.totalCount);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (user && id) {
+      fetchUnreadNotifyCount();
+    }
+  }, [listNoti]);
 
   return (
     <>
       {user ? (
         <div className="relative">
           <button
+            id="btn_show_notify"
             className="relative rounded-full bg-white text-black h-11 w-11 z-20"
             title="Thông báo"
             onClick={(e) => {
@@ -209,13 +311,9 @@ const Notification = ({}) => {
               handleShowNotification(); // Hiển thị thông báo
             }}
           >
-            {listNoti.length > 0 &&
-            listNoti.some((item) => item.read === false) ? (
+            {totalUnread > 0 ? (
               <span className="absolute top-[-20%] right-[-10%] h-[30px] w-[30px] text-[14px] font-medium flex justify-center items-center bg-red-600 text-white rounded-[50%]">
-                {/* {listNoti.filter((item) => item.read === false).length} */}
-                {listNoti.filter((item) => item.read === false).length > 99
-                  ? "99+"
-                  : listNoti.filter((item) => item.read === false).length}
+                {totalUnread > 99 ? "99+" : totalUnread}
               </span>
             ) : (
               <></>
@@ -223,21 +321,25 @@ const Notification = ({}) => {
             <i className="fa-regular fa-bell"></i>
           </button>
           {showNotification && (
-            <div
-              // ref={resultsRef}
-              className="scroll_search_header absolute top-[110%] right-[30%] min-h-[50px] max-h-[400px] w-[450px] bg-[rgba(0,0,0,.8)] overflow-y-auto border-2"
-            >
+            <div className="notification_container absolute top-[110%] right-[30%] min-h-[50px] w-[450px] bg-[rgba(0,0,0,.8)] border-2 border-gray-700">
               <div className="px-4 py-2 border-b-[1px] border-gray-400">
                 <h2 className="text-base font-semibold text-white">
-                  Thông báo
+                  Thông báo ({totalNotify})
                 </h2>
               </div>
 
-              <div className="overflow-hidden">
+              <div
+                ref={notifyRef}
+                className="scroll_search_header max-h-[400px] overflow-y-auto"
+              >
                 {listNoti.length === 0 ? (
-                  <p className="p-2 text-white text-center">
-                    Không có thông báo
-                  </p>
+                  loading ? (
+                    <></>
+                  ) : (
+                    <p className="p-2 text-white text-center">
+                      Không có thông báo
+                    </p>
+                  )
                 ) : (
                   listNoti.map((item, i) => (
                     <div
@@ -314,6 +416,28 @@ const Notification = ({}) => {
                   ))
                 )}
               </div>
+
+              {loading && (
+                <div role="status" className="flex justify-center items-center">
+                  <svg
+                    aria-hidden="true"
+                    className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentFill"
+                    />
+                  </svg>
+                  <span className="sr-only">Loading...</span>
+                </div>
+              )}
             </div>
           )}
         </div>

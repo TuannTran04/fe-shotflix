@@ -1,6 +1,6 @@
 import Image from "next/legacy/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
@@ -59,21 +59,6 @@ const CommentUI = ({
   setComments,
   socket,
 }) => {
-  const searchParams = useSearchParams();
-  const commentIdScrollTo = searchParams.get("commentId");
-  console.log(commentIdScrollTo);
-
-  useEffect(() => {
-    if (commentIdScrollTo) {
-      // Lấy phần tử bình luận bằng ID hoặc class hoặc bất kỳ cách nào phù hợp
-      const commentElement = document.getElementById(`${commentIdScrollTo}`); // Thay 'commentId' bằng ID của bình luận
-      if (commentElement) {
-        // Sử dụng phương thức scrollIntoView để cuộn đến phần tử bình luận
-        commentElement.scrollIntoView({ behavior: "smooth" }); // Sử dụng 'smooth' để có hiệu ứng cuộn mượt
-      }
-    }
-  }, [commentIdScrollTo]);
-
   const router = useRouter();
   // console.log("comment", router);
   const user = useSelector((state) => state.auth.login.currentUser);

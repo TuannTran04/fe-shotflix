@@ -41,11 +41,16 @@ const VideoContainer = ({ movie, nameFilm }) => {
 
       const plyrSources = movie.sources?.map((video, index) => ({
         // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
-        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`,
+        // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`,
+
+        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`,
+        // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/HoangDung/nangtho.mp4`,
 
         // type: video.typeVideo,
-        type: "application/x-mpegURL",
-        size: video.sizeVideo,
+        // type: "application/x-mpegURL",
+        type: "application/x-mpegurl",
+
+        // size: video.sizeVideo,
       }));
 
       // console.log("plyrSources", plyrSources);
@@ -106,7 +111,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
       player.source = {
         type: "video",
         title: "Example title",
-        // sources: plyrSources,
+        sources: plyrSources,
         tracks: plyrTracks,
       };
 

@@ -24,7 +24,7 @@ const SidebarContentFilm = ({ movies }) => {
             </h3>
           </div>
 
-          <div className="list_top_trend_film h-[400px] md:h-[600px] overflow-y-auto">
+          <div className="list_top_trend_film max-h-[400px] md:max-h-[600px] overflow-y-auto">
             {item.listFilm?.map((itemFilm) => (
               <div
                 key={itemFilm._id}

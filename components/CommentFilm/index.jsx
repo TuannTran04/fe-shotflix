@@ -14,6 +14,7 @@ import axios from "axios";
 import CommentUI from "./components/CommentUI";
 import { io } from "socket.io-client";
 import { useRef } from "react";
+import { useSearchParams } from "next/navigation";
 // const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
 // const socket = io("https://be-movie-mt-copy.vercel.app", {
 //   // withCredentials: true,
@@ -53,6 +54,25 @@ function timeAgo(createdAt) {
 }
 
 const CommentFilm = ({ movieId }) => {
+  const [comments, setComments] = useState([]);
+  // console.log(comments);
+
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  const searchParams = useSearchParams();
+  const commentIdScrollTo = searchParams.get("commentId");
+  // console.log(commentIdScrollTo);
+
+  useEffect(() => {
+    if (commentIdScrollTo && comments.length > 0 && !hasScrolled) {
+      const commentElement = document.getElementById(`${commentIdScrollTo}`);
+      if (commentElement) {
+        commentElement.scrollIntoView({ behavior: "smooth" });
+        setHasScrolled(true);
+      }
+    }
+  }, [commentIdScrollTo, comments, hasScrolled]);
+
   const socket = useRef();
   const router = useRouter();
   // console.log("comment", router);
@@ -64,10 +84,7 @@ const CommentFilm = ({ movieId }) => {
     commentInput: "",
   });
   const { commentInput } = textInputs;
-  console.log(textInputs);
-
-  const [comments, setComments] = useState([]);
-  console.log(comments);
+  // console.log(textInputs);
 
   const handleChangeInputs = (e) => {
     // console.log([e.target]);
@@ -112,7 +129,7 @@ const CommentFilm = ({ movieId }) => {
 
   useEffect(() => {
     // https://be-movie-mt-copy.vercel.app
-    socket.current = io("https://be-movie-mt-copy.vercel.app", {
+    socket.current = io("http://localhost:8000", {
       query: {
         token: accessToken,
       },

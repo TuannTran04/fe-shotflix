@@ -7,7 +7,7 @@ const CryptoJS = require("crypto-js");
 
 const VideoContainer = ({ movie, nameFilm }) => {
   const router = useRouter();
-  console.log(router);
+  // console.log(router);
   const refVideo = useRef();
   // let player = useRef(null);
   // const [playerInstance, setPlayerInstance] = useState(null);
@@ -81,23 +81,24 @@ const VideoContainer = ({ movie, nameFilm }) => {
   const setupPlyr = () => {
     // Chuyển đổi dữ liệu phụ đề thành định dạng Plyr
     if (Object.keys(movie).length > 0) {
-      console.log(movie);
+      // console.log(movie);
       // let player;
       // let hls;
       const defaultOptions = {};
-      console.log(movie.video?.[0]);
+      // console.log(movie.video?.[0]);
       if (refVideo.current) {
-        console.log("have element video !");
+        // console.log("have element video !");
 
-        if (Hls.isSupported()) {
-          console.log("Hls.isSupported", Hls.isSupported);
+        // Hls.isSupported()
+        if (false) {
+          // console.log("Hls.isSupported", Hls.isSupported);
           hls = new Hls(config);
-          console.log("have element video HLS !");
+          // console.log("have element video HLS !");
 
           hls.attachMedia(refVideo.current);
 
           hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-            console.log("video and hls.js are now bound together !");
+            // console.log("video and hls.js are now bound together !");
 
             // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
 
@@ -119,15 +120,15 @@ const VideoContainer = ({ movie, nameFilm }) => {
               // );
 
               const availableQualities = hls.levels.map((l) => l.height);
-              console.log(availableQualities);
+              // console.log(availableQualities);
 
               hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, () => {
-                console.log("update track");
+                // console.log("update track");
                 // Lựa chọn phụ đề (subtitle) bằng cách chỉ định GROUP-ID của phụ đề trong manifest
                 const selectedSubtitleTrack = hls.subtitleTracks.find(
                   (track) => track.groupId === "subs"
                 );
-                console.log("selectedSubtitleTrack", selectedSubtitleTrack);
+                // console.log("selectedSubtitleTrack", selectedSubtitleTrack);
                 if (selectedSubtitleTrack) {
                   // Bật phụ đề
                   hls.subtitleTrack = selectedSubtitleTrack.index;
@@ -183,9 +184,9 @@ const VideoContainer = ({ movie, nameFilm }) => {
               // Đặt sự kiện cho Plyr khi video load xong các data
               if (player.playing == false) {
                 player.on("loadedmetadata", (event) => {
-                  console.log("readyyyy start");
+                  // console.log("readyyyy start");
                   // console.log(event.detail.plyr);
-                  console.log(event.detail.plyr.duration);
+                  // console.log(event.detail.plyr.duration);
                   // Kiểm tra nếu có trạng thái xem video trong Local Storage
                   // const savedPlaybackTime = JSON.parse(
                   //   decryptData(localStorage.getItem(`${movie?._id}`), secretKey)
@@ -194,7 +195,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
                   const savedPlaybackTime = JSON.parse(
                     localStorage.getItem(`${movie?._id}`)
                   );
-                  console.log(savedPlaybackTime);
+                  // console.log(savedPlaybackTime);
                   const currTimeLocal = savedPlaybackTime?.currentTime;
                   const videoIdLocal = savedPlaybackTime?.videoId;
 
@@ -206,8 +207,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
                         const minutes = Math.floor(currentTime / 60);
                         const seconds = Math.round(currentTime % 60);
                         if (true) {
-                          console.log(player.current);
-                          console.log("continue");
+                          // console.log(player.current);
+                          // console.log("continue");
                           event.detail.plyr.muted = false;
                           event.detail.plyr.currentTime = currentTime;
                           // player.play();
@@ -226,13 +227,13 @@ const VideoContainer = ({ movie, nameFilm }) => {
 
               // Đặt sự kiện cho Plyr khi video được update time
               player.on("timeupdate", (event) => {
-                console.log("Video is timeupdate");
+                // console.log("Video is timeupdate");
                 let currentTime = event.detail.plyr.currentTime;
                 const duration = event.detail.plyr.duration;
 
                 // Thời gian hiện tại gần cuối video (1 giây trước khi kết thúc)
                 if (duration && duration - currentTime < 1) {
-                  console.log("Video đã xem xong");
+                  // console.log("Video đã xem xong");
                   // Thực hiện các tác vụ khi video kết thúc hoặc đã xem xong
                   localStorage.removeItem(`${movie?._id}`);
                 }
@@ -244,10 +245,10 @@ const VideoContainer = ({ movie, nameFilm }) => {
                   duration &&
                   duration - currentTime > 1
                 ) {
-                  console.log("sett", {
-                    currentTime: currentTime,
-                    videoId: movie._id,
-                  });
+                  // console.log("sett", {
+                  //   currentTime: currentTime,
+                  //   videoId: movie._id,
+                  // });
 
                   localStorage.setItem(
                     `${movie?._id}`,
@@ -261,13 +262,14 @@ const VideoContainer = ({ movie, nameFilm }) => {
             });
           });
         } else if (
-          refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+          // refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+          true
         ) {
           if (refVideo.current) {
             alert("khong sp");
-            refVideo.current.src = `/neudanhmatem.mp4`;
-            // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
-            // refVideo.current.type = "application/x-mpegURL";
+            // refVideo.current.src = `/neudanhmatem.mp4`;
+            refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
+            refVideo.current.type = "application/x-mpegURL";
             // refVideo.current.addEventListener("loadedmetadata", function () {
             //   refVideo.current.play();
             // });
@@ -300,12 +302,13 @@ const VideoContainer = ({ movie, nameFilm }) => {
       // }
       // window.location.reload();
     };
-  }, [movie, movie._id, nameFilm]);
+  }, [movie, movie._id, nameFilm, refVideo.current]);
 
   // const tagSources = movie.sources?.map((video, index) => (
   //   <source
   //     key={index}
-  //     src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`}
+  //     // src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`}
+  //     src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`}
   //     type={video.type}
   //     size={video.sizeVideo}
   //   />
@@ -337,8 +340,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
           controls
           style={{ "--plyr-captions-background": "rgba(0, 0, 0, 0.1)" }}
         >
-          {/* {tagSources}
-          {tagTracks} */}
+          {/* {tagSources} */}
+          {/* {tagTracks} */}
         </video>
       )}
     </div>

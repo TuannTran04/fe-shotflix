@@ -397,6 +397,38 @@ export const deleteReplyCommentById = async (commentId, commentParentId) => {
 };
 
 ////////////////////******************** NOTIFY ********************////////////////////////////
+export const getNotify = async (id, page, batchSize) => {
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.get(
+      `${base_url}/api/v1/notify/${id}?page=${page}&batchSize=${batchSize}`
+    );
+    // console.log(res);
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const getUnreadNotifyCount = async (id) => {
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.get(
+      `${base_url}/api/v1/notify/get-unread-notify/${id}`
+    );
+    // console.log(res);
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
 export const addNotify = async (
   sender,
   recipient,
