@@ -110,7 +110,7 @@ const CommentFilm = ({ movieId }) => {
 
   useEffect(() => {
     // https://be-movie-mt-copy.vercel.app
-    socket.current = io("https://be-movie-mt-copy.vercel.app", {
+    socket.current = io("http://localhost:8000", {
       query: {
         token: accessToken,
       },
