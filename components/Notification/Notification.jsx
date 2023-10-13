@@ -182,7 +182,7 @@ const Notification = ({}) => {
   // handle listent event socket realtime
   useEffect(() => {
     // https://be-movie-mt-copy.vercel.app
-    socket.current = io("http://localhost:8000", {
+    socket.current = io("https://be-movie-mt-copy.vercel.app", {
       query: {
         token: accessToken,
       },
