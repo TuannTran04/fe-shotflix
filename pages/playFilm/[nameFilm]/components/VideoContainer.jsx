@@ -266,14 +266,14 @@ const VideoContainer = ({ movie, nameFilm }) => {
           // true
         ) {
           if (refVideo.current) {
-            const plyrTracks = movie.subtitles?.map((subtitle, index) => ({
-              kind: "captions",
-              label: `${subtitle.langSubtitle} captions`,
-              srcLang: subtitle.langSubtitle,
-              // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`,
-              src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/test_vtt.m3u8?specificFolder=${movie.folderOnFirebase}`,
-              default: index === 0, // Đánh dấu phụ đề đầu tiên là mặc định
-            }));
+            // const plyrTracks = movie.subtitles?.map((subtitle, index) => ({
+            //   kind: "captions",
+            //   label: `${subtitle.langSubtitle} captions`,
+            //   srcLang: subtitle.langSubtitle,
+            //   // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`,
+            //   src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/test_vtt.m3u8?specificFolder=${movie.folderOnFirebase}`,
+            //   default: index === 0, // Đánh dấu phụ đề đầu tiên là mặc định
+            // }));
             // console.log("plyrTracks", plyrTracks);
 
             const plyrSources = movie.sources?.map((video, index) => ({
@@ -353,7 +353,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
               type: "video",
               title: "Example title",
               sources: plyrSources,
-              tracks: plyrTracks,
+              // tracks: plyrTracks,
             };
             /////////////////////////////
 

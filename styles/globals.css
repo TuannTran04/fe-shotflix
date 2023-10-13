@@ -321,6 +321,13 @@ body {
   height: 600px !important;
 }
 
+.plyr__captions {
+  display: flex !important;
+  justify-content: center !important;
+}
+.plyr__captions .plyr__caption {
+}
+
 .plyr__controls {
   display: flex !important;
   /* flex-wrap: wrap !important; */
@@ -386,6 +393,13 @@ body {
   }
   .plyr__controls__item.plyr__time--duration.plyr__time {
     display: block !important;
+  }
+  .plyr__captions {
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .plyr__captions .plyr__caption {
+    font-size: 12px;
   }
 }
 
