@@ -524,6 +524,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
       {movie && (
         <video
           // key={movie?._id}
+          className="video-js vjs-default-skin"
           id="myPlyr"
           ref={refVideo}
           crossOrigin="true"
