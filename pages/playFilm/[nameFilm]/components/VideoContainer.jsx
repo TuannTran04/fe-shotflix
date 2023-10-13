@@ -326,7 +326,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
                 "fullscreen",
               ],
               settings: ["captions", "quality", "speed", "loop"],
-              captions: { active: true, language: "vi", update: true },
+              // captions: { active: true, language: "vi", update: true },
               tooltips: { controls: true, seek: true },
               keyboard: { focused: true, global: true },
               markers: {
@@ -352,7 +352,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
               type: "video",
               title: "Example title",
               sources: plyrSources,
-              tracks: plyrTracks,
+              // tracks: plyrTracks,
             };
             /////////////////////////////
 
