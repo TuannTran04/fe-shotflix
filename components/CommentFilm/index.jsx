@@ -5,6 +5,7 @@ import {
   addComment,
   addReplyComment,
   deleteCommentById,
+  getComment,
   updateCommentById,
 } from "../../store/apiRequest";
 import { useSelector } from "react-redux";
@@ -15,49 +16,29 @@ import CommentUI from "./components/CommentUI";
 import { io } from "socket.io-client";
 import { useRef } from "react";
 import { useSearchParams } from "next/navigation";
+import Loading from "../Loading/Loading";
 // const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
 // const socket = io("https://be-movie-mt-copy.vercel.app", {
 //   // withCredentials: true,
 //   transports: ["websocket", "polling", "flashsocket"],
 // }); // Thay đổi URL máy chủ của bạn
 
-function timeAgo(createdAt) {
-  const currentTime = new Date();
-  const timeDifferenceInMilliseconds = currentTime - createdAt;
-
-  if (timeDifferenceInMilliseconds < 1000) {
-    return "Vừa mới đây";
-  }
-
-  const seconds = Math.floor(timeDifferenceInMilliseconds / 1000);
-  if (seconds < 60) {
-    return `${seconds} giây trước`;
-  }
-
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) {
-    return `${minutes} phút trước`;
-  }
-
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) {
-    return `${hours} giờ trước`;
-  }
-
-  const days = Math.floor(hours / 24);
-  if (days < 30) {
-    return `${days} ngày trước`;
-  }
-
-  const months = Math.floor(days / 30);
-  return `${months} tháng trước`;
-}
-
 const CommentFilm = ({ movieId }) => {
   const [comments, setComments] = useState([]);
+  const [totalComments, setTotalComments] = useState(0);
   // console.log(comments);
 
+  console.log(totalComments, comments.length, totalComments != comments.length);
+
   const [hasScrolled, setHasScrolled] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [hasMoreData, setHasMoreData] = useState(true);
+  console.log("loading >", loading, "hasMoreData >", hasMoreData);
+
+  const [page, setPage] = useState(1);
+  const batchSize = 3; // Kích thước lô thông báo
+  // console.log("page", page);
 
   const searchParams = useSearchParams();
   const commentIdScrollTo = searchParams.get("commentId");
@@ -129,7 +110,7 @@ const CommentFilm = ({ movieId }) => {
 
   useEffect(() => {
     // https://be-movie-mt-copy.vercel.app
-    socket.current = io("http://localhost:8000", {
+    socket.current = io("https://be-movie-mt-copy.vercel.app", {
       query: {
         token: accessToken,
       },
@@ -225,25 +206,49 @@ const CommentFilm = ({ movieId }) => {
     };
   }, []); // [] đảm bảo hiệu chỉnh này chỉ chạy một lần sau khi trang được tải
 
-  useEffect(() => {
-    console.log("rerender", movieId);
-    if (movieId) {
-      const renderComments = async () => {
-        try {
-          let comments = await axios.get(
-            `${process.env.NEXT_PUBLIC_URL}/api/v1/comment/${movieId}`
-          );
+  // Load more comment
+  const handleLoadMoreCmt = () => {
+    if (hasMoreData && !loading) {
+      setPage((prev) => prev + 1);
+    }
+  };
 
-          if (comments.data.code === 200) {
-            setComments(comments.data.data);
+  useEffect(() => {
+    const renderComments = async () => {
+      try {
+        setLoading(true);
+        console.log("siuu");
+
+        let comments = await getComment(movieId, page, batchSize);
+
+        if (comments.data.code === 200) {
+          const newComments = comments.data.data;
+          console.log("newComments", comments);
+          setTotalComments(comments.data.count);
+
+          if (newComments.length === 0) {
+            setHasMoreData(false);
+            setLoading(false);
+          } else {
+            if (page === 1) {
+              setComments(newComments);
+            } else {
+              setComments((prev) => [...prev, ...newComments]);
+            }
+
+            setLoading(false);
           }
-        } catch (err) {
-          console.log(err);
         }
-      };
+      } catch (err) {
+        console.log(err);
+        setLoading(false);
+      }
+    };
+
+    if (movieId && hasMoreData) {
       renderComments();
     }
-  }, [movieId]);
+  }, [movieId, page, hasMoreData]);
 
   // useEffect(() => {
   //   const initFacebookSDK = () => {
@@ -289,6 +294,7 @@ const CommentFilm = ({ movieId }) => {
         data-order-by="reverse_time"
         data-lazy="true"
       ></div> */}
+
       <div className="flex items-center h-[50px] mb-5">
         <div className="relative h-full w-[50px] mr-2.5 border-[2px] border-[#444] flex items-center justify-center">
           {user && user?.avatar ? (
@@ -363,59 +369,32 @@ const CommentFilm = ({ movieId }) => {
               />
             )
           )
+        ) : loading ? (
+          <Loading />
         ) : (
           <p className="p-2 text-white text-center">Không có bình luận nào</p>
         )}
+
+        {comments.length > 0 && loading ? <Loading /> : <></>}
       </div>
+
+      {comments.length > 0 &&
+      totalComments !== comments.length &&
+      hasMoreData &&
+      !loading ? (
+        <div
+          className="py-2 flex justify-center items-center cursor-pointer hover:bg-[rgba(255,255,255,0.5)] select-none"
+          onClick={handleLoadMoreCmt}
+        >
+          <span className="italic text-xs text-white">
+            Tải thêm bình luận?...
+          </span>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
 
 export default memo(CommentFilm);
-
-// {/* <div className="flex min-h-[60px]">
-// <div className="relative w-[50px] h-[50px] mr-2.5 ">
-//   {/* <img
-//     className="block object-cover w-full h-full"
-//     src={
-//       "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/329103902_1170346807183250_1864135939632522915_n.jpg?stp=dst-jpg_p100x100&_nc_cat=108&ccb=1-7&_nc_sid=fe8171&_nc_ohc=BwLZsu7s9sEAX-ZFMw6&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fsgn8-4.fna&oh=00_AfA5YRwD59jyNbPR6-y-VinMzKFtuBzQ2mtjYY_lZNdP4g&oe=6520AADB" ||
-//       "/vercel.svg"
-//     }
-//     alt="pic"
-//   /> */}
-//   <Image
-//     className="block object-cover w-full h-full"
-//     src={
-//       "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/329103902_1170346807183250_1864135939632522915_n.jpg?stp=dst-jpg_p100x100&_nc_cat=108&ccb=1-7&_nc_sid=fe8171&_nc_ohc=BwLZsu7s9sEAX-ZFMw6&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fsgn8-4.fna&oh=00_AfA5YRwD59jyNbPR6-y-VinMzKFtuBzQ2mtjYY_lZNdP4g&oe=6520AADB" ||
-//       "/vercel.svg"
-//     }
-//     alt="pic"
-//     layout="fill"
-//     // width={50}
-//     // height={50}
-//     // loading="lazy"
-//     // priority
-//   />
-// </div>
-// <div className="flex-1 ">
-//   <h4 className="text-[#0285b5] font-semibold">Tuan Tran</h4>
-//   <p className="text-white my-1">phim nhu ccphim nhu cc</p>
-//   <div className="text-sm text-white">
-//     {/* <span className="mr-[15px] cursor-pointer">
-//       <i className="fa-regular fa-thumbs-up mr-[4px]"></i>
-//       <i className="fa-solid fa-thumbs-up hidden"></i>
-//       10
-//     </span>
-//     <span className="mr-[15px] cursor-pointer">
-//       <i className="fa-regular fa-thumbs-down mr-[4px]"></i>
-//       <i className="fa-solid fa-thumbs-down hidden"></i>1
-//     </span> */}
-//     <span className="mr-[15px] cursor-pointer hover:underline">
-//       <i className="fa-solid fa-reply mr-[4px]"></i>trả lời
-//     </span>
-//     <span className="mr-[15px]">
-//       <i className="fa-regular fa-clock mr-[4px]"></i>3 tuần trước
-//     </span>
-//   </div>
-// </div>
-// </div> */}

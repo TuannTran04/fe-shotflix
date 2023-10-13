@@ -11,11 +11,13 @@ import {
   getNotify,
   getUnreadNotifyCount,
   updateNotifyRead,
+  updateNotifySeen,
 } from "../../store/apiRequest";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
 import { floor } from "lodash";
+import Loading from "../Loading/Loading";
 // const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
 
 function timeAgo(createdAt) {
@@ -64,6 +66,7 @@ const Notification = ({}) => {
 
   const [listNoti, setListNoti] = useState([]);
   const [totalUnread, setTotalUnread] = useState(0);
+  const [totalUnseen, setTotalUnseen] = useState(0);
   const [totalNotify, setTotalNotify] = useState(0);
   console.log("notify unread >", totalUnread, "notify total >", totalNotify);
   console.log(listNoti);
@@ -164,6 +167,7 @@ const Notification = ({}) => {
       ) {
         // Ẩn thông báo khi người dùng nhấp chuột ra ngoài
         setShowNotification(false);
+        setShowMenuCommentNotification(null);
       }
     };
 
@@ -178,7 +182,7 @@ const Notification = ({}) => {
   // handle listent event socket realtime
   useEffect(() => {
     // https://be-movie-mt-copy.vercel.app
-    socket.current = io("http://localhost:8000", {
+    socket.current = io("https://be-movie-mt-copy.vercel.app", {
       query: {
         token: accessToken,
       },
@@ -236,7 +240,9 @@ const Notification = ({}) => {
     try {
       setLoading(true);
       const notify = await getNotify(id, pageNumber, batchSize);
+      const updateSeenNotify = await updateNotifySeen(id);
       console.log("fetchData", notify);
+      console.log("updateSeenNotify", updateSeenNotify);
 
       if (notify?.data.code === 200) {
         const newNotifications = notify.data.data;
@@ -286,6 +292,7 @@ const Notification = ({}) => {
         console.log(response);
         if (response?.data?.code === 200) {
           setTotalUnread(response.data.data.unreadNotifyCount);
+          setTotalUnseen(response.data.data.unseenNotifyCount);
           setTotalNotify(response.data.data.totalCount);
         }
       } catch (err) {
@@ -311,9 +318,9 @@ const Notification = ({}) => {
               handleShowNotification(); // Hiển thị thông báo
             }}
           >
-            {totalUnread > 0 ? (
+            {totalUnseen > 0 ? (
               <span className="absolute top-[-20%] right-[-10%] h-[30px] w-[30px] text-[14px] font-medium flex justify-center items-center bg-red-600 text-white rounded-[50%]">
-                {totalUnread > 99 ? "99+" : totalUnread}
+                {totalUnseen > 99 ? "99+" : totalUnseen}
               </span>
             ) : (
               <></>
@@ -321,7 +328,7 @@ const Notification = ({}) => {
             <i className="fa-regular fa-bell"></i>
           </button>
           {showNotification && (
-            <div className="notification_container absolute top-[110%] right-[30%] min-h-[50px] w-[450px] bg-[rgba(0,0,0,.8)] border-2 border-gray-700">
+            <div className="notification_container absolute top-[130%] right-[-19%] md:top-[110%] md:right-[30%] min-h-[50px] w-screen md:w-[450px] bg-[rgba(0,0,0,.8)] border-2 border-gray-700">
               <div className="px-4 py-2 border-b-[1px] border-gray-400">
                 <h2 className="text-base font-semibold text-white">
                   Thông báo ({totalNotify})
@@ -400,7 +407,7 @@ const Notification = ({}) => {
                         <i className="fa-solid fa-ellipsis-vertical text-white group-hover:text-black"></i>
 
                         {item._id === showMenuNotification && (
-                          <span className="py-1 absolute top-0 right-[18px] bg-white min-w-[100px] z-40 select-none">
+                          <span className="py-1 absolute top-0 right-[30px] md:right-[30px] bg-white min-w-[100px] z-40 select-none">
                             <span
                               className="px-2 flex justify-start items-center hover:bg-[rgba(0,0,0,0.3)] cursor-pointer"
                               onClick={() => deleteNotification(item._id)}
@@ -417,27 +424,7 @@ const Notification = ({}) => {
                 )}
               </div>
 
-              {loading && (
-                <div role="status" className="flex justify-center items-center">
-                  <svg
-                    aria-hidden="true"
-                    className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                    viewBox="0 0 100 101"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                      fill="currentFill"
-                    />
-                  </svg>
-                  <span className="sr-only">Loading...</span>
-                </div>
-              )}
+              {loading && <Loading />}
             </div>
           )}
         </div>

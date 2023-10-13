@@ -289,6 +289,22 @@ export const deleteBookmarkMovie = async (userId, movieId, isBookmark) => {
 };
 
 ////////////////////******************** COMMENT ********************////////////////////////////
+export const getComment = async (movieId, page, batchSize) => {
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.get(
+      `${base_url}/api/v1/comment/${movieId}?page=${page}&batchSize=${batchSize}`
+    );
+    // console.log(res);
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
 export const addComment = async (userId, movieId, text) => {
   const data = { userId, movieId, text };
   const base_url = process.env.NEXT_PUBLIC_URL;
@@ -456,6 +472,23 @@ export const updateNotifyRead = async (notifyId) => {
   try {
     const res = await axios.put(
       `${base_url}/api/v1/notify/update-notify-read`,
+      data
+    );
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+export const updateNotifySeen = async (userId) => {
+  const data = { userId };
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axios.put(
+      `${base_url}/api/v1/notify/update-notify-seen`,
       data
     );
     return res;

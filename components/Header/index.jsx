@@ -89,7 +89,7 @@ export default function Header({ categories }) {
   // Sự kiện lắng nghe khi click chuột toàn trang
   useEffect(() => {
     const handleClickOutside = (e) => {
-      console.log(resultsRef.current);
+      // console.log(resultsRef.current);
       // Kiểm tra nếu kết quả đang hiển thị và chuột không nằm trong phần tử kết quả
       if (
         resultsRef.current &&
@@ -548,8 +548,8 @@ export default function Header({ categories }) {
                     <Link
                       href={`/playFilm/${item.slug}`}
                       className="flex items-center justify-between w-full h-[80px] group"
-                      rel="preload"
-                      as="script"
+                      // rel="preload"
+                      // as="script"
                     >
                       <span className="max-w-[40%] w-full h-full mr-[10px] overflow-hidden">
                         <img

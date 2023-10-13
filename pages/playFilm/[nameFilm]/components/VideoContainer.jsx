@@ -90,7 +90,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
         // console.log("have element video !");
 
         // Hls.isSupported()
-        if (false) {
+        if (Hls.isSupported()) {
           // console.log("Hls.isSupported", Hls.isSupported);
           hls = new Hls(config);
           // console.log("have element video HLS !");
@@ -262,13 +262,14 @@ const VideoContainer = ({ movie, nameFilm }) => {
             });
           });
         } else if (
-          // refVideo.current.canPlayType("application/vnd.apple.mpegurl")
-          true
+          refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+          // true
         ) {
           if (refVideo.current) {
             alert("khong sp");
             // refVideo.current.src = `/neudanhmatem.mp4`;
-            refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
+            // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
+            refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/chamvaomay_hongson/master.m3u8`;
             refVideo.current.type = "application/x-mpegURL";
             // refVideo.current.addEventListener("loadedmetadata", function () {
             //   refVideo.current.play();

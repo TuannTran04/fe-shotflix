@@ -330,6 +330,13 @@ const CommentUI = ({
         <div className="flex justify-between items-center">
           <h4 className="text-[#0285b5] font-semibold">
             {item.user?.username}
+            {item.user?.isAdmin ? (
+              <span className="ml-2 p-[1px] tracking-[1px] italic text-white text-[8px] border-[1px] border-cyan-600 bg-cyan-600 rounded-sm">
+                admin
+              </span>
+            ) : (
+              <></>
+            )}
           </h4>
 
           {userId === item.user?._id ? (
