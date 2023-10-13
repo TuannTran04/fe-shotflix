@@ -34,7 +34,9 @@ const VideoContainer = ({ movie, nameFilm }) => {
         kind: "captions",
         label: `${subtitle.langSubtitle} captions`,
         srcLang: subtitle.langSubtitle,
-        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`,
+        // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/${subtitle.subtitle}?specificFolder=${movie.folderOnFirebase}`,
+        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/subtitles/test_vtt.m3u8?specificFolder=${movie.folderOnFirebase}`,
+
         default: index === 0, // Đánh dấu phụ đề đầu tiên là mặc định
       }));
       // console.log("plyrTracks", plyrTracks);
@@ -43,7 +45,10 @@ const VideoContainer = ({ movie, nameFilm }) => {
         // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/video/${video.srcVideo}?specificFolder=${movie.folderOnFirebase}`,
         // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`,
 
-        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`,
+        // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`,
+        src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/${
+          movie.folderOnFirebase
+        }/${movie.video?.[0].trim()}`,
         // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/HoangDung/nangtho.mp4`,
 
         // type: video.typeVideo,
