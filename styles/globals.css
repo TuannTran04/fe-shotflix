@@ -322,8 +322,8 @@ body {
 }
 
 .plyr__captions {
-  display: flex !important;
-  justify-content: center !important;
+  /* display: flex !important; */
+  /* justify-content: center !important; */
 }
 .plyr__captions .plyr__caption {
 }
@@ -395,11 +395,14 @@ body {
     display: block !important;
   }
   .plyr__captions {
-    display: flex !important;
-    justify-content: center !important;
   }
   .plyr__captions .plyr__caption {
+    position: absolute;
+    bottom: 35%;
+    left: 50%;
+    transform: translateX(-50%) !important;
     font-size: 12px;
+    text-align: center !important;
   }
 }
 

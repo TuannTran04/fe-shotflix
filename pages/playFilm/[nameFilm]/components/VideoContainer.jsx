@@ -359,6 +359,15 @@ const VideoContainer = ({ movie, nameFilm }) => {
 
             // Đặt sự kiện cho Plyr khi video load xong các data
             if (player.playing == false) {
+              player.on("enterfullscreen", (event) => {
+                // Bật phụ đề ở chế độ fullscreen
+                player.subtitles.enable();
+              });
+
+              player.on("exitfullscreen", (event) => {
+                // Bật phụ đề ở chế độ bình thường
+                player.subtitles.enable();
+              });
               player.on("loadedmetadata", (event) => {
                 // console.log("readyyyy start");
                 // console.log(event.detail.plyr);
