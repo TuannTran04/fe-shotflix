@@ -476,11 +476,17 @@ const VideoContainer = ({ movie, nameFilm }) => {
 
     // Xóa sự kiện và Plyr instance khi unmount
     return () => {
-      if (player) {
+      if (
+        player &&
+        !refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+      ) {
         player?.destroy();
         window.location.reload();
       }
-      if (hls) {
+      if (
+        hls &&
+        !refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+      ) {
         hls?.destroy();
       }
       // if (playerInstance) {
