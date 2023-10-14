@@ -477,11 +477,11 @@ const VideoContainer = ({ movie, nameFilm }) => {
     // Xóa sự kiện và Plyr instance khi unmount
     return () => {
       if (player) {
-        player.destroy();
+        player?.destroy();
         window.location.reload();
       }
       if (hls) {
-        hls.destroy();
+        hls?.destroy();
       }
       // if (playerInstance) {
       //   // console.log("playerInstance", playerInstance);
