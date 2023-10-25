@@ -131,41 +131,19 @@ const CommentFilm = ({ movieId, nameFilm }) => {
       });
     });
 
-    socket.current.on("new-reply-comment-user", (data, commentId) => {
+    socket.current.on("new-reply-comment-user", (data) => {
       const dataServer = JSON.parse(data);
-      const dataCommentId = JSON.parse(commentId);
       console.log(dataServer);
-      console.log(dataCommentId);
       setComments((prevComments) => {
         return prevComments.map((prevComment) => {
-          console.log(prevComment._id);
-          console.log(dataCommentId);
-          console.log(prevComment._id === dataCommentId);
-          if (prevComment._id === dataCommentId) {
-            console.log(prevComment);
-            return {
-              ...prevComment,
-              replies: [...prevComment.replies, dataServer],
-            };
+          if (prevComment._id === dataServer._id) {
+            return dataServer;
           } else {
             return prevComment;
           }
         });
       });
     });
-    // socket.current.on("new-reply-comment-user", (data) => {
-    //   const dataServer = JSON.parse(data);
-    //   console.log(dataServer);
-    //   setComments((prevComments) => {
-    //     return prevComments.map((prevComment) => {
-    //       if (prevComment._id === dataServer._id) {
-    //         return dataServer;
-    //       } else {
-    //         return prevComment;
-    //       }
-    //     });
-    //   });
-    // });
     socket.current.on("comment-updated-user", (updatedComment) => {
       // Cập nhật giao diện người dùng với comment đã được cập nhật
       const dataServer = JSON.parse(updatedComment);

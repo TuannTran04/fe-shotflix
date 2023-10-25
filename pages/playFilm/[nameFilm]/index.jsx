@@ -1,7 +1,8 @@
 import LayoutRoot from "@/components/Layout";
 import Link from "next/link";
 import Image from "next/legacy/image";
-import CommentFilm from "../../../components/CommentFilm";
+// import CommentFilm from "../../../components/CommentFilm";
+import CommentFilm from "../../../components/CommentFilm2";
 // import { arrDetailInfoFilm } from "./constant";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -119,7 +120,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
               {isLgScreen && (
                 <div className="hidden lg:block">
                   {/* Hiển thị CommentFilm khi màn hình lớn */}
-                  <CommentFilm movieId={movie?._id} />
+                  <CommentFilm movieId={movie?._id} nameFilm={nameFilm} />
                 </div>
               )}
             </div>
@@ -133,7 +134,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
           {!isLgScreen && (
             <div className="col-span-1 lg:hidden">
               {/* Hiển thị CommentFilm khi màn hình lớn */}
-              <CommentFilm movieId={movie?._id} />
+              <CommentFilm movieId={movie?._id} nameFilm={nameFilm} />
             </div>
           )}
         </div>

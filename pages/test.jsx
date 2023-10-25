@@ -7,6 +7,8 @@ import Hls from "hls.js";
 import videojs from "video.js";
 import { useRef } from "react";
 import ReactPlayer from "react-player";
+import shaka from "shaka-player";
+
 import axios from "axios";
 
 const Test = () => {
@@ -14,6 +16,8 @@ const Test = () => {
   const [playerInstance, setPlayerInstance] = useState(null);
   const [hlsInstance, setHLSInstance] = useState(null);
   console.log(hlsInstance);
+  let player;
+  let hls;
 
   // const specificFolder = "neudanhmatem_2023-9-6_22:36:28";
   const specificFolder = "riengminhanh-426x240_2023-9-8_11:37:41";
@@ -182,8 +186,7 @@ const Test = () => {
   const setupPlyrHLS = async () => {
     if (Object.keys(movie).length > 0) {
       console.log(movie);
-      let player;
-      let hls;
+
       const defaultOptions = {};
       if (refVideo.current) {
         // console.log("have element video !");
@@ -339,43 +342,78 @@ const Test = () => {
 
             console.log("dm");
             // Initialize the video.js player
-            const player = videojs(refVideo.current, {
-              html5: {
-                hls: {
-                  // Enable HLS support
-                  enableLowInitialPlaylist: true, // Tạo hiệu ứng tải từng phần nhỏ
-                  overrideNative: true,
-                },
-              },
-              // Tùy chọn để chỉ tải trước một đoạn nhỏ
-              autoStartLoad: true, // Tự động tải video khi player được tạo
-              lowLatencyMode: true, // Kích hoạt chế độ tải trước đoạn nhỏ
-            });
-            // Lắng nghe sự kiện loadedmetadata để chờ metadata của video được tải xong
-            // player.on("loadedmetadata", function () {
-            //   // Lấy thời lượng video
-            //   const videoDuration = player.duration();
-            //   console.log(videoDuration);
-            //   // Giới hạn thời gian đệm tối đa là 10 giây
-            //   const maxBufferTime = 10;
-
-            //   // Tính toán thời gian cần tải trước
-            //   const preloadTime = Math.min(videoDuration, maxBufferTime);
-
-            //   // Thiết lập thời gian đệm tối đa
-            //   // player.buffered(player.buffered().start(0), preloadTime);
+            // const player = videojs(refVideo.current, {
+            //   html5: {
+            //     hls: {
+            //       // Enable HLS support
+            //       enableLowInitialPlaylist: true, // Tạo hiệu ứng tải từng phần nhỏ
+            //       overrideNative: true,
+            //     },
+            //   },
+            //   // Tùy chọn để chỉ tải trước một đoạn nhỏ
+            //   autoStartLoad: true, // Tự động tải video khi player được tạo
+            //   lowLatencyMode: true, // Kích hoạt chế độ tải trước đoạn nhỏ
             // });
-            // Thêm nguồn video
-            player.src({
-              // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`, // Thay thế bằng URL của video của bạn
-              // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`,
-              src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/HoangDung/master.m3u8`,
+            // // Lắng nghe sự kiện loadedmetadata để chờ metadata của video được tải xong
+            // // player.on("loadedmetadata", function () {
+            // //   // Lấy thời lượng video
+            // //   const videoDuration = player.duration();
+            // //   console.log(videoDuration);
+            // //   // Giới hạn thời gian đệm tối đa là 10 giây
+            // //   const maxBufferTime = 10;
 
-              // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`, // Thay thế bằng URL của video của bạn
-              // type: "video/mp4", // Loại video
-              type: "application/x-mpegURL", // Loại video
-            });
+            // //   // Tính toán thời gian cần tải trước
+            // //   const preloadTime = Math.min(videoDuration, maxBufferTime);
+
+            // //   // Thiết lập thời gian đệm tối đa
+            // //   // player.buffered(player.buffered().start(0), preloadTime);
+            // // });
+            // // Thêm nguồn video
+            // player.src({
+            //   // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/master.m3u8`, // Thay thế bằng URL của video của bạn
+            //   // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`,
+            //   src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/HoangDung/master.m3u8`,
+
+            //   // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`, // Thay thế bằng URL của video của bạn
+            //   // type: "video/mp4", // Loại video
+            //   type: "application/x-mpegURL", // Loại video
+            // });
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           }
+        }
+      }
+    }
+  };
+
+  const setUpShaka = async () => {
+    if (Object.keys(movie).length > 0) {
+      if (refVideo.current) {
+        if (shaka.Player.isBrowserSupported()) {
+          player = new shaka.Player(refVideo.current);
+          player.configure({
+            abr: {
+              enabled: true,
+            },
+            streaming: {
+              rebufferingGoal: 15,
+            },
+          });
+
+          const manifestUri = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
+          // const manifestUri = "/neudanhmatem.mp4";
+
+          try {
+            await player.load(manifestUri);
+            // await player.load(
+            //   `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/${
+            //     movie.folderOnFirebase
+            //   }/${movie.video?.[0].trim()}`
+            // );
+          } catch (error) {
+            console.error("Error loading HLS stream", error);
+          }
+        } else {
+          console.error("Browser not supported!");
         }
       }
     }
@@ -383,17 +421,18 @@ const Test = () => {
 
   useEffect(() => {
     console.log("eff");
-    setupPlyrHLS();
+    // setupPlyrHLS();
+    setUpShaka();
     // Xóa sự kiện và Plyr instance khi unmount
     return () => {
       if (playerInstance) {
         console.log("playerInstance", playerInstance);
-        playerInstance.destroy();
-        hlsInstance.destroy();
+        // playerInstance.destroy();
+        // hlsInstance.destroy();
         // window.location.reload();
       }
     };
-  }, [movie]);
+  }, [movie, refVideo.current]);
 
   return (
     <div className="players-container mx-auto h-[200px] w-[800px]">

@@ -76,15 +76,6 @@ const CommentUI = ({
   const [showMenuCommentId, setShowMenuCommentId] = useState(null);
   const [showEditingCommentId, setShowEditingCommentId] = useState(null);
   const [showInputReply, setShowInputReply] = useState(null);
-  const [showReplyCmt, setShowReplyCmt] = useState(false);
-
-  const [pageReplyCmt, setPageReplyCmt] = useState(1);
-  // console.log(pageReplyCmt);
-  const [hasMoreReplyCmt, setHasMoreReplyCmt] = useState(true);
-  const [loadOnceReplyCmt, setLoadOnceReplyCmt] = useState(false);
-
-  const [loadingReplyCmt, setLoadingReplyCmt] = useState(false);
-  console.log(loadingReplyCmt);
 
   const handleChangeInputs = (e) => {
     // console.log([e.target]);
@@ -103,85 +94,6 @@ const CommentUI = ({
       setShowMenuCommentId(commentId);
       setShowEditingCommentId(null);
       console.log("toggle", commentId);
-    }
-  };
-
-  // Handle load more reply comment
-  const handleLoadMoreReplyCommentOnce = async (commentId) => {
-    // console.log(commentId);
-    const base_url = process.env.NEXT_PUBLIC_URL;
-    try {
-      setShowReplyCmt((prev) => !prev);
-      if (loadOnceReplyCmt) {
-        return;
-      }
-      setLoadingReplyCmt(true);
-
-      const res = await axios.get(
-        `${base_url}/api/v1/comment/${commentId}/reply-comment?page=${pageReplyCmt}`
-      );
-      console.log(">>> handleLoadMoreReplyComment <<<", res);
-
-      if (res.data.data.length === 0) {
-        setHasMoreReplyCmt(false);
-        setLoadingReplyCmt(false);
-      }
-
-      if (res.data.code === 200 && res.data.data.length > 0) {
-        setComments((prevComments) =>
-          prevComments.map((prevComment) => {
-            if (prevComment._id === commentId) {
-              return {
-                ...prevComment,
-                replies: [...prevComment.replies, ...res.data.data],
-              };
-            }
-            return prevComment;
-          })
-        );
-        setPageReplyCmt((prev) => prev + 1);
-        setLoadOnceReplyCmt(true);
-        setLoadingReplyCmt(false);
-      }
-    } catch (err) {
-      console.log(err);
-      setLoadingReplyCmt(false);
-    }
-  };
-  const handleLoadMoreReplyComment = async (commentId) => {
-    // console.log(commentId);
-    const base_url = process.env.NEXT_PUBLIC_URL;
-    try {
-      setLoadingReplyCmt(true);
-
-      const res = await axios.get(
-        `${base_url}/api/v1/comment/${commentId}/reply-comment?page=${pageReplyCmt}`
-      );
-      console.log(">>> handleLoadMoreReplyComment <<<", res);
-
-      if (res.data.data.length === 0) {
-        setHasMoreReplyCmt(false);
-        setLoadingReplyCmt(false);
-      }
-
-      if (res.data.code === 200 && res.data.data.length > 0) {
-        setComments((prevComments) =>
-          prevComments.map((prevComment) => {
-            if (prevComment._id === commentId) {
-              return {
-                ...prevComment,
-                replies: [...prevComment.replies, ...res.data.data],
-              };
-            }
-            return prevComment;
-          })
-        );
-        setPageReplyCmt((prev) => prev + 1);
-        setLoadingReplyCmt(false);
-      }
-    } catch (err) {
-      console.log(err);
-      setLoadingReplyCmt(false);
     }
   };
 
@@ -217,27 +129,19 @@ const CommentUI = ({
       }
 
       const res = await addReplyComment(userId, movieId, commentId, replyText);
-      console.log(">>> handleAddReplyComment <<<", res.data?.data);
+      console.log(">>> handleAddReplyComment <<<", res);
 
       if (res && res.data?.data) {
         setComments((prevComments) => {
           return prevComments.map((prevComment) => {
-            if (prevComment._id === commentId) {
-              return {
-                ...prevComment,
-                replies: [...prevComment.replies, res.data?.data],
-              };
+            if (prevComment._id === res.data?.data._id) {
+              return res.data?.data;
             } else {
               return prevComment;
             }
           });
         });
-        setShowReplyCmt(true);
-        socket.emit(
-          "new-reply-comment",
-          JSON.stringify(res.data.data),
-          JSON.stringify(res.data.commentId)
-        );
+        socket.emit("new-reply-comment", JSON.stringify(res.data.data));
 
         if (userId != item?.user._id) {
           const resAddNotify = await addNotify(
@@ -366,7 +270,7 @@ const CommentUI = ({
         });
         socket.emit("comment-deleted", JSON.stringify(res.data.data));
       }
-      toast(res?.data?.message);
+      //   toast(res?.data?.message);
     } catch (err) {
       console.log(err);
       throw new Error(err);
@@ -397,7 +301,7 @@ const CommentUI = ({
         socket.emit("reply-comment-deleted", JSON.stringify(res.data.data));
       }
 
-      toast(res?.data?.message);
+      //   toast(res?.data?.message);
     } catch (err) {
       console.log(err);
       throw new Error(err);
@@ -622,38 +526,8 @@ const CommentUI = ({
           <></>
         )}
 
-        {/* //LOAD MORE COMMENT CON */}
-        {!isReplyCmt && item.repliesCount > 0 && (
-          <span
-            className="inline-block text-[11px] text-[#0285b5] cursor-pointer italic hover:underline"
-            onClick={() => handleLoadMoreReplyCommentOnce(item._id)}
-          >
-            <i className="fa-solid fa-chevron-down mr-[6px] text-[#0285b5]"></i>
-            <span>{item.repliesCount} phản hồi</span>
-          </span>
-        )}
-
         {/* //COMMENT CON */}
-        {replyComment && showReplyCmt ? (
-          <div className="mt-4">{replyComment}</div>
-        ) : (
-          <></>
-        )}
-
-        {/* //LOAD MORE COMMENT CON */}
-        {!isReplyCmt &&
-          item.repliesCount > 0 &&
-          hasMoreReplyCmt &&
-          showReplyCmt &&
-          !loadingReplyCmt && (
-            <span
-              className="inline-block text-[11px] text-[#0285b5] cursor-pointer italic hover:underline"
-              onClick={() => handleLoadMoreReplyComment(item._id)}
-            >
-              <i className="fa-solid fa-message mr-[6px] text-[#0285b5]"></i>
-              <span>Xem thêm phản hồi</span>
-            </span>
-          )}
+        {replyComment ? <div className="mt-4">{replyComment}</div> : <></>}
       </div>
     </div>
   );

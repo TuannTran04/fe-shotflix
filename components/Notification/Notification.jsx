@@ -108,7 +108,7 @@ const Notification = ({}) => {
         });
         // socket.emit("comment-deleted", JSON.stringify(res.data.data));
       }
-      toast(res?.data?.message);
+      // toast(res?.data?.message);
     } catch (err) {
       console.log(err);
       throw new Error(err);
@@ -240,9 +240,7 @@ const Notification = ({}) => {
     try {
       setLoading(true);
       const notify = await getNotify(id, pageNumber, batchSize);
-      const updateSeenNotify = await updateNotifySeen(id);
       console.log("fetchData", notify);
-      console.log("updateSeenNotify", updateSeenNotify);
 
       if (notify?.data.code === 200) {
         const newNotifications = notify.data.data;
@@ -268,12 +266,25 @@ const Notification = ({}) => {
     }
   };
 
+  const updateCountSeenNotify = async () => {
+    const updateSeenNotify = await updateNotifySeen(id);
+    console.log("updateSeenNotify", updateSeenNotify);
+  };
+
   useEffect(() => {
     console.log("alo", loadedOnce);
-    if (user && id && notifyRef.current && showNotification && !loadedOnce) {
-      fetchData(1);
-      // loadedOnce = true;
-      setLoadedOnce(true);
+    if (user && id && notifyRef.current && showNotification) {
+      // notify chua seen thi call api
+      if (totalUnseen > 0) {
+        updateCountSeenNotify();
+        setTotalUnseen(0);
+      }
+
+      // Fetch notify 1 lan khi bam icon bell
+      if (!loadedOnce) {
+        fetchData(1);
+        setLoadedOnce(true);
+      }
     }
   }, [notifyRef, showNotification]);
 
