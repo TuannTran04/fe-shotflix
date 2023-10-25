@@ -367,6 +367,13 @@ const VideoContainer = ({ movie, nameFilm }) => {
     return () => {
       if (
         player &&
+        refVideo.current?.canPlayType("application/vnd.apple.mpegurl")
+      ) {
+        player?.dispose();
+        window.location.reload();
+      }
+      if (
+        player &&
         !refVideo.current?.canPlayType("application/vnd.apple.mpegurl")
       ) {
         player?.destroy();
