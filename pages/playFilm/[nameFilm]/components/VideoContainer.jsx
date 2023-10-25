@@ -367,14 +367,14 @@ const VideoContainer = ({ movie, nameFilm }) => {
     return () => {
       if (
         player &&
-        !refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+        !refVideo.current?.canPlayType("application/vnd.apple.mpegurl")
       ) {
         player?.destroy();
         window.location.reload();
       }
       if (
         hls &&
-        !refVideo.current.canPlayType("application/vnd.apple.mpegurl")
+        !refVideo.current?.canPlayType("application/vnd.apple.mpegurl")
       ) {
         hls?.destroy();
       }
