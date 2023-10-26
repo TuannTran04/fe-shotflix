@@ -312,7 +312,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
           // true
         ) {
           if (refVideo.current) {
-            // // alert("khong sp");
+            alert("khong sp");
             // // refVideo.current.src = `/neudanhmatem.mp4`;
             // // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
 
@@ -346,21 +346,19 @@ const VideoContainer = ({ movie, nameFilm }) => {
               // fluid: true,
               preload: "none",
               crossOrigin: "use-credentials",
-              controlBar: {
-                progressControl: true,
-                remainingTimeDisplay: true,
-                durationDisplay: true,
-                currentTimeDisplay: true,
-                timeDivider: true,
-                // customControlSpacer: true, // Add spacer for custom controls
-              },
+              // controlBar: {
+              //   progressControl: true,
+              //   remainingTimeDisplay: true,
+              //   durationDisplay: true,
+              //   currentTimeDisplay: true,
+              //   timeDivider: true,
+              //   // customControlSpacer: true, // Add spacer for custom controls
+              // },
             });
 
-            // player.addClass("vjs-matrix");
-
-            player.poster(
-              "https://static-cse.canva.com/blob/1126190/poster.1896a7d6.jpg"
-            );
+            // player.poster(
+            //   "https://static-cse.canva.com/blob/1126190/poster.1896a7d6.jpg"
+            // );
 
             // Thêm nguồn video
             player.src({
