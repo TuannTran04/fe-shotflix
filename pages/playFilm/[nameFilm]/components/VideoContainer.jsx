@@ -509,6 +509,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
       // }
       if (
         player &&
+        Hls.isSupported() &&
         !refVideo.current?.canPlayType("application/vnd.apple.mpegurl")
       ) {
         player?.destroy();
@@ -516,6 +517,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
       }
       if (
         hls &&
+        Hls.isSupported() &&
         !refVideo.current?.canPlayType("application/vnd.apple.mpegurl")
       ) {
         hls?.destroy();
