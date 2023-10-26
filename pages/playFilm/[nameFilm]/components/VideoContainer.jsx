@@ -8,6 +8,9 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
+let alreadyCalledVideoJs = false;
+console.log("alreadyCalledVideoJs", alreadyCalledVideoJs);
+
 const VideoContainer = ({ movie, nameFilm }) => {
   const router = useRouter();
   // console.log(router);
@@ -339,8 +342,25 @@ const VideoContainer = ({ movie, nameFilm }) => {
               lowLatencyMode: true, // Kích hoạt chế độ tải trước đoạn nhỏ
               controls: true,
               autoplay: false,
+              responsive: true,
+              fluid: true,
               preload: "none",
+              crossOrigin: "use-credentials",
+              controlBar: {
+                progressControl: true,
+                remainingTimeDisplay: true,
+                durationDisplay: true,
+                currentTimeDisplay: true,
+                timeDivider: true,
+                // customControlSpacer: true, // Add spacer for custom controls
+              },
             });
+
+            // player.addClass("vjs-matrix");
+
+            player.poster(
+              "https://static-cse.canva.com/blob/1126190/poster.1896a7d6.jpg"
+            );
 
             // Thêm nguồn video
             player.src({
@@ -351,6 +371,118 @@ const VideoContainer = ({ movie, nameFilm }) => {
               // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`, // Thay thế bằng URL của video của bạn
               // type: "video/mp4", // Loại video
               type: "application/x-mpegURL", // Loại video
+            });
+
+            player.on("ready", function () {
+              console.log("readyyyyyyyyyyyyyy");
+            });
+
+            player.on("loadedmetadata", function () {
+              console.log("loadedmetadata");
+              const duration = player.duration();
+
+              const savedPlaybackTime = JSON.parse(
+                localStorage.getItem(`${movie?._id}`)
+              );
+              // console.log(savedPlaybackTime);
+              const currTimeLocal = savedPlaybackTime?.currentTime;
+              const videoIdLocal = savedPlaybackTime?.videoId;
+
+              if (videoIdLocal == movie._id && duration) {
+                console.log("savedPlaybackTime canplay");
+
+                const setPlayerCurrentTime = (currentTime) => {
+                  setTimeout(() => {
+                    const minutes = Math.floor(currentTime / 60);
+                    const seconds = Math.round(currentTime % 60);
+                    if (true) {
+                      // console.log(player.current);
+                      // console.log("continue");
+                      // event.detail.plyr.muted = false;
+                      // event.detail.plyr.currentTime = currentTime;
+
+                      player.muted(false);
+                      player.currentTime(currentTime);
+                      // player.play();
+                    } else {
+                      console.log("begin");
+                      player.muted = true;
+                      player.currentTime = 0;
+                      player.play();
+                    }
+                  }, 500);
+                };
+                setPlayerCurrentTime(currTimeLocal);
+              }
+            });
+
+            player.on("waiting", () => {
+              console.log("player is waiting");
+            });
+
+            player.on("timeupdate", async () => {
+              console.log("alreadyCalledVideoJs", alreadyCalledVideoJs);
+
+              // console.log("player is playing");
+              let currentTime = player.currentTime();
+              const duration = player.duration();
+              console.log("Video is timeupdate", currentTime, duration);
+
+              if (
+                duration &&
+                currentTime &&
+                currentTime >= duration / 2 &&
+                !alreadyCalledVideoJs
+              ) {
+                alreadyCalledVideoJs = true;
+                console.log("call api update view ??????????????????????");
+                const movieId = movie?._id;
+                const data = { userId, movieId, duration };
+                const base_url = process.env.NEXT_PUBLIC_URL;
+
+                try {
+                  const incrView = await axios.put(
+                    `${base_url}/api/v1/movie/update-views`,
+                    data
+                  );
+                  console.log(">>> update-views <<<", incrView);
+                } catch (err) {
+                  alreadyCalledVideoJs = true;
+                  console.log(err);
+                }
+              }
+
+              // Thời gian hiện tại gần cuối video (1 giây trước khi kết thúc)
+              if (duration && duration - currentTime < 1) {
+                // console.log("Video đã xem xong");
+                // Thực hiện các tác vụ khi video kết thúc hoặc đã xem xong
+                localStorage.removeItem(`${movie?._id}`);
+              }
+
+              // currTime > 0 và khi video chưa kết thúc thì set localStorage time update
+              if (
+                currentTime &&
+                currentTime > 0 &&
+                duration &&
+                duration - currentTime > 1
+              ) {
+                // console.log("sett", {
+                //   currentTime: currentTime,
+                //   videoId: movie._id,
+                // });
+
+                localStorage.setItem(
+                  `${movie?._id}`,
+                  JSON.stringify({
+                    currentTime: currentTime,
+                    videoId: movie._id,
+                  })
+                );
+              }
+            });
+
+            player.on("ended", function () {
+              this.dispose();
             });
 
             //////////////////////////////////////////////////////////////
@@ -365,13 +497,16 @@ const VideoContainer = ({ movie, nameFilm }) => {
 
     // Xóa sự kiện và Plyr instance khi unmount
     return () => {
-      if (
-        player &&
-        refVideo.current?.canPlayType("application/vnd.apple.mpegurl")
-      ) {
-        player?.dispose();
-        window.location.reload();
-      }
+      // // videojs.getPlayers()["myPlyr"]
+      // if (player && player.isDisposed()) {
+      //   console.log("videojs isDisposed");
+      //   console.log(player);
+      //   console.log(player.isDisposed());
+      //   // videojs.getPlayers()["myPlyr"].dispose();
+      //   player.dispose();
+      //   // refVideo.current = null;
+      //   // window.location.reload();
+      // }
       if (
         player &&
         !refVideo.current?.canPlayType("application/vnd.apple.mpegurl")
