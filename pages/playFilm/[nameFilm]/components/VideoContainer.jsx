@@ -346,19 +346,19 @@ const VideoContainer = ({ movie, nameFilm }) => {
               // fluid: true,
               preload: "none",
               // crossOrigin: "use-credentials",
-              // controlBar: {
-              //   progressControl: true,
-              //   remainingTimeDisplay: true,
-              //   durationDisplay: true,
-              //   currentTimeDisplay: true,
-              //   timeDivider: true,
-              //   // customControlSpacer: true, // Add spacer for custom controls
-              // },
+              controlBar: {
+                progressControl: true,
+                remainingTimeDisplay: true,
+                durationDisplay: true,
+                currentTimeDisplay: true,
+                timeDivider: true,
+                // customControlSpacer: true, // Add spacer for custom controls
+              },
             });
 
-            // player.poster(
-            //   "https://static-cse.canva.com/blob/1126190/poster.1896a7d6.jpg"
-            // );
+            player.poster(
+              "https://static-cse.canva.com/blob/1126190/poster.1896a7d6.jpg"
+            );
 
             // Thêm nguồn video
             player.src({
