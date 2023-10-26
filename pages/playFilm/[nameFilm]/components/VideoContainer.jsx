@@ -345,7 +345,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
               // responsive: true,
               // fluid: true,
               preload: "none",
-              // crossOrigin: "use-credentials",
+              crossOrigin: "use-credentials",
               controlBar: {
                 progressControl: true,
                 remainingTimeDisplay: true,
