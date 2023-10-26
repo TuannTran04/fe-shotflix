@@ -345,7 +345,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
               // responsive: true,
               // fluid: true,
               preload: "none",
-              crossOrigin: "use-credentials",
+              // crossOrigin: "use-credentials",
               // controlBar: {
               //   progressControl: true,
               //   remainingTimeDisplay: true,
@@ -505,6 +505,10 @@ const VideoContainer = ({ movie, nameFilm }) => {
       //   // refVideo.current = null;
       //   // window.location.reload();
       // }
+      if (player && !Hls.isSupported()) {
+        player.dispose();
+        // window.location.reload();
+      }
       if (player && Hls.isSupported()) {
         player?.destroy();
         window.location.reload();
