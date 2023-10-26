@@ -507,7 +507,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
       // }
       if (player && !Hls.isSupported()) {
         player.dispose();
-        // window.location.reload();
+        window.location.reload();
       }
       if (player && Hls.isSupported()) {
         player?.destroy();
