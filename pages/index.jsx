@@ -19,7 +19,7 @@ const Home = (props) => {
   const accessToken = user?.accessToken;
   // console.log(accessToken);
   const userId = user?._id;
-  let axiosJWT = createAxios(user, null, null);
+
   // console.log("dataMovies", props.dataMovies);
 
   console.log("render home");
@@ -34,7 +34,7 @@ const Home = (props) => {
   return (
     <>
       <Head>
-        <title>The Stone</title>
+        <title>Shotflix</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta property="og:type" content="blog" />

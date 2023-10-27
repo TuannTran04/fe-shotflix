@@ -13,6 +13,7 @@ import { createAxios } from "../../../utils/createInstance";
 import Cookies from "js-cookie";
 import ProtectedRoute from "../../../utils/ProtectedRoutes";
 import axios from "axios";
+import { loginSuccess } from "../../../store/authSlice";
 
 const EditInfoUser = ({ nameUserEdit, categories }) => {
   const schema = yup.object().shape({
@@ -25,7 +26,9 @@ const EditInfoUser = ({ nameUserEdit, categories }) => {
   const user = useSelector((state) => state.auth.login.currentUser);
   const accessToken = user?.accessToken;
   const refreshToken = user?.refreshToken;
-  let axiosJWT = createAxios(user, null, null);
+  // let axiosJWT = createAxios(user, null, null);
+  let axiosJWT = createAxios(user, dispatch, loginSuccess);
+
   const userId = user?._id;
 
   const {

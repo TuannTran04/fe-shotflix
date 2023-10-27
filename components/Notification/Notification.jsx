@@ -55,35 +55,34 @@ function timeAgo(createdAt) {
 const Notification = ({}) => {
   const socket = useRef();
   const notifyRef = useRef();
-  console.log(notifyRef.current);
+  // console.log(notifyRef.current);
 
   const router = useRouter();
   const user = useSelector((state) => state.auth.login.currentUser);
   const accessToken = user?.accessToken;
   const id = user?._id;
-  const dispatch = useDispatch();
-  let axiosJWT = createAxios(user, dispatch, logOutSuccess);
+  // const dispatch = useDispatch();
 
   const [listNoti, setListNoti] = useState([]);
   const [totalUnread, setTotalUnread] = useState(0);
   const [totalUnseen, setTotalUnseen] = useState(0);
   const [totalNotify, setTotalNotify] = useState(0);
-  console.log("notify unread >", totalUnread, "notify total >", totalNotify);
-  console.log(listNoti);
+  // console.log("notify unread >", totalUnread, "notify total >", totalNotify);
+  // console.log(listNoti);
   const [showNotification, setShowNotification] = useState(false);
-  console.log("showNotification", showNotification);
+  // console.log("showNotification", showNotification);
   const [showMenuNotification, setShowMenuCommentNotification] = useState(null);
 
   const [loadedOnce, setLoadedOnce] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
-  console.log("loadMore", loadMore);
-  console.log("hasMoreData", hasMoreData);
+  // console.log("loadMore", loadMore);
+  // console.log("hasMoreData", hasMoreData);
 
   const [page, setPage] = useState(1);
   const batchSize = 5; // Kích thước lô thông báo
-  console.log("page", page);
+  // console.log("page", page);
 
   const handleShowNotification = (e) => {
     setShowNotification((prev) => !prev);
@@ -93,14 +92,14 @@ const Notification = ({}) => {
       setShowMenuCommentNotification(null);
     } else {
       setShowMenuCommentNotification(notifyId);
-      console.log("toggle", notifyId);
+      // console.log("toggle", notifyId);
     }
   };
   const deleteNotification = async (notifyId) => {
-    console.log("deleteNotification", notifyId);
+    // console.log("deleteNotification", notifyId);
     try {
       const res = await deleteNotifyById(notifyId);
-      console.log(">>> deleteNotification <<<", res);
+      // console.log(">>> deleteNotification <<<", res);
 
       if (res && res.data?.data) {
         setListNoti((prevNotify) => {
@@ -116,7 +115,7 @@ const Notification = ({}) => {
   };
 
   const handleNavToCmt = async (notifyId, commentParentId, slugMovie) => {
-    console.log("Ok", notifyId, commentParentId, slugMovie);
+    // console.log("Ok", notifyId, commentParentId, slugMovie);
     try {
       if (!user || !accessToken) {
         toast("Đăng nhập để sử dụng tính năng này");
@@ -124,7 +123,7 @@ const Notification = ({}) => {
       }
 
       const res = await updateNotifyRead(notifyId);
-      console.log(">>> updateNotifyRead <<<", res);
+      // console.log(">>> updateNotifyRead <<<", res);
 
       if (res && res.data?.data) {
         setListNoti((prevNotify) => {
@@ -180,35 +179,35 @@ const Notification = ({}) => {
   }, []);
 
   // handle listent event socket realtime
-  useEffect(() => {
-    // https://be-movie-mt-copy.vercel.app
-    socket.current = io("http://localhost:8000", {
-      query: {
-        token: accessToken,
-      },
-      transportOptions: {
-        polling: {
-          extraHeaders: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      },
-    });
+  // useEffect(() => {
+  //   // https://be-movie-mt-copy.vercel.app
+  //   socket.current = io("http://localhost:8000", {
+  //     query: {
+  //       token: accessToken,
+  //     },
+  //     transportOptions: {
+  //       polling: {
+  //         extraHeaders: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       },
+  //     },
+  //   });
 
-    socket.current.on("new-notify-comment-user", (data) => {
-      console.log("an event new-notify-comment-user", data);
+  //   socket.current.on("new-notify-comment-user", (data) => {
+  //     console.log("an event new-notify-comment-user", data);
 
-      setListNoti((prevNotify) => {
-        return [JSON.parse(data), ...prevNotify];
-      });
+  //     setListNoti((prevNotify) => {
+  //       return [JSON.parse(data), ...prevNotify];
+  //     });
 
-      // setListNoti([JSON.parse(data), ...listNoti]);
-    });
+  //     // setListNoti([JSON.parse(data), ...listNoti]);
+  //   });
 
-    return () => {
-      socket.current.disconnect();
-    };
-  }, [socket.current]);
+  //   return () => {
+  //     socket.current.disconnect();
+  //   };
+  // }, [socket.current]);
 
   // handle scroll notifyContainer to load more
   const handleScroll = useCallback(() => {
@@ -240,11 +239,11 @@ const Notification = ({}) => {
     try {
       setLoading(true);
       const notify = await getNotify(id, pageNumber, batchSize);
-      console.log("fetchData", notify);
+      // console.log("fetchData", notify);
 
       if (notify?.data.code === 200) {
         const newNotifications = notify.data.data;
-        console.log("newNotifications.length", newNotifications.length);
+        // console.log("newNotifications.length", newNotifications.length);
 
         if (newNotifications.length === 0) {
           setHasMoreData(false);
@@ -268,11 +267,11 @@ const Notification = ({}) => {
 
   const updateCountSeenNotify = async () => {
     const updateSeenNotify = await updateNotifySeen(id);
-    console.log("updateSeenNotify", updateSeenNotify);
+    // console.log("updateSeenNotify", updateSeenNotify);
   };
 
   useEffect(() => {
-    console.log("alo", loadedOnce);
+    // console.log("alo", loadedOnce);
     if (user && id && notifyRef.current && showNotification) {
       // notify chua seen thi call api
       if (totalUnseen > 0) {
@@ -300,7 +299,7 @@ const Notification = ({}) => {
     const fetchUnreadNotifyCount = async () => {
       try {
         const response = await getUnreadNotifyCount(id); // Thay thế bằng cuộc gọi API thích hợp
-        console.log(response);
+        // console.log(response);
         if (response?.data?.code === 200) {
           setTotalUnread(response.data.data.unreadNotifyCount);
           setTotalUnseen(response.data.data.unseenNotifyCount);

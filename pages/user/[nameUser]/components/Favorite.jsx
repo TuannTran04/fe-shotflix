@@ -13,7 +13,6 @@ const Favorite = ({ movie, toast, setArrFavoriteMovie }) => {
   const userId = user?._id;
   const dispatch = useDispatch();
   const accessToken = user?.accessToken;
-  let axiosJWT = createAxios(user, null, null);
   const [showMenu, setShowMenu] = useState(false);
 
   const handleShowMenuMovie = (e) => {
@@ -28,7 +27,7 @@ const Favorite = ({ movie, toast, setArrFavoriteMovie }) => {
     e.stopPropagation();
     try {
       const res = await deleteFavoriteMovie(userId, movie._id);
-      console.log(">>> deleteFavoriteMovie <<<", res);
+      // console.log(">>> deleteFavoriteMovie <<<", res);
 
       setArrFavoriteMovie((prevFavorires) => {
         return prevFavorires.filter((favorite) => favorite._id !== movie._id);

@@ -11,7 +11,6 @@ const Movie = ({ item, toast }) => {
   const userId = user?._id;
   const dispatch = useDispatch();
   const accessToken = user?.accessToken;
-  let axiosJWT = createAxios(user, null, null);
 
   const [showMenu, setShowMenu] = useState(false);
   const handleShowMenuMovie = (e) => {

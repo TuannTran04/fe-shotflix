@@ -15,7 +15,6 @@ const HeaderManageInfo = ({ showSideBar, setShowSideBar }) => {
   // console.log(">>> Header Manage Info <<<", user);
   const accessToken = user?.accessToken;
   const id = user?._id;
-  let axiosJWT = createAxios(user, dispatch, logOutSuccess);
 
   const [searchInput, setSearchInput] = useState("");
 
@@ -25,7 +24,7 @@ const HeaderManageInfo = ({ showSideBar, setShowSideBar }) => {
   };
   const handleLogout = (e) => {
     e.preventDefault();
-    logOut(dispatch, id, router, accessToken, axiosJWT);
+    logOut(dispatch, id, router);
   };
   const handleShowSideBar = (e) => {
     e.preventDefault();

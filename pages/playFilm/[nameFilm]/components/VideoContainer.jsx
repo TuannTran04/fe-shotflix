@@ -26,6 +26,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
   const accessToken = user?.accessToken;
   const userId = user?._id;
 
+  console.log(movie.photo?.[0]);
+
   var config = {
     autoStartLoad: true,
     startPosition: -1,
@@ -182,9 +184,13 @@ const VideoContainer = ({ movie, nameFilm }) => {
                 disableContextMenu: false,
                 playsinline: true,
                 enabled: true,
+                // poster: movie.photo?.[0],
                 ...defaultOptions,
                 // debug: true,
               });
+              player.source = {
+                poster: movie.photo?.[0],
+              };
 
               /////////////////////////////
               // setPlayerInstance(player);
@@ -356,9 +362,11 @@ const VideoContainer = ({ movie, nameFilm }) => {
               },
             });
 
-            player.poster(
-              "https://static-cse.canva.com/blob/1126190/poster.1896a7d6.jpg"
-            );
+            // player.poster(
+            //   "https://static-cse.canva.com/blob/1126190/poster.1896a7d6.jpg"
+            // );
+
+            player.poster(`${movie.photo?.[0]}`);
 
             // Thêm nguồn video
             player.src({

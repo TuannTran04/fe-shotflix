@@ -6,6 +6,8 @@ import ReactStars from "react-stars";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createAxios } from "../../../../utils/createInstance";
+import { loginSuccess } from "../../../../store/authSlice";
+import { ratingMovie } from "../../../../store/apiRequest";
 
 const VideoDetail = ({ movie }) => {
   // console.log(">>>check movie", movie);
@@ -17,7 +19,9 @@ const VideoDetail = ({ movie }) => {
   const userId = user?._id;
   const accessToken = user?.accessToken;
   const dispatch = useDispatch();
-  let axiosJWT = createAxios(user, null, null);
+  // let axiosJWT = createAxios(user, null, null);
+  console.log(">>> accessToken in Rating <<<", accessToken);
+  let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   const category = movie?.category?.map((category) => category.name);
   const arrDetailInfoFilm = [
@@ -40,7 +44,8 @@ const VideoDetail = ({ movie }) => {
     };
 
     try {
-      const response = await axiosJWT.post(
+      // const response = await ratingMovie(accessToken, dispatch, axiosJWT, data);
+      const response = await axiosJWT.put(
         `${base_url}/api/v1/movie/rating`,
         data,
         {
@@ -159,8 +164,8 @@ const VideoDetail = ({ movie }) => {
             <span>
               <b>
                 {currentMovie.rating != undefined
-                  ? currentMovie?.rating
-                  : movie?.rating}
+                  ? currentMovie?.rating?.toFixed(1)
+                  : movie?.rating?.toFixed(1)}
               </b>{" "}
               of <b>10</b> ( {movie?.listUserRating?.length} reviews )
             </span>

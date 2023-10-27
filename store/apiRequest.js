@@ -20,9 +20,12 @@ export const login = async (user, dispatch, router, toast) => {
   const base_url = process.env.NEXT_PUBLIC_URL;
   dispatch(loginStart());
   try {
-    const res = await axios.post(`${base_url}/api/v1/auth/login`, user);
+    const res = await axios.post(`${base_url}/api/v1/auth/login`, user, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
     if (res.data.code == 200) {
-      let c = res.data.data.accessToken.toString();
+      // let c = res.data.data.accessToken.toString();
       // Cookies.set("user-server", "abc");
       // Cookies.set("accessToken", c);
       dispatch(loginSuccess(res.data.data));
@@ -88,11 +91,13 @@ export const registerOTP = async (
   }
 };
 
-export const logOut = async (dispatch, id, router, accessToken, axiosJWT) => {
+export const logOut = async (dispatch, id, router) => {
   const base_url = process.env.NEXT_PUBLIC_URL;
   dispatch(logOutStart());
   try {
-    await axios.post(`${base_url}/api/v1/auth/logout`, id);
+    await axios.get(`${base_url}/api/v1/auth/logout`, {
+      withCredentials: true,
+    });
     Cookies.remove("accessToken");
     dispatch(logOutSuccess());
     router.push("/");
@@ -177,7 +182,12 @@ export const getAllMovies = async () => {
   }
 };
 
-export const getFavoriteMovies = async (token, dispatch, axiosJWT) => {
+export const getFavoriteMovies = async (
+  token,
+  dispatch,
+  axiosJWT,
+  controller
+) => {
   const base_url = process.env.NEXT_PUBLIC_URL;
 
   try {
@@ -185,6 +195,7 @@ export const getFavoriteMovies = async (token, dispatch, axiosJWT) => {
       `${base_url}/api/v1/user/get-favorite-movie`,
       {
         headers: { token: `Bearer ${token}` },
+        signal: controller.signal,
       }
     );
     dispatch(addArrFavorite(res.data.loveMovie));
@@ -196,7 +207,12 @@ export const getFavoriteMovies = async (token, dispatch, axiosJWT) => {
   }
 };
 
-export const getWatchLaterMovies = async (token, dispatch, axiosJWT) => {
+export const getWatchLaterMovies = async (
+  token,
+  dispatch,
+  axiosJWT,
+  controller
+) => {
   // dispatch(getUsersStart());
   const base_url = process.env.NEXT_PUBLIC_URL;
 
@@ -205,6 +221,7 @@ export const getWatchLaterMovies = async (token, dispatch, axiosJWT) => {
       `${base_url}/api/v1/user/get-bookmark-movie`,
       {
         headers: { token: `Bearer ${token}` },
+        signal: controller.signal,
       }
     );
     dispatch(addArrWatchLater(res.data.markBookMovie));
@@ -278,6 +295,24 @@ export const deleteBookmarkMovie = async (userId, movieId, isBookmark) => {
       `${base_url}/api/v1/movie/delete-bookmark-movie`,
       data
     );
+    console.log(res);
+    return res;
+    // dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUsersFailed());
+    console.log(err);
+    throw new Error(err);
+  }
+};
+
+export const ratingMovie = async (token, dispatch, axiosJWT, data) => {
+  // const data = { userId, movieId, isBookmark };
+  const base_url = process.env.NEXT_PUBLIC_URL;
+  // dispatch(getUsersStart());
+  try {
+    const res = await axiosJWT.put(`${base_url}/api/v1/movie/rating`, data, {
+      headers: { token: `Bearer ${token}` },
+    });
     console.log(res);
     return res;
     // dispatch(getUsersSuccess(res.data));

@@ -106,7 +106,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
 
   return (
     <LayoutRoot categories={categories}>
-      <div className="sm:mt-16">
+      <div className="md:mt-16">
         <Breadcrumb content={`Xem phim ${movie?.title}`} />
 
         <div className="grid grid-cols-1 lg:grid-cols-7 gap-4">

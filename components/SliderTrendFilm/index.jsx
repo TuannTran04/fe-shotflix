@@ -16,7 +16,6 @@ const SliderTrendingFilm = ({ toast }) => {
   const user = useSelector((state) => state.auth.login.currentUser);
   const userId = user?._id;
   const accessToken = user?.accessToken;
-  // let axiosJWT = createAxios(user, null, null);
 
   const film = useSelector((state) => state.film);
   const { movies, favoriteFilm, watchLaterFilm } = film;

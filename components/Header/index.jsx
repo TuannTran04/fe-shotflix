@@ -19,7 +19,6 @@ export default function Header({ categories }) {
   const accessToken = user?.accessToken;
   const id = user?._id;
   const dispatch = useDispatch();
-  let axiosJWT = createAxios(user, dispatch, logOutSuccess);
 
   const resultsRef = useRef(null);
 
@@ -83,7 +82,7 @@ export default function Header({ categories }) {
 
   const handleLogout = (e) => {
     e.preventDefault();
-    logOut(dispatch, id, router, accessToken, axiosJWT);
+    logOut(dispatch, id, router);
   };
 
   // Sự kiện lắng nghe khi click chuột toàn trang

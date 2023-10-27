@@ -19,7 +19,6 @@ const SidebarHomeMobile = ({
   const accessToken = user?.accessToken;
   const id = user?._id;
   const dispatch = useDispatch();
-  let axiosJWT = createAxios(user, dispatch, logOutSuccess);
 
   const cate = categories?.map((item, i) => {
     return {
@@ -30,7 +29,7 @@ const SidebarHomeMobile = ({
 
   const handleLogout = (e) => {
     e.preventDefault();
-    logOut(dispatch, id, router, accessToken, axiosJWT);
+    logOut(dispatch, id, router);
   };
 
   return (

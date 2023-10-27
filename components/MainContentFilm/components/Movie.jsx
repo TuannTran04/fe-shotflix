@@ -33,7 +33,6 @@ const MovieMainContent = ({ item, toast }) => {
   const film = useSelector((state) => state.film);
   const { favoriteFilm, watchLaterFilm } = film;
   const dispatch = useDispatch();
-  let axiosJWT = createAxios(user, null, null);
 
   const [showMenu, setShowMenu] = useState(false);
   const handleShowMenuMovie = (e) => {
@@ -130,7 +129,9 @@ const MovieMainContent = ({ item, toast }) => {
             {titleWithoutAccent}
           </p>
           <p className="text-[10px] opacity-50 whitespace-nowrap text-ellipsis overflow-hidden">
-            Tài liệu • Môi trường • {timeVideo}
+            {category?.[0]?.name}{" "}
+            {category?.[1]?.name ? `• ${category?.[1]?.name}` : ""} •{" "}
+            {timeVideo}
             {/* &apos; */}
           </p>
         </div>

@@ -13,7 +13,6 @@ const WatchLater = ({ movie, toast, setArrWatchLaterMovie }) => {
   const userId = user?._id;
   const dispatch = useDispatch();
   const accessToken = user?.accessToken;
-  let axiosJWT = createAxios(user, null, null);
   const [showMenu, setShowMenu] = useState(false);
 
   const handleShowMenuMovie = (e) => {
@@ -41,7 +40,7 @@ const WatchLater = ({ movie, toast, setArrWatchLaterMovie }) => {
     e.stopPropagation();
     try {
       const res = await deleteBookmarkMovie(userId, movie._id);
-      console.log(res);
+      // console.log(res);
 
       setArrWatchLaterMovie((prevWatchLaters) => {
         return prevWatchLaters.filter(
