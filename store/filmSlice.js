@@ -27,6 +27,10 @@ const filmSlice = createSlice({
       state.watchLaterFilm = [];
       state.movies = {};
     },
+    deleteSuccess_user: (state) => {
+      state.favoriteFilm = [];
+      state.watchLaterFilm = [];
+    },
   },
 });
 
@@ -35,6 +39,7 @@ export const {
   addArrWatchLater,
   addDataMovies,
   deleteSuccess,
+  deleteSuccess_user,
 } = filmSlice.actions;
 
 export default filmSlice.reducer;

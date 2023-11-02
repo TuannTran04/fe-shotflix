@@ -394,6 +394,11 @@
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
+"@types/lodash@^4.14.105":
+  version "4.14.200"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.200.tgz#435b6035c7eba9cdf1e039af8212c9e9281e7149"
+  integrity sha512-YI/M/4HRImtNf3pJgbF+W6FrXovqj+T+/HpENLTooK9PnkacBsDpeP3IpHab40CClUfhNmdM2WTNP2sa2dni5Q==
+
 "@types/node@20.4.9":
   version "20.4.9"
   resolved "https://registry.npmjs.org/@types/node/-/node-20.4.9.tgz#c7164e0f8d3f12dfae336af0b1f7fdec8c6b204f"
@@ -420,6 +425,15 @@
   version "18.2.20"
   resolved "https://registry.npmjs.org/@types/react/-/react-18.2.20.tgz#1605557a83df5c8a2cc4eeb743b3dfc0eb6aaeb2"
   integrity sha512-WKNtmsLWJM/3D5mG4U84cysVY31ivmyw85dE84fOCk5Hx78wezB/XEjVPWl2JTZ5FkEeaTJf+VgUAUn3PE7Isw==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@^16.0.40":
+  version "16.14.50"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.14.50.tgz#ec9c30f2f0c7d9aa748949536d88e3439526a25d"
+  integrity sha512-7TWZ/HjhXsRK3BbhSFxTinbSft3sUXJAU3ONngT0rpcKJaIOlxkRke4bidqQTopUbEv1ApC5nlSEkIpX43MkTg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -2559,6 +2573,14 @@ react-player@^2.12.0:
     memoize-one "^5.1.1"
     prop-types "^15.7.2"
     react-fast-compare "^3.0.1"
+
+react-rating@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-rating/-/react-rating-2.0.5.tgz#2c9d7ebe5907db0361ba28b7c19f0394e6e4dd76"
+  integrity sha512-uldxgLCe5bzqGX7V+7/bPgQQj2Kok6eiMgTMxjKOhfhnQkFLDlc4TjMlp7gaJFAHWdbiOnqpiShI7z8as6oWtg==
+  dependencies:
+    "@types/lodash" "^4.14.105"
+    "@types/react" "^16.0.40"
 
 react-redux@^8.0.5:
   version "8.1.2"

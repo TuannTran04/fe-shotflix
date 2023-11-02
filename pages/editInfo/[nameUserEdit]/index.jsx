@@ -43,11 +43,13 @@ const EditInfoUser = ({ nameUserEdit, categories }) => {
   });
 
   const onSubmit = async (data) => {
+    const controller = new AbortController();
+
     console.log(">>> Data EDIT <<<", data);
     const response = await updateInfoUser(
       data,
       accessToken,
-      refreshToken,
+      controller,
       dispatch,
       axiosJWT
     );

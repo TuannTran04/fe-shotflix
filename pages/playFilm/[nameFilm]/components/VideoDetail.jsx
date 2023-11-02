@@ -1,8 +1,9 @@
-import axios from "axios";
+// import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactStars from "react-stars";
+import Rating from "react-rating";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createAxios } from "../../../../utils/createInstance";
@@ -37,19 +38,32 @@ const VideoDetail = ({ movie }) => {
   const ratingChanged = async (newRating) => {
     console.log(newRating);
     const base_url = process.env.NEXT_PUBLIC_URL;
-    const data = {
-      name: user?.username,
-      point: Number(newRating) * 2,
-      movieId: movie._id,
-    };
+    const controller = new AbortController();
 
     try {
+      if (!movie) {
+        return;
+      }
+
+      const data = {
+        name: user?.username,
+        point: Number(newRating) * 2,
+        movieId: movie._id,
+      };
+
       // const response = await ratingMovie(accessToken, dispatch, axiosJWT, data);
-      const response = await axiosJWT.put(
+      const response = await axiosJWT.post(
         `${base_url}/api/v1/movie/rating`,
-        data,
+        JSON.stringify(data),
         {
-          headers: { token: `Bearer ${accessToken}` },
+          // headers: { token: `Bearer ${accessToken}` },
+          withCredentials: true,
+          headers: {
+            token: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+
+          signal: controller.signal,
         }
       );
       console.log("ratingChanged", response);
@@ -59,9 +73,11 @@ const VideoDetail = ({ movie }) => {
       }
     } catch (error) {
       console.log(error);
+      controller.abort();
       toast(error);
     }
   };
+
   // console.log(
   //   movie.listUserRating?.find((item) => item.name == user?.username)?.point
   // );
@@ -160,6 +176,33 @@ const VideoDetail = ({ movie }) => {
               edit={user ? true : false}
             />
           </span>
+
+          {/* <span className="flex justify-center items-center">
+            {movie && (
+              <Rating
+                stop={5}
+                emptySymbol="fa-regular fa-star"
+                fullSymbol="fa-solid fa-star"
+                fractions={2}
+                initialRating={
+                  currentMovie?.listUserRating != undefined
+                    ? currentMovie.listUserRating?.find(
+                        (item) => item.name == username
+                      )?.point / 2
+                    : movie.listUserRating?.find(
+                        (item) => item.name == username
+                      )?.point / 2 || 10
+                }
+                // onHover={(rate) =>
+                //   (document.getElementById("label-onrate").innerHTML = rate || "")
+                // }
+                // onChange={(rate) => alert(rate)}
+                onChange={ratingChanged}
+                readonly={!user ? true : false}
+              />
+            )}
+          </span> */}
+
           <div>
             <span>
               <b>

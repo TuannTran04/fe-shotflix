@@ -12,7 +12,7 @@ const LayoutAllFilm = ({ styles, content, arrMovie }) => {
             <p className="text-white text-lg">Không có kết quả</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-x-3 md:gap-x-3.5 gap-y-[20px]">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-x-3 md:gap-x-3.5 gap-y-[20px]">
             {arrMovie?.map((item, index) => {
               return <Movie key={item._id} item={item} toast={toast} />;
             })}

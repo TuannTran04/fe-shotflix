@@ -48,7 +48,7 @@ const CategoryPage = ({ slugCategory, nameCategory, categories }) => {
 
   return (
     <LayoutRoot categories={categories}>
-      <div className="sm:mt-16">
+      <div className="md:mt-16">
         <Breadcrumb content={nameCategory} />
 
         <Heading

@@ -44,9 +44,9 @@ const Home = (props) => {
         ></meta>
         <meta
           name="description"
-          content="Web site created using create-react-app"
+          content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
-        <meta property="og:title" content="My page title" key="title" />
+        <meta property="og:title" content="Shotflix" key="title" />
       </Head>
       <LayoutRoot categories={props?.categories}>
         <Dashboard />

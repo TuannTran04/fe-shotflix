@@ -1,16 +1,16 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { createAxios } from "../../../utils/createInstance";
+import { createAxios } from "../../../../utils/createInstance";
 import {
   getFavoriteMovies,
   addBookmarkMovie,
   addFavoriteMovie,
-} from "../../../store/apiRequest";
+} from "../../../../store/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
-import Favorite from "./components/Favorite";
+import Favorite from "../components/Favorite";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { loginSuccess } from "../../../store/authSlice";
+import { loginSuccess } from "../../../../store/authSlice";
 
 // const arrFavoriteFilm = [
 //   {
@@ -87,15 +87,21 @@ const FavoriteMovie = () => {
   }, []);
 
   return (
-    <div className="srcoll_film_manage_user grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-h-[1000px] min-h-[300px] overflow-y-auto">
-      {arrFavoriteMovie?.map((movie, index) => (
-        <Favorite
-          key={movie._id}
-          movie={movie}
-          toast={toast}
-          setArrFavoriteMovie={setArrFavoriteMovie}
-        />
-      ))}
+    <div className="relative srcoll_film_manage_user grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-h-[1000px] min-h-[200px] overflow-y-auto">
+      {arrFavoriteMovie.length > 0 ? (
+        arrFavoriteMovie?.map((movie, index) => (
+          <Favorite
+            key={movie._id}
+            movie={movie}
+            toast={toast}
+            setArrFavoriteMovie={setArrFavoriteMovie}
+          />
+        ))
+      ) : (
+        <p className="absolute left-[50%] -translate-x-1/2 mx-auto text-white">
+          Không có phim yêu thích nào!
+        </p>
+      )}
       <ToastContainer />
     </div>
   );

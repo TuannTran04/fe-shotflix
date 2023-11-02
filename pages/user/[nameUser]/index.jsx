@@ -2,16 +2,17 @@ import Link from "next/link";
 import LayoutManageInfo from "../../../components/LayoutManageInfo";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import FavoriteMovie from "./FavoriteMovie";
-import WatchLaterMovie from "./WatchLaterMovie";
+import FavoriteMovie from "./tabs/FavoriteMovie";
+import WatchLaterMovie from "./tabs/WatchLaterMovie";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "../../../utils/ProtectedRoutes";
 import axios from "axios";
+import ProfileUser from "./tabs/ProfileUser";
 
 const arrTabs = [
-  { id: 1, tabName: "Profile", tabPath: "profile" },
-  { id: 2, tabName: "Favorite", tabPath: "favorite" },
-  { id: 3, tabName: "WatchLater", tabPath: "watchLater" },
+  { id: 1, tabName: "Hồ sơ", tabPath: "profile" },
+  { id: 2, tabName: "Yêu thích", tabPath: "favorite" },
+  { id: 3, tabName: "Xem sau", tabPath: "watchLater" },
 ];
 
 const UserManagePage = ({ nameUser, categories }) => {
@@ -24,6 +25,12 @@ const UserManagePage = ({ nameUser, categories }) => {
   };
 
   const [showBigAvatar, setShowBigAvatar] = useState(false);
+
+  // console.log(router.asPath);
+  // console.log(`/user/${nameUser}`);
+  // console.log(router.asPath == `/user/${nameUser}`);
+  // console.log(router.asPath.includes("/user"));
+  // console.log(router.asPath.includes(`/user/${nameUser}`));
 
   // useEffect(() => {
   //   router.push(`/user/${nameUser.replace(/\s+/g, "-")}?tab=${activeTab}`);
@@ -120,9 +127,7 @@ const UserManagePage = ({ nameUser, categories }) => {
 
         {(router && router.asPath == `/user/${nameUser}`) ||
         (router && router.query && router.query?.tab == "profile") ? (
-          <div className="min-h-[300px]">
-            <h2 className="text-white">profile</h2>
-          </div>
+          <ProfileUser userData={user} />
         ) : (
           ""
         )}

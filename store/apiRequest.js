@@ -9,7 +9,12 @@ import {
   registerSuccess,
   registerFailed,
 } from "./authSlice";
-import { addArrFavorite, addArrWatchLater, deleteSuccess } from "./filmSlice";
+import {
+  addArrFavorite,
+  addArrWatchLater,
+  deleteSuccess,
+  deleteSuccess_user,
+} from "./filmSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -98,8 +103,9 @@ export const logOut = async (dispatch, id, router) => {
     await axios.get(`${base_url}/api/v1/auth/logout`, {
       withCredentials: true,
     });
-    Cookies.remove("accessToken");
+    // Cookies.remove("accessToken");
     dispatch(logOutSuccess());
+    dispatch(deleteSuccess_user());
     router.push("/");
   } catch (err) {
     dispatch(logOutFailed());
@@ -127,7 +133,7 @@ export const logOut = async (dispatch, id, router) => {
 export const updateInfoUser = async (
   formData,
   token,
-  refreshToken,
+  controller,
   dispatch,
   axiosJWT
 ) => {
@@ -139,9 +145,10 @@ export const updateInfoUser = async (
       formData,
       {
         headers: { token: `Bearer ${token}` },
+        signal: controller.signal,
       }
     );
-    const newData = { ...res.data.data, accessToken: token, refreshToken };
+    const newData = { ...res.data.data, accessToken: token };
     // console.log(res);
     if (res.status == 200) {
       dispatch(loginSuccess(newData));
@@ -233,8 +240,8 @@ export const getWatchLaterMovies = async (
   }
 };
 
-export const addFavoriteMovie = async (userId, movieId, isLove) => {
-  const data = { userId, movieId, isLove };
+export const addFavoriteMovie = async (userId, movieId) => {
+  const data = { userId, movieId };
   const base_url = process.env.NEXT_PUBLIC_URL;
   // dispatch(getUsersStart());
   try {
@@ -250,8 +257,8 @@ export const addFavoriteMovie = async (userId, movieId, isLove) => {
     throw new Error(err);
   }
 };
-export const deleteFavoriteMovie = async (userId, movieId, isLove) => {
-  const data = { userId, movieId, isLove };
+export const deleteFavoriteMovie = async (userId, movieId) => {
+  const data = { userId, movieId };
   const base_url = process.env.NEXT_PUBLIC_URL;
   // dispatch(getUsersStart());
   try {
@@ -268,8 +275,8 @@ export const deleteFavoriteMovie = async (userId, movieId, isLove) => {
   }
 };
 
-export const addBookmarkMovie = async (userId, movieId, isBookmark) => {
-  const data = { userId, movieId, isBookmark };
+export const addBookmarkMovie = async (userId, movieId) => {
+  const data = { userId, movieId };
   const base_url = process.env.NEXT_PUBLIC_URL;
   // dispatch(getUsersStart());
   try {
@@ -286,8 +293,8 @@ export const addBookmarkMovie = async (userId, movieId, isBookmark) => {
     throw new Error(err);
   }
 };
-export const deleteBookmarkMovie = async (userId, movieId, isBookmark) => {
-  const data = { userId, movieId, isBookmark };
+export const deleteBookmarkMovie = async (userId, movieId) => {
+  const data = { userId, movieId };
   const base_url = process.env.NEXT_PUBLIC_URL;
   // dispatch(getUsersStart());
   try {

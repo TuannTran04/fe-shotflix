@@ -5,7 +5,7 @@ import Image from "next/legacy/image";
 import CommentFilm from "../../../components/CommentFilm2";
 // import { arrDetailInfoFilm } from "./constant";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "next/navigation";
 import SliderTopRatingofWeek from "../../../components/SliderRelatedFilm";
 import axios from "axios";
@@ -16,6 +16,16 @@ import Breadcrumb from "../../../components/BreadCrumb";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
+import { createAxios } from "../../../utils/createInstance";
+import { loginSuccess } from "../../../store/authSlice";
+import {
+  addBookmarkMovie,
+  addFavoriteMovie,
+  deleteBookmarkMovie,
+  deleteFavoriteMovie,
+} from "../../../store/apiRequest";
+import { addArrFavorite, addArrWatchLater } from "../../../store/filmSlice";
+import { useMemo } from "react";
 
 // const arrDetailInfoFilm = [
 //   { id: 1, name: "Type", text: ["Movie"] },
@@ -33,11 +43,41 @@ import { io } from "socket.io-client";
 const PlayFilmPage = ({ nameFilm, categories }) => {
   const film = useSelector((state) => state.film);
   const { movies, favoriteFilm, watchLaterFilm } = film;
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.login.currentUser);
+  const userId = user?._id;
+  const accessToken = user?.accessToken;
+  console.log(favoriteFilm);
+  console.log(watchLaterFilm);
+
+  // const dispatch = useDispatch();
+  // const user = useSelector((state) => state.auth.login.currentUser);
+  // const accessToken = user?.accessToken;
+  // let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   // console.log(">>> dataMovies <<<", movies?.topRatingofWeek);
 
   const [movie, setMovie] = useState({});
+  console.log(movie?._id);
   const [isLgScreen, setIsLgScreen] = useState(false);
+
+  const checkFavoriteExist = useMemo(() => {
+    const isExist =
+      favoriteFilm.length > 0 &&
+      favoriteFilm.some((film) => film._id === movie._id);
+
+    return isExist;
+  }, [favoriteFilm, movie]);
+
+  const checkWatchLaterExist = useMemo(() => {
+    const isExist =
+      watchLaterFilm.length > 0 &&
+      watchLaterFilm.some((film) => film._id === movie._id);
+    return isExist;
+  }, [watchLaterFilm, movie]);
+
+  console.log(checkFavoriteExist);
+  console.log(checkWatchLaterExist);
 
   // const [comments, setComments] = useState([]);
   // console.log(comments);
@@ -60,6 +100,77 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
   //     clearTimeout(timerId);
   //   };
   // }, []);
+
+  const handleFavorite = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      if (!user || !accessToken) {
+        toast("Đăng nhập để sử dụng tính năng này");
+        return;
+      }
+      if (!checkFavoriteExist) {
+        const res = await addFavoriteMovie(userId, movie._id);
+        console.log(">>> addFavoriteMovie <<<", res);
+        if (res.status === 200) {
+          dispatch(addArrFavorite([...favoriteFilm, res.data.newMovie]));
+          toast(res?.data?.message);
+        }
+      } else {
+        const res = await deleteFavoriteMovie(userId, movie._id);
+        console.log(">>> deleteFavoriteMovie <<<", res);
+
+        const newArrFavMovie = favoriteFilm.filter(
+          (film) => film._id !== movie._id
+        );
+        console.log("newArrFavMovie", newArrFavMovie);
+
+        if (res.status === 200) {
+          dispatch(addArrFavorite([...newArrFavMovie]));
+          toast(res?.data?.message);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  };
+
+  const handleBookmark = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      if (!user || !accessToken) {
+        toast("Đăng nhập để sử dụng tính năng này");
+        return;
+      }
+      if (!checkWatchLaterExist) {
+        const res = await addBookmarkMovie(userId, movie._id);
+        console.log(res);
+
+        if (res.status === 200) {
+          dispatch(addArrWatchLater([...watchLaterFilm, res.data.newMovie]));
+          toast(res?.data?.message);
+        }
+      } else {
+        const res = await deleteBookmarkMovie(userId, movie._id);
+        console.log(">>> deleteBookMarkMovie <<<", res);
+
+        const newArrBookMarkMovie = watchLaterFilm.filter(
+          (film) => film._id !== movie._id
+        );
+        console.log("newArrBookMarkMovie", newArrBookMarkMovie);
+
+        if (res.status === 200) {
+          dispatch(addArrWatchLater([...newArrBookMarkMovie]));
+          toast(res?.data?.message);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  };
 
   useEffect(() => {
     // Xác định kích thước màn hình và cập nhật trạng thái isLgScreen
@@ -102,10 +213,10 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
       }
     };
     renderSingleMovie();
-  }, [nameFilm, movies?._id]);
+  }, [nameFilm, movie?._id]);
 
   return (
-    <LayoutRoot categories={categories}>
+    <LayoutRoot categories={categories} movieData={movie}>
       <div className="md:mt-16">
         <Breadcrumb content={`Xem phim ${movie?.title}`} />
 
@@ -115,6 +226,34 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
             <div className="p-1 sm:p-2.5 bg-[#2D2D2D]">
               <div className="overflow-hidden">
                 <VideoContainer movie={movie} nameFilm={nameFilm} />
+              </div>
+
+              <div className="flex items-center mt-[10px] select-none">
+                <div
+                  className="flex justify-around items-center bg-[#0a5c6f] mr-[10px] py-[2px] px-2 rounded cursor-pointer"
+                  onClick={handleFavorite}
+                >
+                  {!checkFavoriteExist ? (
+                    <i className="fa-regular fa-heart text-sm text-[#06a2d4] mr-[5px]"></i>
+                  ) : (
+                    <i className="fa-solid fa-heart text-sm text-[#06a2d4] mr-[5px]"></i>
+                  )}
+
+                  <span className="text-sm text-[#06a2d4]">Thích</span>
+                </div>
+
+                <div
+                  className="flex justify-around items-center bg-[#0a5c6f] mr-[10px] py-[2px] px-2 rounded cursor-pointer"
+                  onClick={handleBookmark}
+                >
+                  {!checkWatchLaterExist ? (
+                    <i className="fa-regular fa-bookmark text-sm text-[#06a2d4] mr-[5px]"></i>
+                  ) : (
+                    <i className="fa-solid fa-bookmark text-sm text-[#06a2d4] mr-[5px]"></i>
+                  )}
+
+                  <span className="text-sm text-[#06a2d4]">Xem sau</span>
+                </div>
               </div>
 
               {isLgScreen && (

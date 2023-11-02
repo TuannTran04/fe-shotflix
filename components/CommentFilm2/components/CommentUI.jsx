@@ -259,6 +259,11 @@ const CommentUI = ({
   const deleteComment = async (commentId) => {
     console.log("deleteComment", commentId);
     try {
+      if (!user || !accessToken) {
+        toast("Đăng nhập để sử dụng tính năng này");
+        return;
+      }
+
       const res = await deleteCommentById(commentId);
       console.log(">>> deleteComment <<<", res);
 
@@ -280,6 +285,11 @@ const CommentUI = ({
   const deleteReplyComment = async (commentId) => {
     console.log("deleteReplyComment", commentId);
     try {
+      if (!user || !accessToken) {
+        toast("Đăng nhập để sử dụng tính năng này");
+        return;
+      }
+
       const res = await deleteReplyCommentById(commentId, commentParentId);
       console.log(">>> deleteComment <<<", res);
 

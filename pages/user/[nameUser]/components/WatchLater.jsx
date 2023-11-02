@@ -39,6 +39,10 @@ const WatchLater = ({ movie, toast, setArrWatchLaterMovie }) => {
     e.preventDefault();
     e.stopPropagation();
     try {
+      if (!user || !accessToken) {
+        toast("Đăng nhập để sử dụng tính năng này");
+        return;
+      }
       const res = await deleteBookmarkMovie(userId, movie._id);
       // console.log(res);
 

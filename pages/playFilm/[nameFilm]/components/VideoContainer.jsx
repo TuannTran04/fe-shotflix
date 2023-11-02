@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 let alreadyCalledVideoJs = false;
-console.log("alreadyCalledVideoJs", alreadyCalledVideoJs);
+// console.log("alreadyCalledVideoJs", alreadyCalledVideoJs);
 
 const VideoContainer = ({ movie, nameFilm }) => {
   const router = useRouter();
@@ -185,11 +185,13 @@ const VideoContainer = ({ movie, nameFilm }) => {
                 playsinline: true,
                 enabled: true,
                 // poster: movie.photo?.[0],
+                poster: "/unknowAvatar.webp",
                 ...defaultOptions,
                 // debug: true,
               });
               player.source = {
-                poster: movie.photo?.[0],
+                // poster: movie.photo?.[0],
+                poster: "/unknowAvatar.webp",
               };
 
               /////////////////////////////
@@ -318,7 +320,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
           // true
         ) {
           if (refVideo.current) {
-            alert("khong sp");
+            // alert("khong sp");
             // // refVideo.current.src = `/neudanhmatem.mp4`;
             // // refVideo.current.src = `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/JustaTee/bangkhuang.m3u8`;
 
@@ -513,6 +515,8 @@ const VideoContainer = ({ movie, nameFilm }) => {
       //   // refVideo.current = null;
       //   // window.location.reload();
       // }
+
+      ///////
       if (player && !Hls.isSupported()) {
         player.dispose();
         window.location.reload();

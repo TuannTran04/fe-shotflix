@@ -180,34 +180,35 @@ const Notification = ({}) => {
 
   // handle listent event socket realtime
   // useEffect(() => {
-  //   // https://be-movie-mt-copy.vercel.app
-  //   socket.current = io("http://localhost:8000", {
-  //     query: {
-  //       token: accessToken,
-  //     },
-  //     transportOptions: {
-  //       polling: {
-  //         extraHeaders: {
-  //           Authorization: `Bearer ${accessToken}`,
+  //   if (user && accessToken) {
+  //     // https://be-movie-mt-copy.vercel.app
+  //     socket.current = io("http://localhost:8000", {
+  //       query: {
+  //         token: accessToken,
+  //       },
+  //       transportOptions: {
+  //         polling: {
+  //           extraHeaders: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //           },
   //         },
   //       },
-  //     },
-  //   });
-
-  //   socket.current.on("new-notify-comment-user", (data) => {
-  //     console.log("an event new-notify-comment-user", data);
-
-  //     setListNoti((prevNotify) => {
-  //       return [JSON.parse(data), ...prevNotify];
   //     });
 
-  //     // setListNoti([JSON.parse(data), ...listNoti]);
-  //   });
+  //     socket.current.on("new-notify-comment-user", (data) => {
+  //       console.log("an event new-notify-comment-user", data);
 
-  //   return () => {
-  //     socket.current.disconnect();
-  //   };
-  // }, [socket.current]);
+  //       setListNoti((prevNotify) => {
+  //         return [JSON.parse(data), ...prevNotify];
+  //       });
+
+  //       // setListNoti([JSON.parse(data), ...listNoti]);
+  //     });
+  //     return () => {
+  //       socket.current.disconnect();
+  //     };
+  //   }
+  // }, [socket.current, user, accessToken]);
 
   // handle scroll notifyContainer to load more
   const handleScroll = useCallback(() => {
