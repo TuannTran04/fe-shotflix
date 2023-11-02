@@ -5,12 +5,12 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <title>Shotflix</title>
+        {/* <title>Shotflix</title>
         <meta
           name="description"
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
-        <meta property="og:title" content="Shotflix" key="title" />
+        <meta property="og:title" content="Shotflix" key="title" /> */}
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
