@@ -140,7 +140,7 @@ const CommentFilm = ({ movieId, nameFilm }) => {
         });
       });
 
-      socket.current.on("new-reply-comment-user", (data) => {
+      socket.current.on("new-reply-comment-userr", (data) => {
         const dataServer = JSON.parse(data);
         console.log(dataServer);
         setComments((prevComments) => {
