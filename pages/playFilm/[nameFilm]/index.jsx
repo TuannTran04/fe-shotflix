@@ -47,13 +47,15 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
   const user = useSelector((state) => state.auth.login.currentUser);
   const userId = user?._id;
   const accessToken = user?.accessToken;
-  console.log(favoriteFilm);
-  console.log(watchLaterFilm);
+  // const favoriteFilm = user && user.loveMovie;
+  // const watchLaterFilm = user && user.markBookMovie;
 
-  // const dispatch = useDispatch();
-  // const user = useSelector((state) => state.auth.login.currentUser);
-  // const accessToken = user?.accessToken;
-  // let axiosJWT = createAxios(user, dispatch, loginSuccess);
+  let axiosJWT = createAxios(user, dispatch, loginSuccess);
+  // console.log(favoriteFilm);
+  // console.log(watchLaterFilm);
+  // console.log(favoriteFilm);
+  // console.log(watchLaterFilm);
+  // console.log(user);
 
   // console.log(">>> dataMovies <<<", movies?.topRatingofWeek);
 
@@ -62,6 +64,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
   const [isLgScreen, setIsLgScreen] = useState(false);
 
   const checkFavoriteExist = useMemo(() => {
+    if (!user) return;
     const isExist =
       favoriteFilm.length > 0 &&
       favoriteFilm.some((film) => film._id === movie._id);
@@ -70,6 +73,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
   }, [favoriteFilm, movie]);
 
   const checkWatchLaterExist = useMemo(() => {
+    if (!user) return;
     const isExist =
       watchLaterFilm.length > 0 &&
       watchLaterFilm.some((film) => film._id === movie._id);
