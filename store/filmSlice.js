@@ -24,8 +24,8 @@ const filmSlice = createSlice({
 
     deleteSuccess: (state) => {
       state.favoriteFilm = [];
-      state.watchLaterFilm = [];
-      state.movies = {};
+      // state.watchLaterFilm = [];
+      // state.movies = {};
     },
     deleteSuccess_user: (state) => {
       state.favoriteFilm = [];

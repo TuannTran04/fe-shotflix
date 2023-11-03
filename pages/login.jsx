@@ -43,27 +43,27 @@ const LoginPage = () => {
     //     }
     //     return value;
     //   }),
-    currency: yup
-      .string()
-      .test("is-number", "Chỉ được nhập số từ 0-9", (value) => {
-        if (!isNaN(parseInt(value))) {
-          return true;
-        }
-        return false;
-      })
-      .test("has-d", 'Phải có chữ "đ" ở cuối cùng', (value) => {
-        if (value) {
-          return value.endsWith("đ");
-        }
-        return false;
-      })
-      .transform((value, originalValue) => {
-        if (!isNaN(parseInt(originalValue))) {
-          const intValue = parseInt(originalValue);
-          return intValue.toLocaleString("vi-VN") + "đ";
-        }
-        return value;
-      }),
+    // currency: yup
+    //   .string()
+    //   .test("is-number", "Chỉ được nhập số từ 0-9", (value) => {
+    //     if (!isNaN(parseInt(value))) {
+    //       return true;
+    //     }
+    //     return false;
+    //   })
+    //   .test("has-d", 'Phải có chữ "đ" ở cuối cùng', (value) => {
+    //     if (value) {
+    //       return value.endsWith("đ");
+    //     }
+    //     return false;
+    //   })
+    //   .transform((value, originalValue) => {
+    //     if (!isNaN(parseInt(originalValue))) {
+    //       const intValue = parseInt(originalValue);
+    //       return intValue.toLocaleString("vi-VN") + "đ";
+    //     }
+    //     return value;
+    //   }),
     // username: yup.string().min(6).max(20).required(),
   });
 
@@ -85,7 +85,7 @@ const LoginPage = () => {
 
   const onSubmit = async (data) => {
     console.log(">>> Data LOGIN <<<", data);
-    // login(data, dispatch, router, toast);
+    login(data, dispatch, router, toast);
   };
 
   useEffect(() => {
@@ -158,7 +158,7 @@ const LoginPage = () => {
                 }
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   currency
                 </label>
@@ -176,7 +176,7 @@ const LoginPage = () => {
                     {errors.currency?.message}
                   </span>
                 }
-              </div>
+              </div> */}
 
               <div className="flex items-start justify-between">
                 <div className="flex">

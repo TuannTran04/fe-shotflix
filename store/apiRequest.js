@@ -105,7 +105,7 @@ export const logOut = async (dispatch, id, router) => {
     });
     // Cookies.remove("accessToken");
     dispatch(logOutSuccess());
-    dispatch(deleteSuccess_user());
+    // dispatch(deleteSuccess_user());
     router.push("/");
   } catch (err) {
     dispatch(logOutFailed());
