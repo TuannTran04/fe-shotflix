@@ -51,23 +51,22 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
   // const watchLaterFilm = user && user.markBookMovie;
 
   let axiosJWT = createAxios(user, dispatch, loginSuccess);
-  // console.log(favoriteFilm);
-  // console.log(watchLaterFilm);
-  // console.log(favoriteFilm);
-  // console.log(watchLaterFilm);
+  console.log(favoriteFilm);
+  console.log(watchLaterFilm);
+
   // console.log(user);
 
   // console.log(">>> dataMovies <<<", movies?.topRatingofWeek);
 
   const [movie, setMovie] = useState({});
-  console.log(movie?._id);
+  // console.log(movie?._id);
   const [isLgScreen, setIsLgScreen] = useState(false);
 
   const checkFavoriteExist = useMemo(() => {
     if (!user) return;
     const isExist =
       favoriteFilm.length > 0 &&
-      favoriteFilm.some((film) => film._id === movie._id);
+      favoriteFilm.some((film) => film?._id === movie._id);
 
     return isExist;
   }, [favoriteFilm, movie]);
@@ -76,7 +75,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
     if (!user) return;
     const isExist =
       watchLaterFilm.length > 0 &&
-      watchLaterFilm.some((film) => film._id === movie._id);
+      watchLaterFilm.some((film) => film?._id === movie._id);
     return isExist;
   }, [watchLaterFilm, movie]);
 
@@ -116,10 +115,10 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
       if (!checkFavoriteExist) {
         const res = await addFavoriteMovie(userId, movie._id);
         console.log(">>> addFavoriteMovie <<<", res);
-        if (res.status === 200) {
+        if (res.status === 200 && res?.data.newMovie) {
           dispatch(addArrFavorite([...favoriteFilm, res.data.newMovie]));
-          toast(res?.data?.message);
         }
+        toast(res?.data?.message);
       } else {
         const res = await deleteFavoriteMovie(userId, movie._id);
         console.log(">>> deleteFavoriteMovie <<<", res);
@@ -152,10 +151,10 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
         const res = await addBookmarkMovie(userId, movie._id);
         console.log(res);
 
-        if (res.status === 200) {
+        if (res.status === 200 && res?.data.newMovie) {
           dispatch(addArrWatchLater([...watchLaterFilm, res.data.newMovie]));
-          toast(res?.data?.message);
         }
+        toast(res?.data?.message);
       } else {
         const res = await deleteBookmarkMovie(userId, movie._id);
         console.log(">>> deleteBookMarkMovie <<<", res);

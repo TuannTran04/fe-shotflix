@@ -10,19 +10,22 @@ import axios from "axios";
 import { createAxios } from "../utils/createInstance";
 import { getFavoriteMovies, getWatchLaterMovies } from "../store/apiRequest";
 import { addDataMovies } from "../store/filmSlice";
+import { loginSuccess } from "../store/authSlice";
 // import { io } from "socket.io-client";
 
 const Home = (props) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.login?.currentUser);
-  const accessToken = user?.accessToken;
-  // console.log(accessToken);
   const userId = user?._id;
+  const accessToken = user?.accessToken;
+  let axiosJWT = createAxios(user, dispatch, loginSuccess);
+
+  // console.log(accessToken);
 
   // console.log("dataMovies", props.dataMovies);
 
-  console.log("render home");
+  // console.log("render home");
 
   useEffect(() => {
     if (props?.dataMovies) {
@@ -30,6 +33,29 @@ const Home = (props) => {
     }
     // window.location.reload();
   }, []);
+
+  useEffect(() => {
+    if (user && accessToken) {
+      console.log("call film");
+
+      const controller = new AbortController();
+      const fetchMovies = async () => {
+        try {
+          await Promise.all([
+            getFavoriteMovies(accessToken, dispatch, axiosJWT, controller),
+            getWatchLaterMovies(accessToken, dispatch, axiosJWT, controller),
+          ]);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchMovies();
+
+      return () => {
+        controller.abort();
+      };
+    }
+  }, [user, accessToken]);
 
   return (
     <>

@@ -29,11 +29,19 @@ export const login = async (user, dispatch, router, toast) => {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     });
+    // console.log(res);
     if (res.data.code == 200) {
+      // const { loveMovie, markBookMovie, ...other } = res.data.data;
+      // console.log(loveMovie);
+      // console.log(markBookMovie);
+      // console.log(other);
       // let c = res.data.data.accessToken.toString();
       // Cookies.set("user-server", "abc");
       // Cookies.set("accessToken", c);
       dispatch(loginSuccess(res.data.data));
+      // dispatch(addArrFavorite(loveMovie));
+      // dispatch(addArrWatchLater(markBookMovie));
+
       toast("Đăng nhập thành công");
       router.push("/");
     }
@@ -105,7 +113,7 @@ export const logOut = async (dispatch, id, router) => {
     });
     // Cookies.remove("accessToken");
     dispatch(logOutSuccess());
-    // dispatch(deleteSuccess_user());
+    dispatch(deleteSuccess_user());
     router.push("/");
   } catch (err) {
     dispatch(logOutFailed());

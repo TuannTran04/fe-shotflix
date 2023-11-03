@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 const LayoutRoot = ({ children, categories, movieData }) => {
   // console.log("arr category", categories);\\
 
-  console.log(movieData?.photo?.[0]);
+  // console.log(movieData?.photo?.[0]);
   return (
     <div className="w-full">
       <Head>
