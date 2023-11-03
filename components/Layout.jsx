@@ -6,11 +6,15 @@ import ArrowGotoUp from "./ArrowGoToUp";
 const inter = Inter({ subsets: ["latin"] });
 
 const LayoutRoot = ({ children, categories, movieData }) => {
-  // console.log("arr category", categories);
+  // console.log("arr category", categories);\\
+
+  console.log(movieData?.photo?.[0]);
   return (
     <div className="w-full">
       <Head>
-        <title>{movieData?.title ? movieData?.title : "Shotflix"}</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="Shotflix" key="title" />
         <meta
           name="description"
           content={
@@ -20,12 +24,10 @@ const LayoutRoot = ({ children, categories, movieData }) => {
           }
         />
         <meta name="author" content={movieData?.author} />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="keywords"
           content="Shotflix, shotflix, web phim ngắn shotflix"
         />
-        <meta property="og:title" content="Shotflix" key="title" />
         <meta property="og:type" content="video.movie" />
 
         {/* /favicon.ico */}
@@ -37,6 +39,7 @@ const LayoutRoot = ({ children, categories, movieData }) => {
               : "https://img.freepik.com/free-vector/flat-vertical-hotel-information-flyer-template_23-2148898863.jpg?w=2000"
           }
         ></meta>
+        <title>{movieData?.title ? movieData?.title : "Shotflix"}</title>
       </Head>
       <Header categories={categories} />
       <div className="bg-[#424040]">
