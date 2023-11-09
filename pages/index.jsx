@@ -68,6 +68,10 @@ const Home = (props) => {
           name="description"
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
+        <meta
+          property="description"
+          content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
+        />
         <meta property="og:title" content="Shotflix" key="title" />
       </Head>
       <LayoutRoot categories={props?.categories}>
