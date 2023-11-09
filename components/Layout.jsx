@@ -3,10 +3,14 @@ import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ArrowGotoUp from "./ArrowGoToUp";
+import { useRouter } from "next/router";
 const inter = Inter({ subsets: ["latin"] });
 
 const LayoutRoot = ({ children, categories, movieData }) => {
   // console.log("arr category", categories);\\
+  const router = useRouter();
+
+  console.log(router);
 
   // console.log(movieData?.photo?.[0]);
   return (
@@ -15,7 +19,6 @@ const LayoutRoot = ({ children, categories, movieData }) => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="Shotflix" key="title" />
         <meta
           name="description"
           content={
@@ -29,7 +32,20 @@ const LayoutRoot = ({ children, categories, movieData }) => {
           name="keywords"
           content="Shotflix, shotflix, web phim ngắn shotflix"
         />
+        <meta property="og:title" content="Shotflix" key="ogtitle" />
         <meta property="og:type" content="video.movie" />
+        <meta
+          property="og:url"
+          content={`${window.location.origin}${router.asPath}`}
+        />
+        <meta
+          name="og:description"
+          content={
+            movieData?.desc
+              ? movieData?.desc
+              : "Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
+          }
+        />
 
         {/* /favicon.ico */}
         <meta
@@ -42,6 +58,9 @@ const LayoutRoot = ({ children, categories, movieData }) => {
               : "https://img.freepik.com/free-vector/flat-vertical-hotel-information-flyer-template_23-2148898863.jpg?w=2000"
           }
         ></meta>
+        <meta property="og:image:width" content="1200" key="ogimagewidth" />
+        <meta property="og:image:height" content="630" key="ogimageheight" />
+
         <title>{movieData?.title ? movieData?.title : "Shotflix"}</title>
       </Head>
       <Header categories={categories} />
