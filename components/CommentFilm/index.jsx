@@ -17,11 +17,6 @@ import { io } from "socket.io-client";
 import { useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Loading from "../Loading/Loading";
-// const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
-// const socket = io("https://be-movie-mt-copy.vercel.app", {
-//   // withCredentials: true,
-//   transports: ["websocket", "polling", "flashsocket"],
-// }); // Thay đổi URL máy chủ của bạn
 
 const CommentFilm = ({ movieId, nameFilm }) => {
   const [comments, setComments] = useState([]);
@@ -96,7 +91,7 @@ const CommentFilm = ({ movieId, nameFilm }) => {
         setComments((prevComments) => {
           return [res.data.data, ...prevComments];
         });
-        socket.current.emit("new-comment", JSON.stringify(res.data.data));
+        // socket.current.emit("new-comment", JSON.stringify(res.data.data));
       }
       setTextInputs((prevState) => ({
         ...prevState,
@@ -367,7 +362,7 @@ const CommentFilm = ({ movieId, nameFilm }) => {
                 item={item}
                 isLastItem={i !== comments.length - 1}
                 setComments={setComments}
-                socket={socket?.current}
+                // socket={socket?.current}
                 replyComment={item.replies.map((reply, i) => (
                   <CommentUI
                     key={reply._id}
@@ -377,7 +372,7 @@ const CommentFilm = ({ movieId, nameFilm }) => {
                     isReplyCmt={true}
                     commentParentId={item._id}
                     setComments={setComments}
-                    socket={socket?.current}
+                    // socket={socket?.current}
                   />
                 ))}
               />
@@ -388,7 +383,7 @@ const CommentFilm = ({ movieId, nameFilm }) => {
                 item={item}
                 isLastItem={i !== comments.length - 1}
                 setComments={setComments}
-                socket={socket?.current}
+                // socket={socket?.current}
               />
             )
           )

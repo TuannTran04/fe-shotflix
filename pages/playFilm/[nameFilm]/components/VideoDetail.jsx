@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { createAxios } from "../../../../utils/createInstance";
 import { loginSuccess } from "../../../../store/authSlice";
 import { ratingMovie } from "../../../../store/apiRequest";
+import axios from "axios";
 
 const VideoDetail = ({ movie }) => {
   // console.log(">>>check movie", movie);
@@ -82,6 +83,38 @@ const VideoDetail = ({ movie }) => {
   //   movie.listUserRating?.find((item) => item.name == user?.username)?.point
   // );
 
+  // console.log(movie.photo?.[0].trim());
+  // console.log(movie.folderOnFirebase);
+  // console.log(
+  //   `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/poster/${
+  //     movie.folderOnFirebase
+  //   }/${movie.photo?.[0].trim()}`
+  // );
+
+  // const [imageUrl, setImageUrl] = useState("");
+  // useEffect(() => {
+  //   const fetchImage = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/poster/${
+  //           movie.folderOnFirebase
+  //         }/${movie.photo?.[0].trim()}`
+  //       );
+  //       console.log("response", response);
+  //       const imgUrl = URL.createObjectURL(new Blob([response.data]));
+  //       setImageUrl(imgUrl);
+  //     } catch (error) {
+  //       console.error("Lỗi khi lấy ảnh từ server:", error);
+  //     }
+  //   };
+
+  //   if (movie && movie.folderOnFirebase && movie.photo.length > 0) {
+  //     console.log(movie.photo?.[0].trim());
+  //     console.log(movie.folderOnFirebase);
+  //     fetchImage();
+  //   }
+  // }, [movie]);
+
   return (
     <div className=" py-[10px] rounded-md bg-[#1b2d58]">
       <div className="h-[400px] px-[15px]">
@@ -89,6 +122,9 @@ const VideoDetail = ({ movie }) => {
           <img
             className="block w-full h-full object-cover"
             src={movie?.photo?.[0] || ""}
+            // src={`${process.env.NEXT_PUBLIC_URL}/api/v1/movie/poster/${
+            //   movie.folderOnFirebase
+            // }/${movie.photo?.[0].trim()}`}
             alt={movie?.photo?.[0] || ""}
             // width={55}
             // height={55}

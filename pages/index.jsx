@@ -11,7 +11,6 @@ import { createAxios } from "../utils/createInstance";
 import { getFavoriteMovies, getWatchLaterMovies } from "../store/apiRequest";
 import { addDataMovies } from "../store/filmSlice";
 import { loginSuccess } from "../store/authSlice";
-// import { io } from "socket.io-client";
 
 const Home = (props) => {
   const router = useRouter();
@@ -21,17 +20,10 @@ const Home = (props) => {
   const accessToken = user?.accessToken;
   let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
-  // console.log(accessToken);
-
-  // console.log("dataMovies", props.dataMovies);
-
-  // console.log("render home");
-
   useEffect(() => {
     if (props?.dataMovies) {
       dispatch(addDataMovies(props?.dataMovies));
     }
-    // window.location.reload();
   }, []);
 
   useEffect(() => {
@@ -62,8 +54,10 @@ const Home = (props) => {
       <Head>
         <title>Shotflix</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
         <meta name="theme-color" content="#000000" />
-        <meta property="og:type" content="blog" />
+        <meta property="og:type" content="video.movie" />
+
         <meta
           property="og:image"
           content="https://img.freepik.com/free-vector/flat-vertical-hotel-information-flyer-template_23-2148898863.jpg?w=2000"

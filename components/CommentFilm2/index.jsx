@@ -22,12 +22,6 @@ import Cookie from "js-cookie";
 
 // const cookies = new Cookies();
 
-// const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
-// const socket = io("https://be-movie-mt-copy.vercel.app", {
-//   // withCredentials: true,
-//   transports: ["websocket", "polling", "flashsocket"],
-// }); // Thay đổi URL máy chủ của bạn
-
 const CommentFilm = ({ movieId, nameFilm }) => {
   const [comments, setComments] = useState([]);
   const [totalComments, setTotalComments] = useState(0);
@@ -104,7 +98,7 @@ const CommentFilm = ({ movieId, nameFilm }) => {
         setComments((prevComments) => {
           return [res.data.data, ...prevComments];
         });
-        socket.current.emit("new-comment", JSON.stringify(res.data.data));
+        // socket.current.emit("new-comment", JSON.stringify(res.data.data));
       }
       setTextInputs((prevState) => ({
         ...prevState,
@@ -116,105 +110,105 @@ const CommentFilm = ({ movieId, nameFilm }) => {
     }
   };
 
-  useEffect(() => {
-    if (user && accessToken) {
-      // https://be-movie-mt-copy.vercel.app
-      socket.current = io("http://localhost:8000", {
-        query: {
-          token: accessToken,
-        },
-        transportOptions: {
-          polling: {
-            extraHeaders: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        },
-      });
+  // useEffect(() => {
+  //   if (user && accessToken) {
+  //     // https://be-movie-mt-copy.vercel.app
+  //     socket.current = io("http://localhost:8000", {
+  //       query: {
+  //         token: accessToken,
+  //       },
+  //       transportOptions: {
+  //         polling: {
+  //           extraHeaders: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //           },
+  //         },
+  //       },
+  //     });
 
-      // Xử lý bình luận ở đây
-      socket.current.on("new-comment-user", (data) => {
-        console.log("an event");
-        setComments((prevComments) => {
-          return [JSON.parse(data), ...prevComments];
-        });
-      });
+  //     // Xử lý bình luận ở đây
+  //     socket.current.on("new-comment-user", (data) => {
+  //       console.log("an event");
+  //       setComments((prevComments) => {
+  //         return [JSON.parse(data), ...prevComments];
+  //       });
+  //     });
 
-      socket.current.on("new-reply-comment-userr", (data) => {
-        const dataServer = JSON.parse(data);
-        console.log(dataServer);
-        setComments((prevComments) => {
-          return prevComments.map((prevComment) => {
-            if (prevComment._id === dataServer._id) {
-              return dataServer;
-            } else {
-              return prevComment;
-            }
-          });
-        });
-      });
-      socket.current.on("comment-updated-user", (updatedComment) => {
-        // Cập nhật giao diện người dùng với comment đã được cập nhật
-        const dataServer = JSON.parse(updatedComment);
+  //     socket.current.on("new-reply-comment-userr", (data) => {
+  //       const dataServer = JSON.parse(data);
+  //       console.log(dataServer);
+  //       setComments((prevComments) => {
+  //         return prevComments.map((prevComment) => {
+  //           if (prevComment._id === dataServer._id) {
+  //             return dataServer;
+  //           } else {
+  //             return prevComment;
+  //           }
+  //         });
+  //       });
+  //     });
+  //     socket.current.on("comment-updated-user", (updatedComment) => {
+  //       // Cập nhật giao diện người dùng với comment đã được cập nhật
+  //       const dataServer = JSON.parse(updatedComment);
 
-        setComments((prevComments) => {
-          return prevComments.map((prevComment) => {
-            if (prevComment._id === dataServer._id) {
-              return dataServer;
-            } else {
-              return prevComment;
-            }
-          });
-        });
-      });
-      socket.current.on("reply-comment-updated-user", (updatedComment) => {
-        const dataServer = JSON.parse(updatedComment);
-        setComments((prevComments) => {
-          return prevComments.map((prevComment) => {
-            if (prevComment._id === dataServer._id) {
-              return dataServer;
-            } else {
-              return prevComment;
-            }
-          });
-        });
-      });
+  //       setComments((prevComments) => {
+  //         return prevComments.map((prevComment) => {
+  //           if (prevComment._id === dataServer._id) {
+  //             return dataServer;
+  //           } else {
+  //             return prevComment;
+  //           }
+  //         });
+  //       });
+  //     });
+  //     socket.current.on("reply-comment-updated-user", (updatedComment) => {
+  //       const dataServer = JSON.parse(updatedComment);
+  //       setComments((prevComments) => {
+  //         return prevComments.map((prevComment) => {
+  //           if (prevComment._id === dataServer._id) {
+  //             return dataServer;
+  //           } else {
+  //             return prevComment;
+  //           }
+  //         });
+  //       });
+  //     });
 
-      socket.current.on("comment-deleted-user", (commentId) => {
-        // Cập nhật giao diện người dùng để xóa comment với commentId đã được xóa
-        const dataServer = JSON.parse(commentId);
-        setComments((prevComments) => {
-          return prevComments.filter((comment) => comment._id !== dataServer);
-        });
-      });
-      socket.current.on("reply-comment-deleted-user", (data) => {
-        // Cập nhật giao diện người dùng để xóa reply với commentId đã xóa từ comment với commentParentId tương ứng
-        // console.log(commentId, commentParentId);
-        const { commentId, commentParentId } = JSON.parse(data);
-        console.log(commentId, commentParentId);
+  //     socket.current.on("comment-deleted-user", (commentId) => {
+  //       // Cập nhật giao diện người dùng để xóa comment với commentId đã được xóa
+  //       const dataServer = JSON.parse(commentId);
+  //       setComments((prevComments) => {
+  //         return prevComments.filter((comment) => comment._id !== dataServer);
+  //       });
+  //     });
+  //     socket.current.on("reply-comment-deleted-user", (data) => {
+  //       // Cập nhật giao diện người dùng để xóa reply với commentId đã xóa từ comment với commentParentId tương ứng
+  //       // console.log(commentId, commentParentId);
+  //       const { commentId, commentParentId } = JSON.parse(data);
+  //       console.log(commentId, commentParentId);
 
-        setComments((prevComments) => {
-          return prevComments.map((comment) => {
-            if (comment._id === commentParentId) {
-              // Tạo một bản sao của comment và loại bỏ reply với commentId đã xóa
-              const updatedComment = { ...comment };
-              updatedComment.replies = updatedComment.replies.filter(
-                (reply) => reply._id !== commentId
-              );
-              return updatedComment;
-            } else {
-              return comment;
-            }
-          });
-        });
-      });
+  //       setComments((prevComments) => {
+  //         return prevComments.map((comment) => {
+  //           if (comment._id === commentParentId) {
+  //             // Tạo một bản sao của comment và loại bỏ reply với commentId đã xóa
+  //             const updatedComment = { ...comment };
+  //             updatedComment.replies = updatedComment.replies.filter(
+  //               (reply) => reply._id !== commentId
+  //             );
+  //             return updatedComment;
+  //           } else {
+  //             return comment;
+  //           }
+  //         });
+  //       });
+  //     });
 
-      // Ngắt kết nối Socket.current.IO khi component unmount (trang bị đóng hoặc chuyển sang trang khác)
-      return () => {
-        socket.current.disconnect();
-      };
-    }
-  }, []); // [] đảm bảo hiệu chỉnh này chỉ chạy một lần sau khi trang được tải
+  //     // Ngắt kết nối Socket.current.IO khi component unmount (trang bị đóng hoặc chuyển sang trang khác)
+  //     return () => {
+  //       socket.current.disconnect();
+  //     };
+  //   }
+  // }, []); // [] đảm bảo hiệu chỉnh này chỉ chạy một lần sau khi trang được tải
 
   // Load more comment
   const handleLoadMoreCmt = () => {
@@ -355,7 +349,7 @@ const CommentFilm = ({ movieId, nameFilm }) => {
                 item={item}
                 isLastItem={i !== comments.length - 1}
                 setComments={setComments}
-                socket={socket?.current}
+                // socket={socket?.current}
                 replyComment={item.replies.map((reply, i) => (
                   <CommentUI
                     key={reply._id}
@@ -365,7 +359,7 @@ const CommentFilm = ({ movieId, nameFilm }) => {
                     isReplyCmt={true}
                     commentParentId={item._id}
                     setComments={setComments}
-                    socket={socket?.current}
+                    // socket={socket?.current}
                   />
                 ))}
               />
@@ -376,7 +370,7 @@ const CommentFilm = ({ movieId, nameFilm }) => {
                 item={item}
                 isLastItem={i !== comments.length - 1}
                 setComments={setComments}
-                socket={socket?.current}
+                // socket={socket?.current}
               />
             )
           )

@@ -184,15 +184,9 @@ const VideoContainer = ({ movie, nameFilm }) => {
                 disableContextMenu: false,
                 playsinline: true,
                 enabled: true,
-                // poster: movie.photo?.[0],
-                poster: "/unknowAvatar.webp",
                 ...defaultOptions,
                 // debug: true,
               });
-              player.source = {
-                // poster: movie.photo?.[0],
-                poster: "/unknowAvatar.webp",
-              };
 
               /////////////////////////////
               // setPlayerInstance(player);
@@ -201,6 +195,15 @@ const VideoContainer = ({ movie, nameFilm }) => {
 
               // Đặt sự kiện cho Plyr khi video load xong các data
               if (player.playing == false) {
+                player.on("ready", async (event) => {
+                  console.log("ready goooooooooooooooooooooooooo");
+                  event.detail.plyr.poster = `${
+                    process.env.NEXT_PUBLIC_URL
+                  }/api/v1/movie/poster/${
+                    movie.folderOnFirebase
+                  }/${movie.photo?.[1]?.trim()}`;
+                });
+
                 // player.on("play", async (event) => {
                 //   const durationVideo = event.detail.plyr.duration;
                 //   const movieId = movie?._id;
@@ -368,18 +371,23 @@ const VideoContainer = ({ movie, nameFilm }) => {
             //   "https://static-cse.canva.com/blob/1126190/poster.1896a7d6.jpg"
             // );
 
-            player.poster(`${movie.photo?.[0]}`);
+            // player.poster(`${movie.photo?.[0]}`);
 
-            // Thêm nguồn video
-            player.src({
-              src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/${
+            player.poster(
+              `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/poster/${
                 movie.folderOnFirebase
-              }/${movie.video?.[0].trim()}`,
+              }/${movie.photo?.[1]?.trim()}`
+            ),
+              // Thêm nguồn video
+              player.src({
+                src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/${
+                  movie.folderOnFirebase
+                }/${movie.video?.[0].trim()}`,
 
-              // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`, // Thay thế bằng URL của video của bạn
-              // type: "video/mp4", // Loại video
-              type: "application/x-mpegURL", // Loại video
-            });
+                // src: `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/videoHLS/test_hls/v240p/index.m3u8`, // Thay thế bằng URL của video của bạn
+                // type: "video/mp4", // Loại video
+                type: "application/x-mpegURL", // Loại video
+              });
 
             player.on("ready", function () {
               console.log("readyyyyyyyyyyyyyy");
@@ -563,7 +571,7 @@ const VideoContainer = ({ movie, nameFilm }) => {
           ref={refVideo}
           crossOrigin="true"
           playsInline
-          preload="none"
+          // preload="none"
           controls
           style={{ "--plyr-captions-background": "rgba(0, 0, 0, 0.1)" }}
         >

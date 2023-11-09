@@ -14,6 +14,7 @@ const LayoutRoot = ({ children, categories, movieData }) => {
       <Head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
         <meta property="og:title" content="Shotflix" key="title" />
         <meta
           name="description"
@@ -34,8 +35,10 @@ const LayoutRoot = ({ children, categories, movieData }) => {
         <meta
           property="og:image"
           content={
-            movieData?.photo?.[0]
-              ? movieData?.photo?.[0]
+            movieData?.photo?.[1]
+              ? `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/poster/${
+                  movieData.folderOnFirebase
+                }/${movieData.photo?.[1]?.trim()}`
               : "https://img.freepik.com/free-vector/flat-vertical-hotel-information-flyer-template_23-2148898863.jpg?w=2000"
           }
         ></meta>

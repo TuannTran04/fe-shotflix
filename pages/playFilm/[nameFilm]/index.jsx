@@ -15,7 +15,6 @@ import VideoDetail from "./components/VideoDetail";
 import Breadcrumb from "../../../components/BreadCrumb";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { io } from "socket.io-client";
 import { createAxios } from "../../../utils/createInstance";
 import { loginSuccess } from "../../../store/authSlice";
 import {
@@ -36,9 +35,6 @@ import { useMemo } from "react";
 //   { id: 6, name: "Cast", text: ["Lewis", "Athie", "Carmen"] },
 // ];
 // const TIME_UPDATE_VIEW = 900000
-
-// Tạo kết nối Socket.IO
-// const socket = io("http://localhost:8000");
 
 const PlayFilmPage = ({ nameFilm, categories }) => {
   const film = useSelector((state) => state.film);

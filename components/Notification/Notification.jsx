@@ -18,7 +18,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
 import { floor } from "lodash";
 import Loading from "../Loading/Loading";
-// const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
 
 function timeAgo(createdAt) {
   const currentTime = new Date();

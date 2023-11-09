@@ -16,7 +16,6 @@ import {
 } from "../../../store/apiRequest";
 import { memo } from "react";
 import { io } from "socket.io-client";
-// const socket = io("http://localhost:8000"); // Thay đổi URL máy chủ của bạn
 
 function timeAgo(createdAt) {
   const currentTime = new Date();
@@ -58,7 +57,7 @@ const CommentUI = ({
   isLastItem,
   isReplyCmt,
   setComments,
-  socket,
+  // socket,
 }) => {
   const router = useRouter();
   // console.log("comment", router);
@@ -233,11 +232,11 @@ const CommentUI = ({
           });
         });
         setShowReplyCmt(true);
-        socket.emit(
-          "new-reply-comment",
-          JSON.stringify(res.data.data),
-          JSON.stringify(res.data.commentId)
-        );
+        // socket.emit(
+        //   "new-reply-comment",
+        //   JSON.stringify(res.data.data),
+        //   JSON.stringify(res.data.commentId)
+        // );
 
         if (userId != item?.user._id) {
           const resAddNotify = await addNotify(
@@ -253,11 +252,11 @@ const CommentUI = ({
           if (resAddNotify && resAddNotify.data?.data) {
             console.log("emit", resAddNotify.data?.data);
 
-            socket.emit(
-              "new-notify-comment",
-              JSON.stringify(resAddNotify.data.data),
-              resAddNotify.data?.data.recipient._id
-            );
+            // socket.emit(
+            //   "new-notify-comment",
+            //   JSON.stringify(resAddNotify.data.data),
+            //   resAddNotify.data?.data.recipient._id
+            // );
           }
         }
       }
@@ -300,7 +299,7 @@ const CommentUI = ({
             }
           });
         });
-        socket.emit("reply-comment-updated", JSON.stringify(res.data.data));
+        // socket.emit("reply-comment-updated", JSON.stringify(res.data.data));
       }
       toast(res?.data?.message);
       setShowEditingCommentId(null);
@@ -340,7 +339,7 @@ const CommentUI = ({
             }
           });
         });
-        socket.emit("comment-updated", JSON.stringify(res.data.data));
+        // socket.emit("comment-updated", JSON.stringify(res.data.data));
       }
 
       toast(res?.data?.message);
@@ -364,7 +363,7 @@ const CommentUI = ({
             (comment) => comment._id !== res.data?.data
           );
         });
-        socket.emit("comment-deleted", JSON.stringify(res.data.data));
+        // socket.emit("comment-deleted", JSON.stringify(res.data.data));
       }
       toast(res?.data?.message);
     } catch (err) {
@@ -394,7 +393,7 @@ const CommentUI = ({
             }
           });
         });
-        socket.emit("reply-comment-deleted", JSON.stringify(res.data.data));
+        // socket.emit("reply-comment-deleted", JSON.stringify(res.data.data));
       }
 
       toast(res?.data?.message);
