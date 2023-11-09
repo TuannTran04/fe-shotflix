@@ -62,6 +62,8 @@ const Home = (props) => {
           property="og:image"
           content="https://img.freepik.com/free-vector/flat-vertical-hotel-information-flyer-template_23-2148898863.jpg?w=2000"
         ></meta>
+        <meta property="og:image:width" content="1200" key="ogimagewidth" />
+        <meta property="og:image:height" content="630" key="ogimageheight" />
         <meta
           name="description"
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."

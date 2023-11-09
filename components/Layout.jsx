@@ -39,7 +39,7 @@ const LayoutRoot = ({ children, categories, movieData }) => {
           content={`${window.location.origin}${router.asPath}`}
         />
         <meta
-          name="og:description"
+          property="og:description"
           content={
             movieData?.desc
               ? movieData?.desc
