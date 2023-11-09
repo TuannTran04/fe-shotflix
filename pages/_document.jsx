@@ -11,7 +11,7 @@ export default function Document() {
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
         <meta
-          property="description"
+          property="og:description"
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
         <meta property="og:title" content="Shotflix" key="title" />
