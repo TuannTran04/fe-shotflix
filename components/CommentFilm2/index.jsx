@@ -1,26 +1,16 @@
 import Image from "next/legacy/image";
 import { useRouter } from "next/router";
 import { memo, useEffect, useState } from "react";
-import {
-  addComment,
-  addReplyComment,
-  deleteCommentById,
-  getComment,
-  updateCommentById,
-} from "../../store/apiRequest";
+import { addComment, getComment } from "../../store/apiRequest";
 import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import CommentUI from "./components/CommentUI";
 import { io } from "socket.io-client";
 import { useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Loading from "../Loading/Loading";
 import Cookie from "js-cookie";
-// import Cookies from "universal-cookie";
-
-// const cookies = new Cookies();
 
 const CommentFilm = ({ movieId, nameFilm }) => {
   const [comments, setComments] = useState([]);

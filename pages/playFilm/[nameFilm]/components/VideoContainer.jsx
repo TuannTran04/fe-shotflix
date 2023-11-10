@@ -1,8 +1,7 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Plyr from "plyr";
 import Hls from "hls.js";
 import videojs from "video.js";
-import shaka from "shaka-player";
 
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";

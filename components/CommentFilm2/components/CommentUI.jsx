@@ -156,11 +156,11 @@ const CommentUI = ({
           if (resAddNotify && resAddNotify.data?.data) {
             console.log("emit", resAddNotify.data?.data);
 
-            socket.emit(
-              "new-notify-comment",
-              JSON.stringify(resAddNotify.data.data),
-              resAddNotify.data?.data.recipient._id
-            );
+            // socket.emit(
+            //   "new-notify-comment",
+            //   JSON.stringify(resAddNotify.data.data),
+            //   resAddNotify.data?.data.recipient._id
+            // );
           }
         }
       }

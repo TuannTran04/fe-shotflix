@@ -1,13 +1,11 @@
 import Link from "next/link";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+
 import { settings } from "./constant";
 import SidebarContentFilm from "../SidebarContentFilm";
 import MovieMainContent from "./components/Movie";
 import SliderTopRatingofWeek from "../SliderRelatedFilm";
 import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Heading from "../Heading";
 

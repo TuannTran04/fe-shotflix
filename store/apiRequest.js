@@ -18,8 +18,6 @@ import {
 import axios from "axios";
 import Cookies from "js-cookie";
 
-// import Cookies from 'universal-cookie';
-// const cookies = new Cookies();
 ////////////////////******************** AUTH ********************////////////////////////////
 export const login = async (user, dispatch, router, toast) => {
   const base_url = process.env.NEXT_PUBLIC_URL;

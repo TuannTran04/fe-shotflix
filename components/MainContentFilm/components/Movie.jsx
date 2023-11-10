@@ -78,7 +78,7 @@ const MovieMainContent = ({ item, toast }) => {
 
   return (
     <div className="h-full">
-      <div className="mx-1 sm:mx-2 relative h-full overflow-hidden group flex flex-col justify-between">
+      <div className="mx-1 sm:mx-[5px] relative h-full overflow-hidden group flex flex-col justify-between">
         <Link
           href={`/playFilm/${slug}`}
           className="flex h-full items-center justify-center z-50 overflow-hidden"

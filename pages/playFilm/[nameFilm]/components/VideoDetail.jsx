@@ -1,15 +1,12 @@
 // import axios from "axios";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactStars from "react-stars";
-import Rating from "react-rating";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createAxios } from "../../../../utils/createInstance";
 import { loginSuccess } from "../../../../store/authSlice";
-import { ratingMovie } from "../../../../store/apiRequest";
-import axios from "axios";
 
 const VideoDetail = ({ movie }) => {
   // console.log(">>>check movie", movie);
@@ -212,32 +209,6 @@ const VideoDetail = ({ movie }) => {
               edit={user ? true : false}
             />
           </span>
-
-          {/* <span className="flex justify-center items-center">
-            {movie && (
-              <Rating
-                stop={5}
-                emptySymbol="fa-regular fa-star"
-                fullSymbol="fa-solid fa-star"
-                fractions={2}
-                initialRating={
-                  currentMovie?.listUserRating != undefined
-                    ? currentMovie.listUserRating?.find(
-                        (item) => item.name == username
-                      )?.point / 2
-                    : movie.listUserRating?.find(
-                        (item) => item.name == username
-                      )?.point / 2 || 10
-                }
-                // onHover={(rate) =>
-                //   (document.getElementById("label-onrate").innerHTML = rate || "")
-                // }
-                // onChange={(rate) => alert(rate)}
-                onChange={ratingChanged}
-                readonly={!user ? true : false}
-              />
-            )}
-          </span> */}
 
           <div>
             <span>

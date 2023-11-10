@@ -1,24 +1,16 @@
-import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
-import { arrSliderLatestFilm, settings } from "./constants";
+import { settings } from "./constants";
 import Movie from "./components/Movie";
-import { getAllMovies, getAllUsers } from "../../store/apiRequest";
+
 import { useSelector } from "react-redux";
-import { createAxios } from "../../utils/createInstance";
-import { ToastContainer, toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import Heading from "../Heading";
 
 const SliderTrendingFilm = ({ toast }) => {
-  const user = useSelector((state) => state.auth.login.currentUser);
-  const userId = user?._id;
-  const accessToken = user?.accessToken;
-
   const film = useSelector((state) => state.film);
-  const { movies, favoriteFilm, watchLaterFilm } = film;
+  const { movies } = film;
 
   return (
     <div className="mt-0 md:mt-20 mb-14 sm:mb-8 -mx-2.5">

@@ -51,7 +51,7 @@ const Home = (props) => {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Shotflix</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
@@ -73,7 +73,7 @@ const Home = (props) => {
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
         <meta property="og:title" content="Shotflix" key="title" />
-      </Head>
+      </Head> */}
       <LayoutRoot categories={props?.categories}>
         <Dashboard />
       </LayoutRoot>
