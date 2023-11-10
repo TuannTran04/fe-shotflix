@@ -33,6 +33,8 @@ const LayoutRoot = ({ children, categories, movieData }) => {
         }
         canonical={window.location.origin}
         openGraph={{
+          type: "website",
+          locale: "vi_VN",
           url: `${window.location.origin}${router.asPath}`,
           title: movieData?.title ? movieData?.title : "Shotflix",
           description: movieData?.desc

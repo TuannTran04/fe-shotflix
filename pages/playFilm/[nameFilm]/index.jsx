@@ -219,7 +219,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
 
   return (
     <LayoutRoot categories={categories} movieData={movie}>
-      <NextSeo
+      {/* <NextSeo
         title={movie?.title ? movie?.title : "Shotflix"}
         description={
           movie?.desc
@@ -248,7 +248,7 @@ const PlayFilmPage = ({ nameFilm, categories }) => {
           ],
           siteName: window.location.origin,
         }}
-      />
+      /> */}
 
       <div className="md:mt-16">
         <Breadcrumb content={`Xem phim ${movie?.title}`} />
