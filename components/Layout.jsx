@@ -11,6 +11,13 @@ const LayoutRoot = ({ children, categories, movieData }) => {
   const router = useRouter();
 
   console.log(router);
+  console.log(
+    movieData?.photo?.[1]
+      ? `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/poster/${
+          movieData.folderOnFirebase
+        }/${movieData.photo?.[1]?.trim()}`
+      : "poster"
+  );
 
   // console.log(movieData?.photo?.[0]);
   return (
@@ -32,7 +39,7 @@ const LayoutRoot = ({ children, categories, movieData }) => {
           name="keywords"
           content="Shotflix, shotflix, web phim ngắn shotflix"
         />
-        <meta property="og:title" content="Shotflix" key="ogtitle" />
+        <meta property="og:title" content="Shotflix" key="title" />
         <meta property="og:type" content="video.movie" />
         <meta
           property="og:url"
@@ -55,7 +62,7 @@ const LayoutRoot = ({ children, categories, movieData }) => {
               ? `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/poster/${
                   movieData.folderOnFirebase
                 }/${movieData.photo?.[1]?.trim()}`
-              : "https://img.freepik.com/free-vector/flat-vertical-hotel-information-flyer-template_23-2148898863.jpg?w=2000"
+              : "poster"
           }
         ></meta>
         <meta property="og:image:width" content="1200" key="ogimagewidth" />

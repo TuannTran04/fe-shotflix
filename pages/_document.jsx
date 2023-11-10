@@ -1,20 +1,51 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import { useRouter } from "next/router";
 import Script from "next/script";
 
 export default function Document() {
+  // const router = useRouter();
+
   return (
     <Html lang="en">
       <Head>
         {/* <title>Shotflix</title> */}
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow" />
         <meta
           name="description"
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
         <meta
+          name="keywords"
+          content="Shotflix, shotflix, web phim ngắn shotflix"
+        />
+
+        <meta property="og:title" content="Shotflix" key="title" />
+        <meta property="og:type" content="video.movie" />
+        {/* <meta
+          property="og:url"
+          content={`${window.location.origin}${router.asPath}`}
+        /> */}
+        <meta
           property="og:description"
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
-        <meta property="og:title" content="Shotflix" key="title" />
+
+        {/* <meta name="author" content={movieData?.author} /> */}
+        <meta
+          property="og:image"
+          content={
+            false
+              ? `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/poster/${
+                  movieData.folderOnFirebase
+                }/${movieData.photo?.[1]?.trim()}`
+              : "https://img.freepik.com/free-vector/flat-vertical-hotel-information-flyer-template_23-2148898863.jpg?w=2000"
+          }
+        ></meta>
+        <meta property="og:image:width" content="1200" key="ogimagewidth" />
+        <meta property="og:image:height" content="630" key="ogimageheight" />
+
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
