@@ -6,30 +6,18 @@ export default function Document() {
   // const router = useRouter();
 
   return (
-    <Html lang="en">
+    <Html lang="vi">
       <Head>
-        {/* <title>Shotflix</title> */}
-        {/* <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="index, follow" />
-        <meta
+        {/* <meta
           name="description"
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
-        <meta
-          name="keywords"
-          content="Shotflix, shotflix, web phim ngắn shotflix"
-        />
-
         <meta property="og:title" content="Shotflix" key="title" />
         <meta property="og:type" content="video.movie" />
-       
         <meta
           property="og:description"
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
-
-      
         <meta
           property="og:image"
           content={
@@ -42,10 +30,9 @@ export default function Document() {
         ></meta>
         <meta property="og:image:width" content="1200" key="ogimagewidth" />
         <meta property="og:image:height" content="630" key="ogimageheight" /> */}
-        {/* <meta
-          property="og:image"
-          content="https://firebasestorage.googleapis.com/v0/b/prj-cv-film.appspot.com/o/files%2FSonTung_MTP%2Fnangamxadan%2Fimages%2Fnaxd.png?alt=media&token=9d1f101d-27bb-44c3-b6d1-438d8067ff2c"
-        ></meta> */}
+        {/* "https://firebasestorage.googleapis.com/v0/b/prj-cv-film.appspot.com/o/files%2FSonTung_MTP%2Fnangamxadan%2Fimages%2Fnaxd.png?alt=media&token=9d1f101d-27bb-44c3-b6d1-438d8067ff2c" */}
+
+        {/* <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> */}
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"

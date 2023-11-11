@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "../../../utils/ProtectedRoutes";
 import axios from "axios";
 import ProfileUser from "./tabs/ProfileUser";
+import LayoutRoot from "../../../components/Layout";
 
 const arrTabs = [
   { id: 1, tabName: "Hồ sơ", tabPath: "profile" },
@@ -44,7 +45,7 @@ const UserManagePage = ({ nameUser, categories }) => {
 
   return (
     <ProtectedRoute>
-      <LayoutManageInfo categories={categories}>
+      <LayoutRoot categories={categories}>
         <div className="sm:mt-20 mb-8 overflow-hidden">
           <div className="flex justify-start items-center mb-[25px]">
             <div className="h-[130px] w-[130px] select-none">
@@ -140,7 +141,7 @@ const UserManagePage = ({ nameUser, categories }) => {
         {router && router.query && router.query?.tab == "watchLater" && (
           <WatchLaterMovie />
         )}
-      </LayoutManageInfo>
+      </LayoutRoot>
     </ProtectedRoute>
   );
 };
