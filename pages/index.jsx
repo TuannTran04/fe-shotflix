@@ -11,6 +11,7 @@ import { createAxios } from "../utils/createInstance";
 import { getFavoriteMovies, getWatchLaterMovies } from "../store/apiRequest";
 import { addDataMovies } from "../store/filmSlice";
 import { loginSuccess } from "../store/authSlice";
+import Script from "next/script";
 
 const Home = (props) => {
   const router = useRouter();
@@ -51,8 +52,8 @@ const Home = (props) => {
 
   return (
     <>
-      {/* <Head>
-        <title>Shotflix</title>
+      {/* <Head> */}
+      {/* <title>Shotflix</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow" />
         <meta name="theme-color" content="#000000" />
@@ -72,8 +73,31 @@ const Home = (props) => {
           property="description"
           content="Đây là trang web xem phim ngắn. Một 'sân chơi' dành cho các bạn trẻ đam mê nghệ thuật, điện ảnh..."
         />
-        <meta property="og:title" content="Shotflix" key="title" />
-      </Head> */}
+        <meta property="og:title" content="Shotflix" key="title" /> */}
+
+      {/* <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        /> */}
+      {/* <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.css"
+          rel="stylesheet"
+          crossOrigin="anonymous"
+          referrerPolicy="no-re"
+        /> */}
+      {/* <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+        <link
+          href="https://vjs.zencdn.net/8.5.2/video-js.css"
+          rel="stylesheet"
+        />
+
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.0/flowbite.min.js" />
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+        <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script> */}
+      {/* </Head> */}
       <LayoutRoot categories={props?.categories}>
         <Dashboard />
       </LayoutRoot>
